@@ -9,6 +9,8 @@ nsmap = {
 
 
 class BaseXmlModelWithNS(BaseXmlModel):
+    model_config = {"arbitrary_types_allowed": True}
+
     def __init_subclass__(
         cls,
         *args,

@@ -1,5 +1,9 @@
-import pytest
+from typing import Optional
 
+import pytest
+from pydantic_xml import element
+
+from envoy_schema.server.schema.sep2.base import BaseXmlModelWithNS
 from envoy_schema.server.schema.sep2.identification import Resource
 from envoy_schema.server.schema.sep2.primitive_types import UriFullyQualified, UriWithoutHost
 from envoy_schema.server.schema.sep2.pub_sub import (
@@ -84,7 +88,7 @@ def test_notification_encode_resource_DERControlListResponse():
     # Replace the resource (in dict form) with a descendent type (we have to do it in dict form as updating a
     # constructed pydantic xml model directly causes headaches)
     # We will roundtrip that via XML to ensure all of our values are preserved
-    notif_dict = Notification.from_xml(original_xml).dict()
+    notif_dict = Notification.from_xml(original_xml).model_dump()
     notif_dict["resource"] = {
         "all_": 1,
         "results": 1,
@@ -134,7 +138,7 @@ def test_notification_encode_resource_DefaultDERControl():
     # Replace the resource (in dict form) with a descendent type (we have to do it in dict form as updating a
     # constructed pydantic xml model directly causes headaches)
     # We will roundtrip that via XML to ensure all of our values are preserved
-    notif_dict = Notification.from_xml(original_xml).dict()
+    notif_dict = Notification.from_xml(original_xml).model_dump()
     notif_dict["resource"] = {
         "type": "DefaultDERControl",
         "creationTime": 123,
@@ -175,7 +179,7 @@ def test_notification_encode_resource_TimeTariffIntervalListResponse():
     # Replace the resource (in dict form) with a descendent type (we have to do it in dict form as updating a
     # constructed pydantic xml model directly causes headaches)
     # We will roundtrip that via XML to ensure all of our values are preserved
-    notif_dict = Notification.from_xml(original_xml).dict()
+    notif_dict = Notification.from_xml(original_xml).model_dump()
     notif_dict["resource"] = {
         "all_": 1,
         "results": 1,
@@ -218,7 +222,7 @@ def test_notification_encode_resource_EndDeviceListResponse():
     # Replace the resource (in dict form) with a descendent type (we have to do it in dict form as updating a
     # constructed pydantic xml model directly causes headaches)
     # We will roundtrip that via XML to ensure all of our values are preserved
-    notif_dict = Notification.from_xml(original_xml).dict()
+    notif_dict = Notification.from_xml(original_xml).model_dump()
     notif_dict["resource"] = {
         "all_": 1,
         "results": 1,
