@@ -1,0 +1,21 @@
+<Notification xmlns="urn:ieee:std:2030.5:ns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <subscribedResource>/upt/0/mr/4/r</subscribedResource>
+    <Resource xsi:type="DERControlList" all="1" results="1" href="/my/list">        
+        <DERControl>
+            <creationTime>123</creationTime>
+            <mRID>abc</mRID>
+            <interval>
+                <start>456</start>
+                <duration>789</duration>
+            </interval>
+            <DERControlBase>
+                <opModImpLimW><value>100</value><multiplier>1</multiplier></opModImpLimW>
+                <opModExpLimW><value>200</value><multiplier>1</multiplier></opModExpLimW>
+                <opModGenLimW><value>300</value><multiplier>1</multiplier></opModGenLimW>
+                <opModLoadLimW><value>400</value><multiplier>1</multiplier></opModLoadLimW>
+            </DERControlBase>
+        </DERControl>
+    </Resource>
+    <status>0</status>
+    <subscriptionURI>/edev/8/sub/5</subscriptionURI>
+</Notification>

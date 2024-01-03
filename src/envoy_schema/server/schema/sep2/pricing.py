@@ -64,19 +64,19 @@ class ConsumptionTariffIntervalResponse(Resource, tag="ConsumptionTariffInterval
 
 
 class TariffProfileListResponse(SepList, tag="TariffProfileList"):
-    TariffProfile: list[TariffProfileResponse] = element()
+    TariffProfile: list[TariffProfileResponse] = element(default_factory=list)
 
 
 class RateComponentListResponse(SubscribableList, tag="RateComponentList"):
     """Worth noting that the standard describes RateComponentList as a standard list but it's an envoy
     specific extension to support subscriptions via SubscribableList"""
 
-    RateComponent: list[RateComponentResponse] = element()
+    RateComponent: list[RateComponentResponse] = element(default_factory=list)
 
 
 class TimeTariffIntervalListResponse(SepList, tag="TimeTariffIntervalList"):
-    TimeTariffInterval: list[TimeTariffIntervalResponse] = element()
+    TimeTariffInterval: list[TimeTariffIntervalResponse] = element(default_factory=list)
 
 
 class ConsumptionTariffIntervalListResponse(SepList, tag="ConsumptionTariffIntervalList"):
-    ConsumptionTariffInterval: list[ConsumptionTariffIntervalResponse] = element()
+    ConsumptionTariffInterval: list[ConsumptionTariffIntervalResponse] = element(default_factory=list)

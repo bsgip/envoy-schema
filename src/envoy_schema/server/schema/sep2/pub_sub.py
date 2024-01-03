@@ -1,14 +1,17 @@
 from enum import IntEnum
 from typing import Optional, Union
 
+from pydantic import root_validator, validator
+from pydantic.fields import ModelField
 from pydantic_xml import attr, element
 
 from envoy_schema.server.schema.sep2.base import BaseXmlModelWithNS
-from envoy_schema.server.schema.sep2.der import DefaultDERControl, DERControlListResponse
-from envoy_schema.server.schema.sep2.end_device import EndDeviceListResponse
+from envoy_schema.server.schema.sep2.der import DefaultDERControl, DERControlListResponse, DERControlResponse
+from envoy_schema.server.schema.sep2.end_device import EndDeviceListResponse, EndDeviceResponse
 from envoy_schema.server.schema.sep2.identification import List as Sep2List
 from envoy_schema.server.schema.sep2.identification import Resource
-from envoy_schema.server.schema.sep2.pricing import TimeTariffIntervalListResponse
+from envoy_schema.server.schema.sep2.metering import Reading
+from envoy_schema.server.schema.sep2.pricing import TimeTariffIntervalListResponse, TimeTariffIntervalResponse
 from envoy_schema.server.schema.sep2.primitive_types import UriFullyQualified, UriWithoutHost
 
 
@@ -43,6 +46,24 @@ class SubscriptionBase(Resource):
     subscribedResource: UriWithoutHost = element()  # The resource for which the subscription applies.
 
 
+# class NotificationResource(Sep2List, DefaultDERControl, Reading):
+#     """This is a workaround for pydantic xml - the Resource element in Notification can essentially be ANY type
+#     of which many are list types that pydantic struggles to pick the correct type as many of the types are
+#     interchangeable once you start considering that many of the elements are optional
+
+#     To workaround this limitation - we've manually merged the relevant types here - practically speaking this will
+#     only return a list of a single type as indicated by the xsi:type attribute"""
+
+#     # Only set if type is TimeTariffIntervalList
+#     TimeTariffInterval: Optional[list[TimeTariffIntervalResponse]] = element()
+
+#     # Only set if type is DERControlList
+#     DERControl: Optional[list[DERControlResponse]] = element()
+
+#     # Only set if type is EndDeviceList
+#     EndDevice: Optional[list[EndDeviceResponse]] = element()
+
+
 class Notification(SubscriptionBase):
     """Holds the information related to a client subscription to receive updates to a resource automatically.
     The actual resources may be passed in the Notification by specifying a specific xsi:type for the Resource and
@@ -55,13 +76,68 @@ class Notification(SubscriptionBase):
     # A resource is an addressable unit of information, either a collection (List) or instance of an object
     # (identifiedObject, or simply, Resource)
     #
+    # The xsi:type attribute will define how the entity is parsed
+    #
     # NOTE - Resource must be the LAST type in the union - pydantic tries left to right looking for the first match
     #
     resource: Optional[
         Union[
-            TimeTariffIntervalListResponse, DERControlListResponse, DefaultDERControl, EndDeviceListResponse, Resource
+            TimeTariffIntervalListResponse,
+            DERControlListResponse,
+            DefaultDERControl,
+            EndDeviceListResponse,
+            Reading,
+            Resource,
         ]
-    ] = element(tag="Resource")
+    ] = element(tag="Resource", union_mode="smart")
+
+    @root_validator(pre=True)
+    def prep_resource(cls, values: dict):
+        xsi_type: Optional[str] = values.get("type", None)
+
+        if xsi_type == "TimeTariffIntervalList":
+            return TimeTariffIntervalListResponse.validate(values)
+        elif xsi_type == "DERControlList":
+            return DERControlListResponse.validate(values)
+        elif xsi_type == "EndDeviceList":
+            return EndDeviceListResponse.validate(values)
+        elif xsi_type == "Reading":
+            return Reading.validate(values)
+
+        # if "TimeTariffInterval" in v:
+        #     return TimeTariffIntervalListResponse.validate(v)
+        # elif "DERControl" in v:
+        #     return DERControlListResponse.validate(v)
+        # elif "EndDevice" in v:
+        #     return EndDeviceListResponse.validate(v)
+        # elif "timePeriod" in v or "value" in v:
+        #     return Reading.validate(v)
+
+        return Resource.validate(values)
+
+    # @validator("resource", pre=True)
+    # def prepare_resource(cls, v, values: dict, field: ModelField):
+    #     xsi_type: Optional[str] = values.get("type", None)
+
+    #     if xsi_type == "TimeTariffIntervalList":
+    #         return TimeTariffIntervalListResponse.validate(values)
+    #     elif xsi_type == "DERControlList":
+    #         return DERControlListResponse.validate(values)
+    #     elif xsi_type == "EndDeviceList":
+    #         return EndDeviceListResponse.validate(values)
+    #     elif xsi_type == "Reading":
+    #         return Reading.validate(values)
+
+    #     # if "TimeTariffInterval" in v:
+    #     #     return TimeTariffIntervalListResponse.validate(v)
+    #     # elif "DERControl" in v:
+    #     #     return DERControlListResponse.validate(v)
+    #     # elif "EndDevice" in v:
+    #     #     return EndDeviceListResponse.validate(v)
+    #     # elif "timePeriod" in v or "value" in v:
+    #     #     return Reading.validate(v)
+
+    #     return Resource.validate(values)
 
 
 class Condition(BaseXmlModelWithNS):
@@ -86,8 +162,8 @@ class Subscription(SubscriptionBase):
 
 class SubscriptionListResponse(Sep2List, tag="SubscriptionList"):
     pollRate: Optional[int] = attr()  # The default polling rate for this function set in seconds
-    subscriptions: list[Subscription] = element(tag="Subscription")
+    subscriptions: list[Subscription] = element(tag="Subscription", default_factory=list)
 
 
 class NotificationListResponse(Sep2List, tag="NotificationList"):
-    notifications: list[Notification] = element(tag="Notification")
+    notifications: list[Notification] = element(tag="Notification", default_factory=list)

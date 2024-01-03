@@ -42,4 +42,4 @@ class FunctionSetAssignmentsResponse(
 class FunctionSetAssignmentsListResponse(SubscribableList, tag="FunctionSetAssignments"):
     pollrate: types.PollRateType = types.DEFAULT_POLLRATE
 
-    FunctionSetAssignments: list[FunctionSetAssignmentsResponse] = element()
+    FunctionSetAssignments: list[FunctionSetAssignmentsResponse] = element(default_factory=list)

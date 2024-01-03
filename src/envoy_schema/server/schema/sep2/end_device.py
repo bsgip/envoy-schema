@@ -43,4 +43,4 @@ class EndDeviceResponse(EndDeviceRequest, tag="EndDevice"):
 
 
 class EndDeviceListResponse(SubscribableList, tag="EndDeviceList"):
-    EndDevice: List[EndDeviceResponse] = element()
+    EndDevice: List[EndDeviceResponse] = element(default_factory=list)

@@ -5,11 +5,19 @@ from envoy_schema.server.schema.sep2.primitive_types import UriFullyQualified, U
 from envoy_schema.server.schema.sep2.pub_sub import (
     ConditionAttributeIdentifier,
     Notification,
+    NotificationListResponse,
     NotificationStatus,
     Subscription,
     SubscriptionEncoding,
+    SubscriptionListResponse,
 )
 from envoy_schema.server.schema.sep2.types import TOUType
+
+
+def test_missing_list_defaults_empty():
+    """Ensure the list objects fallback to empty list if unspecified in source"""
+    assert SubscriptionListResponse.validate({"all_": 0, "results": 0}).subscriptions == []
+    assert NotificationListResponse.validate({"all_": 0, "results": 0}).notifications == []
 
 
 def test_subscription():
@@ -60,7 +68,7 @@ def test_subscription_conditions():
     assert parsed_sub.condition.attributeIdentifier == ConditionAttributeIdentifier.READING_VALUE
 
 
-def test_notification():
+def test_notification_xml_reading():
     """Simple validation to ensure we can read basic XML"""
     with open("tests/data/notification.xml", "r") as fp:
         raw_xml = fp.read()
@@ -69,10 +77,28 @@ def test_notification():
 
     assert parsed_notif.subscribedResource == "/upt/0/mr/4/r"
     assert parsed_notif.resource is not None
-    assert type(parsed_notif.resource) == Resource
+    assert parsed_notif.resource.timePeriod.duration == 0
+    assert parsed_notif.resource.timePeriod.start == 12987364
+    assert parsed_notif.resource.value == 1001
     assert parsed_notif.status == NotificationStatus.DEFAULT
     assert parsed_notif.subscriptionURI == "/edev/8/sub/5"
     assert type(parsed_notif.subscriptionURI) == UriWithoutHost
+
+
+def test_notification_xml_doe():
+    """Simple validation to ensure we can read basic XML"""
+
+    with open("tests/data/notification_doe.xml", "r") as fp:
+        original_xml = fp.read()
+
+    notif = Notification.from_xml(original_xml)
+    assert notif.resource is not None
+    assert notif.resource.DERControl is not None
+    assert len(notif.resource.DERControl) == 1
+    assert notif.resource.DERControl[0].DERControlBase_.opModImpLimW.value == 100
+    assert notif.resource.DERControl[0].DERControlBase_.opModExpLimW.value == 200
+    assert notif.resource.DERControl[0].DERControlBase_.opModGenLimW.value == 300
+    assert notif.resource.DERControl[0].DERControlBase_.opModLoadLimW.value == 400
 
 
 def test_notification_encode_resource_DERControlListResponse():
