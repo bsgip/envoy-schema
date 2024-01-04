@@ -1,6 +1,5 @@
 from typing import List, Optional
 
-from pydantic import validator
 from pydantic_xml import element
 
 from envoy_schema.server.schema.sep2 import primitive_types, types
