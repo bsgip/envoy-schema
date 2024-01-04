@@ -1,4 +1,4 @@
-<Notification xmlns="urn:ieee:std:2030.5:ns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<Notification xmlns="urn:ieee:std:2030.5:ns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:csipaus="http://csipaus.org/ns">
     <subscribedResource>/upt/0/mr/4/r</subscribedResource>
     <Resource xsi:type="DERControlList" all="1" results="1" href="/my/list">        
         <DERControl>
@@ -9,10 +9,10 @@
                 <duration>789</duration>
             </interval>
             <DERControlBase>
-                <opModImpLimW><value>100</value><multiplier>1</multiplier></opModImpLimW>
-                <opModExpLimW><value>200</value><multiplier>1</multiplier></opModExpLimW>
-                <opModGenLimW><value>300</value><multiplier>1</multiplier></opModGenLimW>
-                <opModLoadLimW><value>400</value><multiplier>1</multiplier></opModLoadLimW>
+                <csipaus:opModImpLimW><value>100</value><multiplier>1</multiplier></csipaus:opModImpLimW>
+                <csipaus:opModExpLimW><value>200</value><multiplier>1</multiplier></csipaus:opModExpLimW>
+                <csipaus:opModGenLimW><value>300</value><multiplier>1</multiplier></csipaus:opModGenLimW>
+                <csipaus:opModLoadLimW><value>400</value><multiplier>1</multiplier></csipaus:opModLoadLimW>
             </DERControlBase>
         </DERControl>
     </Resource>

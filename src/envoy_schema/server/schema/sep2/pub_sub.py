@@ -1,8 +1,6 @@
 from enum import IntEnum
 from typing import Any, Optional
 
-from pydantic import root_validator, validator
-from pydantic.fields import ModelField
 from pydantic_xml import attr, element
 
 from envoy_schema.server.schema.sep2.base import BaseXmlModelWithNS
@@ -59,6 +57,74 @@ class SubscriptionBase(Resource):
     passing the full representation."""
 
     subscribedResource: LocalAbsoluteUri = element()  # The resource for which the subscription applies.
+
+
+def get_notification_resource_discriminator(v: Any) -> str:
+    if not v:
+        return XSI_TYPE_DEFAULT
+
+    if isinstance(v, dict):
+        return v.get("type", XSI_TYPE_DEFAULT)
+    return getattr(v, "type", XSI_TYPE_DEFAULT)
+
+
+class NotificationResourceCombined(Resource):
+    """This class only exists because pydantic-xml has limited support for pydantic discriminated unions
+
+    Ultimately we have a single element in notification called <Resource> that can be filled with any number
+    of types - the pydantic xml typing struggles to represent this via discriminators.
+
+    One major limitation: https://github.com/dapper91/pydantic-xml/issues/157
+    Pydantic XML also only support discriminating between sub models with the exact same attributes
+
+    This class essentially combines (manually) the following classes:
+        TimeTariffIntervalListResponse, DERControlListResponse, DefaultDERControl, EndDeviceListResponse, Reading
+
+    The plan is for the server to only fill out the fields relevant for the notification being served (based on
+    the xsi:type attribute). Clients using this to parse Notifications will have to manually map the fields to
+    the appropriate types.
+    """
+
+    # List
+    all_: Optional[int] = attr(name="all", default=None)
+    results: Optional[int] = attr(default=None)
+
+    # TimeTariffIntervalListResponse
+    TimeTariffInterval: Optional[list[TimeTariffIntervalResponse]] = element(default=None)
+
+    # DERControlListResponse
+    DERControl: Optional[list[DERControlResponse]] = element(default=None)
+
+    # EndDeviceListResponse
+    EndDevice: Optional[list[EndDeviceResponse]] = element(default=None)
+
+    # SubscribableIdentifiedObject
+    description: Optional[str] = element(default=None)
+    mRID: Optional[mRIDType] = element(default=None)
+    version: Optional[VersionType] = element(default=None)
+
+    # DefaultDERControl
+    setESDelay: Optional[int] = element(default=None)
+    setESHighFreq: Optional[int] = element(default=None)
+    setESHighVolt: Optional[int] = element(default=None)
+    setESLowFreq: Optional[int] = element(default=None)
+    setESLowVolt: Optional[int] = element(default=None)
+    setESRampTms: Optional[int] = element(default=None)
+    setESRandomDelay: Optional[int] = element(default=None)
+    setGradW: Optional[int] = element(default=None)
+    setSoftGradW: Optional[int] = element(default=None)
+    DERControlBase_: Optional[DERControlBase] = element(tag="DERControlBase", default=None)
+
+    # Reading
+    subscribable: Optional[SubscribableType] = attr(default=None)
+    localID: Optional[HexBinary16] = element(default=None)
+
+    # ReadingBase
+    consumptionBlock: Optional[ConsumptionBlockType] = element(default=None)
+    qualityFlags: Optional[HexBinary16] = element(default=None)
+    timePeriod: Optional[DateTimeIntervalType] = element(default=None)
+    touTier: Optional[TOUType] = element(default=None)
+    value: Optional[int] = element(default=None)
 
 
 class Notification(SubscriptionBase):
@@ -119,8 +185,8 @@ class Subscription(SubscriptionBase):
 
 class SubscriptionListResponse(Sep2List, tag="SubscriptionList"):
     pollRate: Optional[int] = attr(default=None)  # The default polling rate for this function set in seconds
-    subscriptions: list[Subscription] = element(tag="Subscription")
+    subscriptions: Optional[list[Subscription]] = element(tag="Subscription", default=None)
 
 
 class NotificationListResponse(Sep2List, tag="NotificationList"):
-    notifications: list[Notification] = element(tag="Notification", default_factory=list)
+    notifications: Optional[list[Notification]] = element(tag="Notification", default=None)
