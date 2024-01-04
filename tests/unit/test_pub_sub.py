@@ -1,12 +1,5 @@
-from typing import Optional
-
 import pytest
-from pydantic import AnyUrl
-from pydantic_xml import element
 
-from envoy_schema.server.schema.sep2.base import BaseXmlModelWithNS
-from envoy_schema.server.schema.sep2.identification import Resource
-from envoy_schema.server.schema.sep2.primitive_types import HttpUri, LocalAbsoluteUri
 from envoy_schema.server.schema.sep2.pub_sub import (
     ConditionAttributeIdentifier,
     Notification,
@@ -70,7 +63,9 @@ def test_notification():
 
     assert parsed_notif.subscribedResource == "/upt/0/mr/4/r"
     assert parsed_notif.resource is not None
-    assert type(parsed_notif.resource) == Resource
+    assert parsed_notif.resource.value == 1001
+    assert parsed_notif.resource.timePeriod.start == 12987364
+    assert parsed_notif.resource.timePeriod.duration == 0
     assert parsed_notif.status == NotificationStatus.DEFAULT
     assert parsed_notif.subscriptionURI == "/edev/8/sub/5"
 
