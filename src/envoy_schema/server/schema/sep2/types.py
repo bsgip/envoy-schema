@@ -1,22 +1,17 @@
 from enum import IntEnum, IntFlag, auto
 from functools import reduce
-from typing import Optional
+from typing import Annotated, Optional
 
+from pydantic import Field, Tag
 from pydantic_xml import attr, element
 
 from envoy_schema.server.schema.sep2 import base, primitive_types
 
-
-class PENType(int):
-    pass
-
-
-class VersionType(int):
-    pass
+PENType = Annotated[int, Tag("PENType")]
+VersionType = Annotated[int, Tag("VersionType")]
 
 
-class mRIDType(primitive_types.HexBinary128):
-    pass
+mRIDType = Annotated[primitive_types.HexBinary128, Tag("mRIDType")]
 
 
 class AccumulationBehaviourType(IntEnum):
@@ -188,7 +183,7 @@ class UnitValueType(base.BaseXmlModelWithNS):
 
 
 class PollRateType(base.BaseXmlModelWithNS):
-    pollRate: Optional[int] = attr()
+    pollRate: Optional[int] = attr(default=None)
 
 
 DEFAULT_POLLRATE = PollRateType(pollRate=900)
@@ -228,15 +223,8 @@ class DeviceCategory(IntFlag):
 # The combination of ALL DeviceCategory bit flags
 DEVICE_CATEGORY_ALL_SET: DeviceCategory = reduce(lambda a, b: a | b, DeviceCategory)  # type: ignore # py311 issue
 
-
-class TimeType(int):
-    # Unix time
-    pass
-
-
-class TimeOffsetType(int):
-    # A sign time offset, typically applied to a TimeType value, expressed in seconds.
-    pass
+TimeType = Annotated[int, Tag("TimeType")]
+TimeOffsetType = Annotated[int, Tag("TimeOffsetType")]
 
 
 class TimeQualityType(IntEnum):
@@ -309,20 +297,14 @@ class ReasonCodeType(IntEnum):
     internal_error = 16384  # Unspecified error due to an issue with some internal logic/system
 
 
-class OneHourRangeType(int):
-    """A signed time offset, typically applied to a Time value, expressed in seconds, with range -3600 to 3600."""
+# A signed time offset, typically applied to a Time value, expressed in seconds, with range -3600 to 3600.
+OneHourRangeType = Annotated[int, Field(ge=-3600, le=3600), Tag("OneHourRangeType")]
 
-    pass
+# Used for signed percentages, specified in hundredths of a percent, -10000 - 10000. (10000 = 100%)
+SignedPerCent = Annotated[int, Field(ge=-10000, le=10000), Tag("SignedPerCent")]
 
-
-class SignedPerCent(int):
-    # Used for signed percentages, specified in hundredths of a percent, -10000 - 10000. (10000 = 100%)
-    pass
-
-
-class PerCent(int):
-    # Used for percentages, specified in hundredths of a percent, 0 - 10000. (10000 = 100%)
-    pass
+# Used for percentages, specified in hundredths of a percent, 0 - 10000. (10000 = 100%)
+PerCent = Annotated[int, Field(ge=0, le=10000), Tag("PerCent")]
 
 
 class DERUnitRefType(IntEnum):

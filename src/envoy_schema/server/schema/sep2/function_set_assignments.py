@@ -15,18 +15,18 @@ from envoy_schema.server.schema.sep2.identification import (
 
 class FunctionSetAssignmentsBase(Resource):
     # Optional (0..1) Links
-    TimeLink: Optional[Link] = element()
+    TimeLink: Optional[Link] = element(default=None)
 
     # Optional (0..1) ListLinks
-    CustomerAccountListLink: Optional[ListLink] = element()
-    DemandResponseProgramListLink: Optional[ListLink] = element()
-    DERProgramListLink: Optional[ListLink] = element()
-    FileListLink: Optional[ListLink] = element()
-    MessagingProgramListLink: Optional[ListLink] = element()
-    PrepaymentListLink: Optional[ListLink] = element()
-    ResponseSetListLink: Optional[ListLink] = element()
-    TariffProfileListLink: Optional[ListLink] = element()
-    UsagePointListLink: Optional[ListLink] = element()
+    CustomerAccountListLink: Optional[ListLink] = element(default=None)
+    DemandResponseProgramListLink: Optional[ListLink] = element(default=None)
+    DERProgramListLink: Optional[ListLink] = element(default=None)
+    FileListLink: Optional[ListLink] = element(default=None)
+    MessagingProgramListLink: Optional[ListLink] = element(default=None)
+    PrepaymentListLink: Optional[ListLink] = element(default=None)
+    ResponseSetListLink: Optional[ListLink] = element(default=None)
+    TariffProfileListLink: Optional[ListLink] = element(default=None)
+    UsagePointListLink: Optional[ListLink] = element(default=None)
 
 
 # The SEP2 standard doesn't explicitly state that FunctionSetAssignments derives from

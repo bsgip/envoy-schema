@@ -19,8 +19,8 @@ class DeviceCapabilityResponse(Resource, tag="DeviceCapability"):
 
     # (0..1) Link
     # Not supported at this time
-    # SelfDeviceLink: Optional[Link] = element()
+    # SelfDeviceLink: Optional[Link] = element(default=None)
 
     # (0..1) ListLink
-    EndDeviceListLink: Optional[ListLink] = element()
-    MirrorUsagePointListLink: Optional[ListLink] = element()
+    EndDeviceListLink: Optional[ListLink] = element(default=None)
+    MirrorUsagePointListLink: Optional[ListLink] = element(default=None)

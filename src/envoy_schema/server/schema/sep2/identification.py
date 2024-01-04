@@ -6,18 +6,18 @@ from envoy_schema.server.schema.sep2 import base, primitive_types, types
 
 
 class Resource(base.BaseXmlModelWithNS):
-    href: Optional[str] = attr()
-    type: Optional[str] = attr(ns="xsi")
+    href: Optional[str] = attr(default=None)
+    type: Optional[str] = attr(ns="xsi", default=None)
 
 
 class IdentifiedObject(Resource):
-    description: Optional[str] = element()
+    description: Optional[str] = element(default=None)
     mRID: types.mRIDType = element()
-    version: Optional[types.VersionType] = element()
+    version: Optional[types.VersionType] = element(default=None)
 
 
 class SubscribableResource(Resource):
-    subscribable: Optional[types.SubscribableType] = attr()
+    subscribable: Optional[types.SubscribableType] = attr(default=None)
 
 
 class SubscribableList(SubscribableResource):
@@ -28,26 +28,28 @@ class SubscribableList(SubscribableResource):
 
 
 class SubscribableIdentifiedObject(SubscribableResource):
-    description: Optional[str] = element()  # The description is a human readable text describing or naming the object.
+    description: Optional[str] = element(
+        default=None
+    )  # The description is a human readable text describing or naming the object.
     mRID: types.mRIDType = element()  # The global identifier of the object
-    version: Optional[types.VersionType] = element()  # Contains the version number of the object.
+    version: Optional[types.VersionType] = element(default=None)  # Contains the version number of the object.
 
 
 class RespondableResource(Resource):
     """A Resource to which a Response can be requested."""
 
-    replyTo: Optional[str] = attr()
-    responseRequired: Optional[primitive_types.HexBinary32] = attr()
+    replyTo: Optional[str] = attr(default=None)
+    responseRequired: Optional[primitive_types.HexBinary32] = attr(default=None)
 
 
 class RespondableSubscribableIdentifiedObject(RespondableResource):
     """An IdentifiedObject to which a Response can be requested."""
 
-    subscribable: Optional[types.SubscribableType] = attr()
+    subscribable: Optional[types.SubscribableType] = attr(default=None)
 
-    description: Optional[str] = element()
+    description: Optional[str] = element(default=None)
     mRID: primitive_types.HexBinary128 = element()
-    version: Optional[types.VersionType] = element()
+    version: Optional[types.VersionType] = element(default=None)
 
 
 class List(Resource):
@@ -63,4 +65,4 @@ class Link(Resource):
 
 
 class ListLink(Link):
-    all_: Optional[int] = attr(name="all")
+    all_: Optional[int] = attr(name="all", default=None)

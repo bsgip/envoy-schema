@@ -19,7 +19,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "envoy_schema"
 version = "0.1.0"
-dependencies = ["pydantic<2.0.0", "pydantic_xml[lxml]"]
+dependencies = ["pydantic>=2.5.0", "pydantic_xml[lxml]"]
 
 [project.optional-dependencies]
 dev = ["bandit", "flake8", "mypy", "types-python-dateutil", "types-tzlocal"]

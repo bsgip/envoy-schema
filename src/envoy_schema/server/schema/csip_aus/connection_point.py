@@ -19,4 +19,4 @@ class ConnectionPointRequest(base.BaseXmlModelWithNS, tag="ConnectionPoint", ns=
 class ConnectionPointResponse(base.BaseXmlModelWithNS, tag="ConnectionPoint", ns="csipaus"):
     """Contains identification information related to the network location at which the EndDevice is installed."""
 
-    id: Optional[str] = element()  # Typically used as the NMI
+    id: Optional[str] = element(default=None)  # Typically used as the NMI

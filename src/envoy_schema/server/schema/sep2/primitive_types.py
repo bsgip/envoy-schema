@@ -1,103 +1,94 @@
-from pydantic.networks import AnyUrl
+from urllib.parse import urlparse
+
+from pydantic import AfterValidator
+from typing_extensions import Annotated
 
 
-class HexBinary8(str):
-    @classmethod
-    def __get_validators__(cls):
-        yield cls.validate
-
-    @classmethod
-    def validate(cls, v):
-        if len(v) > 2:
-            raise ValueError("HexBinary8 max length of 2.")
-        return cls(v)
+def validate_HexBinary8(v: str):
+    if len(v) > 2:
+        raise ValueError("HexBinary8 max length of 2.")
+    return v
 
 
-class HexBinary16(str):
-    @classmethod
-    def __get_validators__(cls):
-        yield cls.validate
-
-    @classmethod
-    def validate(cls, v):
-        if len(v) > 4:
-            raise ValueError("HexBinary16 max length of 4.")
-        return cls(v)
+def validate_HexBinary16(v: str):
+    if len(v) > 4:
+        raise ValueError("HexBinary16 max length of 4.")
+    return v
 
 
-class HexBinary32(str):
-    @classmethod
-    def __get_validators__(cls):
-        yield cls.validate
-
-    @classmethod
-    def validate(cls, v):
-        if len(v) > 8:
-            raise ValueError("HexBinary32 max length of 8.")
-        return cls(v)
+def validate_HexBinary32(v: str):
+    if len(v) > 8:
+        raise ValueError("HexBinary32 max length of 8.")
+    return v
 
 
-class HexBinary48(str):
-    @classmethod
-    def __get_validators__(cls):
-        yield cls.validate
-
-    @classmethod
-    def validate(cls, v):
-        if len(v) > 12:
-            raise ValueError("HexBinary48 max length of 12.")
-        return cls(v)
+def validate_HexBinary48(v: str):
+    if len(v) > 12:
+        raise ValueError("HexBinary48 max length of 12.")
+    return v
 
 
-class HexBinary64(str):
-    @classmethod
-    def __get_validators__(cls):
-        yield cls.validate
-
-    @classmethod
-    def validate(cls, v):
-        if len(v) > 16:
-            raise ValueError("HexBinary64 max length of 16.")
-        return cls(v)
+def validate_HexBinary64(v: str):
+    if len(v) > 16:
+        raise ValueError("HexBinary64 max length of 16.")
+    return v
 
 
-class HexBinary128(str):
-    @classmethod
-    def __get_validators__(cls):
-        yield cls.validate
-
-    @classmethod
-    def validate(cls, v):
-        if len(v) > 32:
-            raise ValueError("HexBinary128 max length of 32.")
-        return cls(v)
+def validate_HexBinary128(v: str):
+    if len(v) > 32:
+        raise ValueError("HexBinary128 max length of 32.")
+    return v
 
 
-class HexBinary160(str):
-    @classmethod
-    def __get_validators__(cls):
-        yield cls.validate
-
-    @classmethod
-    def validate(cls, v):
-        if len(v) > 40:
-            raise ValueError("HexBinary160 max length of 40.")
-        return cls(v)
+def validate_HexBinary160(v: str):
+    if len(v) > 40:
+        raise ValueError("HexBinary160 max length of 40.")
+    return v
 
 
-class UriWithoutHost(AnyUrl):
-    """Allows URIs without a host/scheme (i.e. - just a path like /edev/123)"""
+def validate_LocalAbsoluteUri(v: str):
+    """Only does a cursory check that a URI looks like a local absolute URI eg: /edev/123/cp"""
+    v = v.strip()
+    if len(v) > 4096:
+        raise ValueError("LocalUri length has a max of 4096")
 
-    # XSD anyURI type -
-    host_required = False
+    parsed = urlparse(v)
+    if parsed.scheme or parsed.netloc:
+        raise ValueError("LocalUri should not include a scheme or host")
 
-    @staticmethod
-    def get_default_parts(parts):
-        return {"scheme": "https"}
+    if not v.startswith("/"):
+        raise ValueError("LocalUri should be an absolute URI")
+
+    return v
 
 
-class UriFullyQualified(AnyUrl):
-    """Allows only strings that match a fully qualified URI (i.e. requires host/scheme)"""
+def validate_HttpUri(v: str):
+    """Only does a cursory check that a URI looks like a remote server HTTP(S) query eg: https://example.com:123/hook"""
 
-    # XSD anyURI type with a requirement of a HOST
-    host_required = True
+    v = v.strip()
+    if len(v) > 4096:
+        raise ValueError("HttpUri length has a max of 4096")
+
+    parsed = urlparse(v)
+    if parsed.scheme != "https" and parsed.scheme != "http":
+        raise ValueError("HttpUri should have a http or https scheme")
+
+    if len(parsed.netloc) < 3:
+        raise ValueError("HttpUri requires a remote host")
+
+    if not parsed.path.startswith("/"):
+        raise ValueError("HttpUri should be an absolute path")
+
+    return v
+
+
+HexBinary8 = Annotated[str, AfterValidator(validate_HexBinary8)]
+HexBinary16 = Annotated[str, AfterValidator(validate_HexBinary16)]
+HexBinary32 = Annotated[str, AfterValidator(validate_HexBinary32)]
+HexBinary48 = Annotated[str, AfterValidator(validate_HexBinary48)]
+HexBinary64 = Annotated[str, AfterValidator(validate_HexBinary64)]
+HexBinary128 = Annotated[str, AfterValidator(validate_HexBinary128)]
+HexBinary160 = Annotated[str, AfterValidator(validate_HexBinary160)]
+
+LocalAbsoluteUri = Annotated[str, AfterValidator(validate_LocalAbsoluteUri)]
+HttpUri = Annotated[str, AfterValidator(validate_HttpUri)]

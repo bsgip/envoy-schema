@@ -11,7 +11,7 @@ from envoy_schema.server.schema.sep2.metering import Reading, ReadingSetBase, Re
 
 
 class MirrorReadingSet(ReadingSetBase):
-    readings: Optional[List[Reading]] = element(tag="Reading")
+    readings: Optional[List[Reading]] = element(tag="Reading", default=None)
 
 
 class MeterReadingBase(IdentifiedObject):
@@ -19,26 +19,26 @@ class MeterReadingBase(IdentifiedObject):
 
 
 class MirrorMeterReading(MeterReadingBase):
-    lastUpdateTime: Optional[types.TimeType] = element()
-    nextUpdateTime: Optional[types.TimeType] = element()
-    reading: Optional[Reading] = element(tag="Reading")
-    readingType: Optional[ReadingType] = element(tag="ReadingType")
-    mirrorReadingSets: Optional[List[MirrorReadingSet]] = element(tag="MirrorReadingSet")
+    lastUpdateTime: Optional[types.TimeType] = element(default=None)
+    nextUpdateTime: Optional[types.TimeType] = element(default=None)
+    reading: Optional[Reading] = element(tag="Reading", default=None)
+    readingType: Optional[ReadingType] = element(tag="ReadingType", default=None)
+    mirrorReadingSets: Optional[List[MirrorReadingSet]] = element(tag="MirrorReadingSet", default=None)
 
 
 class MirrorUsagePoint(UsagePointBase):
     deviceLFDI: primitive_types.HexBinary160 = element()
-    postRate: Optional[int] = element()
-    mirrorMeterReadings: Optional[List[MirrorMeterReading]] = element(tag="MirrorMeterReading")
+    postRate: Optional[int] = element(default=None)
+    mirrorMeterReadings: Optional[List[MirrorMeterReading]] = element(tag="MirrorMeterReading", default=None)
 
 
 class MirrorUsagePointList(Sep2List):
     pollrate: types.PollRateType = types.DEFAULT_POLLRATE
-    mirrorUsagePoints: Optional[List[MirrorUsagePoint]] = element(tag="MirrorUsagePoint")
+    mirrorUsagePoints: Optional[List[MirrorUsagePoint]] = element(tag="MirrorUsagePoint", default=None)
 
 
 class MirrorMeterReadingList(Sep2List):
-    mirrorMeterReadings: Optional[List[MirrorMeterReading]] = element(tag="MirrorMeterReading")
+    mirrorMeterReadings: Optional[List[MirrorMeterReading]] = element(tag="MirrorMeterReading", default=None)
 
 
 class MirrorMeterReadingRequest(MirrorMeterReading, tag="MirrorMeterReading"):
@@ -48,7 +48,7 @@ class MirrorMeterReadingRequest(MirrorMeterReading, tag="MirrorMeterReading"):
 # Unlike MirrorMeterReadingList this is a list resource is doesn't subclass Sep2List. The reasons is that clients
 # don't need to specify the attributes 'all' or 'result' for the list resources they are posting
 class MirrorMeterReadingListRequest(Resource, tag="MirrorMeterReadingList"):
-    mirrorMeterReadings: Optional[List[MirrorMeterReading]] = element(tag="MirrorMeterReading")
+    mirrorMeterReadings: Optional[List[MirrorMeterReading]] = element(tag="MirrorMeterReading", default=None)
 
 
 class MirrorUsagePointListResponse(Sep2List, tag="MirrorUsagePointList"):

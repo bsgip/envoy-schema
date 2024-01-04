@@ -17,5 +17,5 @@ class Event(RespondableSubscribableIdentifiedObject):
 class RandomizableEvent(Event):
     """An Event that can indicate time ranges over which the start time and duration SHALL be randomized."""
 
-    randomizeDuration: Optional[OneHourRangeType] = element()
-    randomizeStart: Optional[OneHourRangeType] = element()
+    randomizeDuration: Optional[OneHourRangeType] = element(default=None)
+    randomizeStart: Optional[OneHourRangeType] = element(default=None)
