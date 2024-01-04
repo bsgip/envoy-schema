@@ -20,24 +20,24 @@ class TariffProfileResponse(IdentifiedObject, tag="TariffProfile"):
     """A schedule of charges; structure that allows the definition of tariff structures such as step (block) and
     time of use (tier) when used in conjunction with TimeTariffInterval and ConsumptionTariffInterval."""
 
-    currency: Optional[CurrencyCode] = element()
-    pricePowerOfTenMultiplier: Optional[int] = element()
-    primacyType: Optional[PrimacyType] = element()
-    rateCode: Optional[str] = element()
+    currency: Optional[CurrencyCode] = element(default=None)
+    pricePowerOfTenMultiplier: Optional[int] = element(default=None)
+    primacyType: Optional[PrimacyType] = element(default=None)
+    rateCode: Optional[str] = element(default=None)
     serviceCategoryKind: ServiceKind = element()
 
-    RateComponentListLink: Optional[ListLink] = element()
+    RateComponentListLink: Optional[ListLink] = element(default=None)
 
 
 class RateComponentResponse(IdentifiedObject, tag="RateComponent"):
     """Specifies the applicable charges for a single component of the rate, which could be generation price or
     consumption price, for example."""
 
-    flowRateEndLimit: Optional[UnitValueType] = element()
-    flowRateStartLimit: Optional[UnitValueType] = element()
+    flowRateEndLimit: Optional[UnitValueType] = element(default=None)
+    flowRateStartLimit: Optional[UnitValueType] = element(default=None)
     roleFlags: int = element()  # See RoleFlagsType
     ReadingTypeLink: Link = element()
-    ActiveTimeTariffIntervalListLink: Optional[ListLink] = element()
+    ActiveTimeTariffIntervalListLink: Optional[ListLink] = element(default=None)
     TimeTariffIntervalListLink: ListLink = element()
 
 
@@ -57,26 +57,28 @@ class ConsumptionTariffIntervalResponse(Resource, tag="ConsumptionTariffInterval
     within one of the previous blocks."""
 
     consumptionBlock: ConsumptionBlockType = element()
-    price: Optional[int] = element()  # The charge for this rate component, per unit of measure defined by the
+    price: Optional[int] = element(
+        default=None
+    )  # The charge for this rate component, per unit of measure defined by the
     # associated ReadingType, in currency specified in TariffProfile.  # noqa e114
     startValue: int = element()  # The lowest level of consumption that defines the starting point of this consumption
     # step or block. Thresholds start at zero for each billing period. # noqa e114
 
 
 class TariffProfileListResponse(SepList, tag="TariffProfileList"):
-    TariffProfile: list[TariffProfileResponse] = element()
+    TariffProfile: Optional[list[TariffProfileResponse]] = element(default=None)
 
 
 class RateComponentListResponse(SubscribableList, tag="RateComponentList"):
     """Worth noting that the standard describes RateComponentList as a standard list but it's an envoy
     specific extension to support subscriptions via SubscribableList"""
 
-    RateComponent: list[RateComponentResponse] = element()
+    RateComponent: Optional[list[RateComponentResponse]] = element(default=None)
 
 
 class TimeTariffIntervalListResponse(SepList, tag="TimeTariffIntervalList"):
-    TimeTariffInterval: list[TimeTariffIntervalResponse] = element()
+    TimeTariffInterval: Optional[list[TimeTariffIntervalResponse]] = element(default=None)
 
 
 class ConsumptionTariffIntervalListResponse(SepList, tag="ConsumptionTariffIntervalList"):
-    ConsumptionTariffInterval: list[ConsumptionTariffIntervalResponse] = element()
+    ConsumptionTariffInterval: Optional[list[ConsumptionTariffIntervalResponse]] = element(default=None)

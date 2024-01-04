@@ -188,7 +188,7 @@ class UnitValueType(base.BaseXmlModelWithNS):
 
 
 class PollRateType(base.BaseXmlModelWithNS):
-    pollRate: Optional[int] = attr()
+    pollRate: Optional[int] = attr(default=None)
 
 
 DEFAULT_POLLRATE = PollRateType(pollRate=900)

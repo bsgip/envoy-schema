@@ -16,6 +16,6 @@ class TimeResponse(Resource, tag="Time"):
     dstEndTime: TimeType = element()
     dstOffset: TimeOffsetType = element()
     dstStartTime: TimeType = element()
-    localTime: Optional[TimeType] = element()
+    localTime: Optional[TimeType] = element(default=None)
     quality: TimeQualityType = element()
     tzOffset: TimeOffsetType = element()

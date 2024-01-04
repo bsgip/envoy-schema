@@ -1,11 +1,12 @@
 from typing import Optional
 
 import pytest
+from pydantic import AnyUrl
 from pydantic_xml import element
 
 from envoy_schema.server.schema.sep2.base import BaseXmlModelWithNS
 from envoy_schema.server.schema.sep2.identification import Resource
-from envoy_schema.server.schema.sep2.primitive_types import UriFullyQualified, UriWithoutHost
+from envoy_schema.server.schema.sep2.primitive_types import HttpUri, LocalAbsoluteUri
 from envoy_schema.server.schema.sep2.pub_sub import (
     ConditionAttributeIdentifier,
     Notification,
@@ -24,12 +25,10 @@ def test_subscription():
     parsed_sub: Subscription = Subscription.from_xml(raw_xml)
 
     assert parsed_sub.subscribedResource == "/upt/0/mr/4/r"
-    assert type(parsed_sub.subscribedResource) == UriWithoutHost
     assert parsed_sub.encoding == SubscriptionEncoding.XML
     assert parsed_sub.level == "+S1"
     assert parsed_sub.limit == 1
     assert parsed_sub.notificationURI == "http://example.com:8001/note"
-    assert type(parsed_sub.notificationURI) == UriFullyQualified
     assert parsed_sub.condition is None
 
 
@@ -52,12 +51,10 @@ def test_subscription_conditions():
     parsed_sub: Subscription = Subscription.from_xml(raw_xml)
 
     assert parsed_sub.subscribedResource == "/upt/0/mr/4/r"
-    assert type(parsed_sub.subscribedResource) == UriWithoutHost
     assert parsed_sub.encoding == SubscriptionEncoding.XML
     assert parsed_sub.level == "+S1"
     assert parsed_sub.limit == 1
     assert parsed_sub.notificationURI == "http://example.com:8001/note"
-    assert type(parsed_sub.notificationURI) == UriFullyQualified
     assert parsed_sub.condition is not None
     assert parsed_sub.condition.lowerThreshold == 100
     assert parsed_sub.condition.upperThreshold == 200
@@ -76,7 +73,6 @@ def test_notification():
     assert type(parsed_notif.resource) == Resource
     assert parsed_notif.status == NotificationStatus.DEFAULT
     assert parsed_notif.subscriptionURI == "/edev/8/sub/5"
-    assert type(parsed_notif.subscriptionURI) == UriWithoutHost
 
 
 def test_notification_encode_resource_DERControlListResponse():
@@ -113,7 +109,7 @@ def test_notification_encode_resource_DERControlListResponse():
     }
 
     # Quick sanity check on the raw XML
-    updated_xml = Notification.validate(notif_dict).to_xml(skip_empty=True).decode()
+    updated_xml = Notification.model_validate(notif_dict).to_xml(skip_empty=True).decode()
     assert 'xsi:type="DERControlList"' in updated_xml
     assert 'href="/my/list"' in updated_xml
     assert "<value>100</value>" in updated_xml
@@ -156,7 +152,7 @@ def test_notification_encode_resource_DefaultDERControl():
     }
 
     # Quick sanity check on the raw XML
-    updated_xml = Notification.validate(notif_dict).to_xml(skip_empty=True).decode()
+    updated_xml = Notification.model_validate(notif_dict).to_xml(skip_empty=True).decode()
     assert 'xsi:type="DefaultDERControl"' in updated_xml
     assert "<value>100</value>" in updated_xml
 
@@ -200,7 +196,7 @@ def test_notification_encode_resource_TimeTariffIntervalListResponse():
     }
 
     # Quick sanity check on the raw XML
-    updated_xml = Notification.validate(notif_dict).to_xml(skip_empty=True).decode()
+    updated_xml = Notification.model_validate(notif_dict).to_xml(skip_empty=True).decode()
     assert 'xsi:type="TimeTariffIntervalList"' in updated_xml
     assert 'href="/my/list"' in updated_xml
     assert 'href="/my/price/at/time/554433"' in updated_xml
@@ -240,7 +236,7 @@ def test_notification_encode_resource_EndDeviceListResponse():
     }
 
     # Quick sanity check on the raw XML
-    updated_xml = Notification.validate(notif_dict).to_xml(skip_empty=True).decode()
+    updated_xml = Notification.model_validate(notif_dict).to_xml(skip_empty=True).decode()
     assert 'xsi:type="EndDeviceListResponse"' in updated_xml
     assert 'href="/href/cp"' in updated_xml
 

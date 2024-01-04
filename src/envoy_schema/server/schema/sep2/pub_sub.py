@@ -8,8 +8,9 @@ from envoy_schema.server.schema.sep2.der import DefaultDERControl, DERControlLis
 from envoy_schema.server.schema.sep2.end_device import EndDeviceListResponse
 from envoy_schema.server.schema.sep2.identification import List as Sep2List
 from envoy_schema.server.schema.sep2.identification import Resource
+from envoy_schema.server.schema.sep2.metering import Reading
 from envoy_schema.server.schema.sep2.pricing import TimeTariffIntervalListResponse
-from envoy_schema.server.schema.sep2.primitive_types import UriFullyQualified, UriWithoutHost
+from envoy_schema.server.schema.sep2.primitive_types import HttpUri, LocalAbsoluteUri
 
 
 class NotificationStatus(IntEnum):
@@ -40,7 +41,7 @@ class SubscriptionBase(Resource):
     The actual resources may be passed in the Notification by specifying a specific xsi:type for the Resource and
     passing the full representation."""
 
-    subscribedResource: UriWithoutHost = element()  # The resource for which the subscription applies.
+    subscribedResource: LocalAbsoluteUri = element()  # The resource for which the subscription applies.
 
 
 class Notification(SubscriptionBase):
@@ -48,9 +49,9 @@ class Notification(SubscriptionBase):
     The actual resources may be passed in the Notification by specifying a specific xsi:type for the Resource and
     passing the full representation."""
 
-    newResourceURI: Optional[UriWithoutHost] = element()  # The new location of the resource if moved.
+    newResourceURI: Optional[LocalAbsoluteUri] = element(default=None)  # The new location of the resource if moved.
     status: NotificationStatus = element()
-    subscriptionURI: UriWithoutHost = element()  # Subscription from which this notification was triggered.
+    subscriptionURI: LocalAbsoluteUri = element()  # Subscription from which this notification was triggered.
 
     # A resource is an addressable unit of information, either a collection (List) or instance of an object
     # (identifiedObject, or simply, Resource)
@@ -59,9 +60,14 @@ class Notification(SubscriptionBase):
     #
     resource: Optional[
         Union[
-            TimeTariffIntervalListResponse, DERControlListResponse, DefaultDERControl, EndDeviceListResponse, Resource
+            TimeTariffIntervalListResponse,
+            DERControlListResponse,
+            DefaultDERControl,
+            EndDeviceListResponse,
+            Reading,
+            Resource,
         ]
-    ] = element(tag="Resource")
+    ] = element(tag="Resource", default=None)
 
 
 class Condition(BaseXmlModelWithNS):
@@ -79,13 +85,13 @@ class Subscription(SubscriptionBase):
     level: str = element()  # Contains the preferred schema and extensibility level indication such as "+S1"
     limit: int = element()  # This element is used to indicate the maximum number of list items that should be included
     # in a notification when the subscribed resource changes
-    notificationURI: UriFullyQualified = element()  # The resource to which to post the notifications
+    notificationURI: HttpUri = element()  # The resource to which to post the notifications
 
-    condition: Optional[Condition] = element(tag="Condition")
+    condition: Optional[Condition] = element(tag="Condition", default=None)
 
 
 class SubscriptionListResponse(Sep2List, tag="SubscriptionList"):
-    pollRate: Optional[int] = attr()  # The default polling rate for this function set in seconds
+    pollRate: Optional[int] = attr(default=None)  # The default polling rate for this function set in seconds
     subscriptions: list[Subscription] = element(tag="Subscription")
 
 

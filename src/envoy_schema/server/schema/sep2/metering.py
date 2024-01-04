@@ -11,14 +11,14 @@ class ReadingBase(Resource):
     qualityFlags: Optional[primitive_types.HexBinary16] = element(
         default=primitive_types.HexBinary16("00")
     )  # string (hex encoded) form that maps to QualityFlagsType
-    timePeriod: Optional[types.DateTimeIntervalType] = element()
+    timePeriod: Optional[types.DateTimeIntervalType] = element(default=None)
     touTier: Optional[types.TOUType] = element(default=0)
-    value: Optional[int] = element()
+    value: Optional[int] = element(default=None)
 
 
 class Reading(ReadingBase):
-    subscribable: Optional[types.SubscribableType] = attr()
-    localID: Optional[primitive_types.HexBinary16] = element()
+    subscribable: Optional[types.SubscribableType] = attr(default=None)
+    localID: Optional[primitive_types.HexBinary16] = element(default=None)
 
 
 class ReadingSetBase(IdentifiedObject):
@@ -29,23 +29,23 @@ class ReadingType(Resource):
     """Type of data conveyed by a specific Reading. See IEC 61968 Part 9 Annex C for full definitions
     of these values."""
 
-    accumulationBehaviour: Optional[types.AccumulationBehaviourType] = element()
-    calorificValue: Optional[types.UnitValueType] = element()
-    commodity: Optional[types.CommodityType] = element()
-    conversionFactor: Optional[types.UnitValueType] = element()
-    dataQualifier: Optional[types.DataQualifierType] = element()
-    flowDirection: Optional[types.FlowDirectionType] = element()
-    intervalLength: Optional[int] = element()
-    kind: Optional[types.KindType] = element()
-    maxNumberOfIntervals: Optional[int] = element()
-    numberOfConsumptionBlocks: Optional[int] = element()
-    numberOfTouTiers: Optional[int] = element()
-    phase: Optional[types.PhaseCode] = element()
-    powerOfTenMultiplier: Optional[int] = element()
-    subIntervalLength: Optional[int] = element()
-    supplyLimit: Optional[int] = element()
-    tieredConsumptionBlocks: Optional[bool] = element()
-    uom: Optional[types.UomType] = element()
+    accumulationBehaviour: Optional[types.AccumulationBehaviourType] = element(default=None)
+    calorificValue: Optional[types.UnitValueType] = element(default=None)
+    commodity: Optional[types.CommodityType] = element(default=None)
+    conversionFactor: Optional[types.UnitValueType] = element(default=None)
+    dataQualifier: Optional[types.DataQualifierType] = element(default=None)
+    flowDirection: Optional[types.FlowDirectionType] = element(default=None)
+    intervalLength: Optional[int] = element(default=None)
+    kind: Optional[types.KindType] = element(default=None)
+    maxNumberOfIntervals: Optional[int] = element(default=None)
+    numberOfConsumptionBlocks: Optional[int] = element(default=None)
+    numberOfTouTiers: Optional[int] = element(default=None)
+    phase: Optional[types.PhaseCode] = element(default=None)
+    powerOfTenMultiplier: Optional[int] = element(default=None)
+    subIntervalLength: Optional[int] = element(default=None)
+    supplyLimit: Optional[int] = element(default=None)
+    tieredConsumptionBlocks: Optional[bool] = element(default=None)
+    uom: Optional[types.UomType] = element(default=None)
 
 
 class UsagePointBase(IdentifiedObject):
