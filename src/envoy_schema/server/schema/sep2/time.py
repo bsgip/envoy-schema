@@ -1,5 +1,6 @@
 """Time resource related
 """
+
 from typing import Optional
 
 from pydantic_xml import attr, element
