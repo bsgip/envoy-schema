@@ -4,6 +4,12 @@ from pydantic import AfterValidator
 from typing_extensions import Annotated
 
 
+def validate_String6(v: str):
+    if len(v) > 6:
+        raise ValueError("String6 max length of 6.")
+    return v
+
+
 def validate_HexBinary8(v: str):
     if len(v) > 2:
         raise ValueError("HexBinary8 max length of 2.")
@@ -81,6 +87,8 @@ def validate_HttpUri(v: str):
 
     return v
 
+
+String6 = Annotated[str, AfterValidator(validate_String6)]
 
 HexBinary8 = Annotated[str, AfterValidator(validate_HexBinary8)]
 HexBinary16 = Annotated[str, AfterValidator(validate_HexBinary16)]

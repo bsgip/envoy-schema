@@ -1,3 +1,4 @@
+from enum import IntEnum, IntFlag, auto
 from typing import Optional
 
 from pydantic_xml import element
@@ -13,8 +14,125 @@ from envoy_schema.server.schema.sep2.der_control_types import (
 from envoy_schema.server.schema.sep2.event import RandomizableEvent
 from envoy_schema.server.schema.sep2.identification import IdentifiedObject, Link
 from envoy_schema.server.schema.sep2.identification import List as Sep2List
-from envoy_schema.server.schema.sep2.identification import ListLink, SubscribableIdentifiedObject, SubscribableList
+from envoy_schema.server.schema.sep2.identification import (
+    ListLink,
+    SubscribableIdentifiedObject,
+    SubscribableList,
+    SubscribableResource,
+)
 from envoy_schema.server.schema.sep2.pricing import PrimacyType
+
+
+class DERType(IntEnum):
+    NOT_APPLICABLE = 0
+    VIRTUAL_OR_MIXED = 1
+    RECIPROCATING_ENGINE = 2
+    FUEL_CELL = 3
+    PHOTOVOLTAIC_SYSTEM = 4
+    COMBINED_HEAT_POWER = 5
+    OTHER_GENERATION_SYSTEM = 6
+    OTHER_STORAGE_SYSTEM = 80
+    ELECTRIC_VEHICLE = 81
+    EVSE = 82
+    COMBINED_PV_AND_STORAGE = 83
+
+
+class DERControlType(IntFlag):
+    """Series of bit flags: Control modes supported by the DER"""
+
+    CHARGE_MODE = auto()
+    DISCHARGE_MODE = auto()
+    OP_MOD_CONNECT = auto()  # Connect/Disconnect - implies galvanic isolation
+    OP_MOD_ENERGIZE = auto()  # Energize/De-Energize
+    OP_MOD_FIXED_PF_ABSORB_W = auto()  # Fixed Power Factor Setpoint when absorbing active power
+    OP_MOD_FIXED_PF_INJECT_W = auto()  # Fixed Power Factor Setpoint when injecting active power
+    OP_MOD_FIXED_VAR = auto()  # Reactive power setpoint
+    OP_MOD_FIXED_W = auto()  # Charge / Discharge Setpoint
+    OP_MOD_FREQ_DROOP = auto()  # Frequency-Watt Parameterized Mode
+    OP_MOD_FREQ_WATT = auto()  # Frequency-Watt Curve Mode
+    OP_MOD_HFRT_MAY_TRIP = auto()  # High Frequency Ride Through, May Trip Mode
+    OP_MOD_HFRT_MUST_TRIP = auto()  # High Frequency Ride Through, Must Trip Mode
+    OP_MOD_HVRT_MAY_TRIP = auto()  # High Voltage Ride Through, May Trip Mode
+    OP_MOD_HVRT_MOMENTARY_CESSATION = auto()  # High Frequency Ride Through, Momentary cessation Mode
+    OP_MOD_HVRT_MUST_TRIP = auto()  # High Voltage Ride Through, Must Trip Mode
+    OP_MOD_LFRT_MAY_TRIP = auto()  # Low Frequency Ride Through, May Trip Mode
+    OP_MOD_LFRT_MUST_TRIP = auto()  # Low Frequency Ride Through, Must Trip Mode
+    OP_MOD_LVRT_MAY_TRIP = auto()  # Low Voltage Ride Through, May Trip Mode
+    OP_MOD_LVRT_MOMENTARY_CESSATION = auto()  # Low Frequency Ride Through, Momentary cessation Mode
+    OP_MOD_LVRT_MUST_TRIP = auto()  # Low Voltage Ride Through, Must Trip Mode
+    OP_MOD_MAX_LIM_W = auto()  # Maximum Active Power
+    OP_MOD_TARGET_VAR = auto()  # Target Reactive Power
+    OP_MOD_TARGET_W = auto()  # Target Active Power
+    OP_MOD_VOLT_VAR = auto()  # Volt-Var Mode
+    OP_MOD_VOLT_WATT = auto()  # Volt-Watt Mode
+    OP_MOD_WATT_PF = auto()  # Watt-PowerFactor Mode
+    OP_MOD_WATT_VAR = auto()  # Watt-Var Mode
+
+
+class InverterStatusType(IntEnum):
+    """DER InverterStatus value"""
+
+    NOT_APPLICABLE = 0
+    OFF = 1
+    SLEEPING = 2  # sleeping (auto-shutdown) or DER is at low output power/voltage
+    STARTING = 3  # starting up or ON but not producing power
+    TRACKING_MPPT_POWER_POINT = 4  # tracking MPPT power point
+    FORCED_POWER_REDUCTION = 5  # forced power reduction/derating
+    SHUTTING_DOWN = 6
+    ONE_OR_MORE_FAULTS = 7
+    STANDBY = 8  # standby (service on unit) - DER may be at high output voltage/power
+    TEST_MODE = 9
+    MANUFACTURER_STATUS = 10  # as defined in manufacturer status
+
+
+class OperationalModeStatusType(IntEnum):
+    """DER OperationalModeStatus value"""
+
+    NOT_APPLICABLE = 0
+    OFF = 1
+    OPERATIONAL_MODEL = 2
+    TEST_MODE = 3
+
+
+class StorageModeStatusType(IntEnum):
+    """DER StorageModeStatus value"""
+
+    STORAGE_CHARGING = 0
+    STORAGE_DISCHARGING = 1
+    STORAGE_HOLDING = 2
+
+
+class LocalControlModeStatusType(IntEnum):
+    """DER LocalControlModeStatus/value"""
+
+    LOCAL_CONTROL = 0
+    REMOTE_CONTROL = 1
+
+
+class ConnectStatusType(IntFlag):
+    """Bit map of DER ConnectStatus values"""
+
+    CONNECTED = auto()
+    AVAILABLE = auto()
+    OPERATING = auto()
+    TEST = auto()
+    FAULT_ERROR = auto()
+
+
+class AlarmStatusType(IntFlag):
+    """Bitmap indicating the status of DER alarms (see DER LogEvents for more details)."""
+
+    DER_FAULT_OVER_CURRENT = auto()
+    DER_FAULT_OVER_VOLTAGE = auto()
+    DER_FAULT_UNDER_VOLTAGE = auto()
+    DER_FAULT_OVER_FREQUENCY = auto()
+    DER_FAULT_UNDER_FREQUENCY = auto()
+    DER_FAULT_VOLTAGE_IMBALANCE = auto()
+    DER_FAULT_CURRENT_IMBALANCE = auto()
+    DER_FAULT_EMERGENCY_LOCAL = auto()
+    DER_FAULT_EMERGENCY_REMOTE = auto()
+    DER_FAULT_LOW_POWER_INPUT = auto()
+    DER_FAULT_PHASE_ROTATION = auto()
 
 
 class DERControlBase(BaseXmlModelWithNS):
@@ -144,3 +262,65 @@ class EndDeviceControlResponse(RandomizableEvent, tag="EndDeviceControl"):
     drProgramMandatory: bool = element()
     loadShiftForward: bool = element()
     overrideDuration: Optional[int] = element(default=None)
+
+
+class DER(SubscribableResource):
+    """sep2 DER: Contains links to DER resources."""
+
+    AssociatedUsagePointLink: Optional[Link]  # If present, this is the submeter that monitors the DER output.
+    AssociatedDERProgramListLink: Optional[ListLink]  # Link to List of DERPrograms having the DERControls for this DER
+    CurrentDERProgramLink: Optional[Link]  # If set, this is the DERProgram containing the currently active DERControl
+    DERStatusLink: Optional[Link]  # SHALL contain a Link to an instance of DERStatus.
+    DERCapabilityLink: Optional[Link]  # SHALL contain a Link to an instance of DERCapability.
+    DERSettingsLink: Optional[Link]  # SHALL contain a Link to an instance of DERSettings.
+    DERAvailabilityLink: Optional[Link]  # SHALL contain a Link to an instance of DERAvailability.
+
+
+class ConnectStatusTypeValue(BaseXmlModelWithNS):
+    dateTime: types.TimeType = element()  # The date and time at which the state applied.
+    value: primitive_types.HexBinary8 = element()  # Should have bits set from ConnectStatusType
+
+
+class InverterStatusTypeValue(BaseXmlModelWithNS):
+    dateTime: types.TimeType = element()  # The date and time at which the state applied.
+    value: InverterStatusType = element()
+
+
+class LocalControlModeStatusTypeValue(BaseXmlModelWithNS):
+    dateTime: types.TimeType = element()  # The date and time at which the state applied.
+    value: LocalControlModeStatusType = element()
+
+
+class OperationalModeStatusTypeValue(BaseXmlModelWithNS):
+    dateTime: types.TimeType = element()  # The date and time at which the state applied.
+    value: OperationalModeStatusType = element()
+
+
+class StorageModeStatusTypeValue(BaseXmlModelWithNS):
+    dateTime: types.TimeType = element()  # The date and time at which the state applied.
+    value: StorageModeStatusType = element()
+
+
+class ManufacturerStatusValue(BaseXmlModelWithNS):
+    dateTime: types.TimeType = element()  # The date and time at which the state applied.
+    value: primitive_types.String6  # The manufacturer status value
+
+
+class StateOfChargeStatusValue(BaseXmlModelWithNS):
+    dateTime: types.TimeType = element()  # The date and time at which the state applied.
+    value: types.PerCent = element()
+
+
+class DERStatus(SubscribableResource):
+    """DER status information"""
+
+    alarmStatus: Optional[primitive_types.HexBinary32] = element(default=None)  # AlarmStatusType encoded HexBinary str
+    genConnectStatus: Optional[ConnectStatusTypeValue] = element(default=None)  # Connection status for generator
+    inverterStatus: Optional[InverterStatusTypeValue] = element(default=None)
+    localControlModeStatus: Optional[LocalControlModeStatusTypeValue] = element(default=None)
+    manufacturerStatus: Optional[ManufacturerStatusValue] = element(default=None)
+    operationalModeStatus: Optional[OperationalModeStatusTypeValue] = element(default=None)
+    readingTime: types.TimeType = element()
+    stateOfChargeStatus: Optional[StateOfChargeStatusValue] = element(default=None)
+    storageModeStatus: Optional[StorageModeStatusTypeValue] = element(default=None)
+    storConnectStatus: Optional[ConnectStatusTypeValue] = element(default=None)  # Connection status for storage
