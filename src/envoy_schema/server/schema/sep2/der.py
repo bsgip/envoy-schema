@@ -7,12 +7,20 @@ from envoy_schema.server.schema.sep2 import primitive_types, types
 from envoy_schema.server.schema.sep2.base import BaseXmlModelWithNS
 from envoy_schema.server.schema.sep2.der_control_types import (
     ActivePower,
+    AmpereHour,
+    ApparentPower,
+    CurrentRMS,
     FixedVar,
+    PowerFactor,
     PowerFactorWithExcitation,
     ReactivePower,
+    ReactiveSusceptance,
+    VoltageRMS,
+    WattHour,
 )
 from envoy_schema.server.schema.sep2.event import RandomizableEvent
 from envoy_schema.server.schema.sep2.identification import IdentifiedObject, Link
+from envoy_schema.server.schema.sep2.identification import List
 from envoy_schema.server.schema.sep2.identification import List as Sep2List
 from envoy_schema.server.schema.sep2.identification import (
     ListLink,
@@ -133,6 +141,23 @@ class AlarmStatusType(IntFlag):
     DER_FAULT_EMERGENCY_REMOTE = auto()
     DER_FAULT_LOW_POWER_INPUT = auto()
     DER_FAULT_PHASE_ROTATION = auto()
+
+
+class AbnormalCategoryType(IntEnum):
+    """Abnormal operating performance category as defined by IEEE 1547-2018. One of:"""
+
+    NOT_SPECIFIED = 0
+    CATEGORY_1 = 1
+    CATEGORY_2 = 2
+    CATEGORY_3 = 3
+
+
+class NormalCategoryType(IntEnum):
+    """Normal operating performance category as defined by IEEE 1547-2018."""
+
+    NOT_SPECIFIED = 0
+    CATEGORY_A = 1
+    CATEGORY_B = 2
 
 
 class DERControlBase(BaseXmlModelWithNS):
@@ -324,3 +349,165 @@ class DERStatus(SubscribableResource):
     stateOfChargeStatus: Optional[StateOfChargeStatusValue] = element(default=None)
     storageModeStatus: Optional[StorageModeStatusTypeValue] = element(default=None)
     storConnectStatus: Optional[ConnectStatusTypeValue] = element(default=None)  # Connection status for storage
+
+
+class DERAvailability(SubscribableResource):
+    """Indicates current reserve generation status"""
+
+    availabilityDuration: Optional[int] = element(
+        default=None
+    )  # Indicates number of seconds the DER will be able to deliver active power at the reservePercent level.
+    maxChargeDuration: Optional[int] = element(
+        default=None
+    )  # Indicates number of seconds the DER will be able to receive active power at the reserveChargePercent level.
+    readingTime: types.TimeType = element()  # The timestamp when the DER availability was last updated.
+    reserverChargePercent: Optional[types.PerCent] = element(
+        default=None
+    )  # Percent of continuous received active power (%setMaxChargeRateW) that is estimated to be available in reserve.
+    reservePercent: Optional[types.PerCent] = element(
+        default=None
+    )  # Percent of continuous delivered active power (%setMaxW) that is estimated to be available in reserve.
+    statVarAvail: Optional[ReactivePower] = element(
+        default=None
+    )  # Estimated reserve reactive power, in var.  Represents the lesser of received or delivered reactive power.
+    statWAvail: Optional[ActivePower] = element(default=None)  # Estimated reserve active power, in watts.
+
+
+class DERCapability(SubscribableResource):
+    """Distributed energy resource type and nameplate ratings."""
+
+    modesSupported: primitive_types.HexBinary32 = element()  # HexBinary encoded DERControlType flags
+    rtgAbnormalCategory: Optional[AbnormalCategoryType] = element(default=None)  #
+    rtgMaxA: Optional[CurrentRMS] = element(default=None)  # Maximum continuous AC current capability of the DER
+    rtgMaxAh: Optional[AmpereHour] = element(default=None)  # Usable energy storage capacity of the DER, in AmpHours.
+    rtgMaxChargeRateVA: Optional[ApparentPower] = element(
+        default=None
+    )  # Maximum apparent power charge rating in Volt-Amperes. May differ from the maximum apparent power rating.
+    rtgMaxChargeRateW: Optional[ActivePower] = element(
+        default=None
+    )  # Maximum rate of energy transfer received by the storage DER, in Watts.
+    rtgMaxDischargeRateVA: Optional[ApparentPower] = element(
+        default=None
+    )  # Maximum apparent power discharge rating in Volt-Amperes. May differ from the maximum apparent power rating.
+    rtgMaxDischargeRateW: Optional[ActivePower] = element(
+        default=None
+    )  # Maximum rate of energy transfer delivered by the storage DER, in Watts. Required for DERType == 83
+    rtgMaxV: Optional[VoltageRMS] = element(default=None)  # AC voltage maximum rating.
+    rtgMaxVA: Optional[ApparentPower] = element(default=None)  # Maximum cont' apparent power output capability, in VA.
+    rtgMaxVar: Optional[ReactivePower] = element(default=None)  # Max cont' reactive power delivered by the DER (var)
+    rtgMaxVarNeg: Optional[ReactivePower] = element(
+        default=None
+    )  # Maximum continuous reactive power received by the DER, in var. If absent, defaults to negative rtgMaxVar.
+    rtgMaxW: ActivePower = (
+        element()
+    )  # Max cont' AP output capability of the DER, in watts. Combined gen plus storage output if DERType == 83.
+    rtgMaxWh: Optional[WattHour] = element(default=None)  # Maximum energy storage capacity of the DER, in WattHours.
+    rtgMinPFOverExcited: Optional[PowerFactor] = element(
+        default=None
+    )  # Minimum Power Factor displacement capability of the DER when injecting reactive power (over-excited)
+    # SHALL be a positive value between 0.0 (typically > 0.7) and 1.0. If absent, defaults to unity.
+    rtgMinPFUnderExcited: Optional[PowerFactor] = element(
+        default=None
+    )  # Minimum Power Factor displacement capability of the DER when absorbing reactive power (under-excited);
+    # SHALL be a positive value between 0.0 (typically > 0.7) and 0.9999.  If absent, defaults to rtgMinPFOverExcited.
+    rtgMinV: Optional[VoltageRMS] = element(default=None)  # AC voltage minimum rating.
+    rtgNormalCategory: Optional[NormalCategoryType] = element(default=None)
+    rtgOverExcitedPF: Optional[PowerFactor] = element(default=None)  # Specified over-excited power factor.
+    rtgOverExcitedW: Optional[ActivePower] = element(
+        default=None
+    )  # AP rating in Watts at specified over-excited PF (rtgOverExcitedPF). If set rtgOverExcitedPF SHALL be present.
+    rtgReactiveSusceptance: Optional[ReactiveSusceptance] = element(
+        default=None
+    )  # Reactive susceptance that remains connected to the Area EPS in the cease to energize and trip state.
+    rtgUnderExcitedPF: Optional[PowerFactor] = element(default=None)  # Specified under-excited power factor.
+    rtgUnderExcitedW: Optional[ActivePower] = element(default=None)  # Specified under-excited power factor.
+
+    rtgVNom: Optional[VoltageRMS] = element(default=None)  # AC voltage nominal rating.
+    type_: DERType = element(tag="type")  # Type of DER; see DERType object
+
+
+class DERSettings(SubscribableResource):
+    """Distributed energy resource settings"""
+
+    modesEnabled: Optional[primitive_types.HexBinary32] = element(default=None)  # Hex encoded DERControlType flags
+    setESDelay: Optional[int] = element(default=None)  # Enter service delay, in hundredths of a second.
+    setESHighFreq: Optional[int] = element(default=None)  # Enter service frequency high. Specified in hundredths of Hz.
+    setESHighVolt: Optional[int] = element(
+        default=None
+    )  # Enter service voltage high. Specified as an effective percent voltage in hundredths of a percent.
+    setESLowFreq: Optional[int] = element(default=None)  # Enter service frequency low. Specified in hundredths of Hz.
+    setESLowVolt: Optional[int] = element(
+        default=None
+    )  # Enter service voltage low. Specified as an effective percent voltage in hundredths of a percent.
+    setESRampTms: Optional[int] = element(default=None)  # Enter service ramp time, in hundredths of a second.
+    setESRandomDelay: Optional[int] = element(
+        default=None
+    )  # Enter service randomized delay, in hundredths of a second.
+    setGradW: int = (
+        element()
+    )  # Set default rate of change (ramp rate) of active power output due to command or internal action,
+    # defined in %setWMax / second.  Resolution is in hundredths of a percent/second.
+    # A value of 0 means there is no limit. Interpreted as a percentage change in output capability limit
+    # per second when used as a default ramp rate.
+    setMaxA: Optional[CurrentRMS] = element(default=None)  # AC current maximum. Maximum AC current in RMS Amperes.
+    setMaxAh: Optional[AmpereHour] = element(
+        default=None
+    )  # Max usable energy storage capacity of the DER, in AmpHours. This may be different from physical capability.
+    setMaxChargeRateVA: Optional[ApparentPower] = element(
+        default=None
+    )  # Apparent power charge maximum. Maximum apparent power the DER can absorb from the grid in Volt-Amperes.
+    # May differ from the apparent power maximum (setMaxVA).
+    setMaxChargeRateW: Optional[ActivePower] = element(
+        default=None
+    )  # Maximum rate of energy transfer received by the storage device, in Watts. Defaults to rtgMaxChargeRateW.
+    setMaxDischargeRateVA: Optional[ApparentPower] = element(
+        default=None
+    )  # Apparent power discharge maximum. Maximum apparent power the DER can deliver to the grid in Volt-Amperes.
+    # May differ from the apparent power maximum (setMaxVA).
+    setMaxDischargeRateW: Optional[ActivePower] = element(
+        default=None
+    )  # Maximum rate of energy transfer delivered by the storage device, in Watts. Defaults to rtgMaxDischargeRateW.
+    setMaxV: Optional[VoltageRMS] = element(default=None)  # AC voltage maximum setting.
+    setMaxVar: Optional[ReactivePower] = element(
+        default=None
+    )  # Set limit for maximum apparent power capability of the DER (in VA). Defaults to rtgMaxVA.
+    setMaxVarNeg: Optional[ReactivePower] = element(
+        default=None
+    )  # Set limit for maximum reactive power received by the DER (in var).
+    # If present, SHALL be a negative value >= rtgMaxVarNeg (default). If absent, defaults to negative setMaxVar.
+    setMaxW: ActivePower = (
+        element()
+    )  # Set limit for maximum active power capability of the DER (in W). Defaults to rtgMaxW.
+    setMaxWh: Optional[WattHour] = element(
+        default=None
+    )  # Maximum energy storage capacity of the DER, in WattHours. Note: this may be different from physical capability.
+    setMinPFOverExcited: Optional[PowerFactor] = element(
+        default=None
+    )  # Set minimum Power Factor displacement limit of the DER when injecting reactive power (over-excited);
+    # SHALL be a positive value between 0.0 (typically > 0.7) and 1.0.  SHALL be >= rtgMinPFOverExcited (default).
+    setMinPFUnderExcited: Optional[PowerFactor] = element(
+        default=None
+    )  # Set minimum Power Factor displacement limit of the DER when absorbing reactive power (under-excited);
+    # SHALL be a positive value between 0.0 (typically > 0.7) and 0.9999.
+    # If present, SHALL be >= rtgMinPFUnderExcited (default).  If absent, defaults to setMinPFOverExcited.
+    setMinV: Optional[VoltageRMS] = element(default=None)  # AC voltage min setting.
+    setSoftGradW: Optional[int] = element(
+        default=None
+    )  # Set soft-start rate of change (soft-start ramp rate) of active power output due to command or internal action
+    # defined in %setWMax / second.  Resolution is in hundredths of a percent/second.
+    # 0 means there is no limit. Interpreted as a % change in output capability limit/second when used as a ramp rate.
+    setVNom: Optional[VoltageRMS] = element(default=None)  # AC voltage nominal setting.
+    setVRef: Optional[VoltageRMS] = element(
+        default=None
+    )  # The nominal AC voltage (RMS) at the utility's point of common coupling.
+    setVRefOfs: Optional[VoltageRMS] = element(
+        default=None
+    )  # The nominal AC voltage (RMS) offset between the DER's electrical CP and the utility's point of common coupling.
+    updatedTime: types.TimeType = element()  # Specifies the time at which the DER information was last updated.
+
+
+class DERListResponse(List, tag="DERList"):
+    pollRate: Optional[int] = element(default=None)  # The default polling rate for this function set (this resource and
+    # all resources below), in seconds. If not specified, a default of 900 seconds (15 minutes) is used.
+    # It is RECOMMENDED a client poll the resources of this function set every pollRate seconds.
+    DER_: Optional[list[DER]] = element(default=None, tag="DER")
