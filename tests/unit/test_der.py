@@ -1,3 +1,6 @@
+import pytest
+from pydantic_core import ValidationError
+
 from envoy_schema.server.schema.sep2.der import (
     DemandResponseProgramListResponse,
     DERAvailability,
@@ -57,3 +60,12 @@ def test_DERAvailability_roundtrip():
     round_tripped = DERAvailability.from_xml(original.to_xml(skip_empty=True))
 
     assert original.readingTime == round_tripped.readingTime
+
+
+def test_DERStatus_long_manufacturer():
+    max_len = DERStatus.model_validate({"readingTime": 789, "manufacturerStatus": {"dateTime": 123, "value": "maxlen"}})
+    with pytest.raises(ValidationError):
+        DERStatus.model_validate({"readingTime": 789, "manufacturerStatus": {"dateTime": 123, "value": "toolong"}})
+
+    assert max_len.manufacturerStatus.dateTime == 123
+    assert max_len.manufacturerStatus.value == "maxlen"
