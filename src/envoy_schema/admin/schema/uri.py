@@ -1,5 +1,7 @@
 """Defines all the URIs"""
 
+AggregatorListUri = "/aggregator"
+AggregatorUri = "/aggregator/{aggregator_id}"
 TariffCreateUri = "/tariff"
 TariffUpdateUri = "/tariff/{tariff_id}"
 TariffGeneratedRateCreateUri = "/tariff_generated_rate"
