@@ -1,6 +1,6 @@
-<Notification xmlns="urn:ieee:std:2030.5:ns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:csipaus="http://csipaus.org/ns">
+<Notification xmlns="urn:ieee:std:2030.5:ns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:csipaus="https://csipaus.org/ns">
     <subscribedResource>/upt/0/mr/4/r</subscribedResource>
-    <Resource xsi:type="DERControlList" all="1" results="1" href="/my/list">        
+    <Resource xsi:type="DERControlList" all="1" results="1" href="/my/list">
         <DERControl>
             <creationTime>123</creationTime>
             <mRID>abc</mRID>
