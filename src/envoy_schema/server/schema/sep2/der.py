@@ -1,7 +1,7 @@
 from enum import IntEnum, IntFlag, auto
 from typing import Optional
 
-from pydantic_xml import element
+from pydantic_xml import attr, element
 
 from envoy_schema.server.schema.sep2 import primitive_types, types
 from envoy_schema.server.schema.sep2.base import BaseXmlModelWithNS
@@ -261,16 +261,16 @@ class DERControlListResponse(SubscribableList, tag="DERControlList"):
 class DERProgramResponse(SubscribableIdentifiedObject, tag="DERProgram"):
     """sep2 DERProgram"""
 
-    primacy: PrimacyType = element()
-    DefaultDERControlLink: Optional[Link] = element(default=None)
     ActiveDERControlListLink: Optional[ListLink] = element(default=None)
+    DefaultDERControlLink: Optional[Link] = element(default=None)
     DERControlListLink: Optional[ListLink] = element(default=None)
     DERCurveListLink: Optional[ListLink] = element(default=None)
+    primacy: PrimacyType = element()
 
 
 class DERProgramListResponse(SubscribableList, tag="DERProgramList"):
     DERProgram: Optional[list[DERProgramResponse]] = element(default=None)
-    pollRate: Optional[int] = element(
+    pollRate: Optional[int] = attr(
         default=None
     )  # The default polling rate for this resource and all resources below in seconds
 
@@ -301,21 +301,24 @@ class EndDeviceControlResponse(RandomizableEvent, tag="EndDeviceControl"):
 class DER(SubscribableResource):
     """sep2 DER: Contains links to DER resources."""
 
-    AssociatedUsagePointLink: Optional[Link] = element(
-        default=None
-    )  # If present, this is the submeter that monitors the DER output.
     AssociatedDERProgramListLink: Optional[ListLink] = element(
         default=None
     )  # Link to List of DERPrograms having the DERControls for this DER
+    AssociatedUsagePointLink: Optional[Link] = element(
+        default=None
+    )  # If present, this is the submeter that monitors the DER output.
+
     CurrentDERProgramLink: Optional[Link] = element(
         default=None
     )  # If set, this is the DERProgram containing the currently active DERControl
-    DERStatusLink: Optional[Link] = element(default=None)  # SHALL contain a Link to an instance of DERStatus.
-    DERCapabilityLink: Optional[Link] = element(default=None)  # SHALL contain a Link to an instance of DERCapability.
-    DERSettingsLink: Optional[Link] = element(default=None)  # SHALL contain a Link to an instance of DERSettings.
+
     DERAvailabilityLink: Optional[Link] = element(
         default=None
     )  # SHALL contain a Link to an instance of DERAvailability.
+    DERCapabilityLink: Optional[Link] = element(default=None)  # SHALL contain a Link to an instance of DERCapability.
+    DERSettingsLink: Optional[Link] = element(default=None)  # SHALL contain a Link to an instance of DERSettings.
+
+    DERStatusLink: Optional[Link] = element(default=None)  # SHALL contain a Link to an instance of DERStatus.
 
 
 class ConnectStatusTypeValue(BaseXmlModelWithNS):
@@ -530,7 +533,6 @@ class DERSettings(SubscribableResource):
 
 
 class DERListResponse(List, tag="DERList"):
-    pollRate: Optional[int] = element(default=None)  # The default polling rate for this function set (this resource and
-    # all resources below), in seconds. If not specified, a default of 900 seconds (15 minutes) is used.
-    # It is RECOMMENDED a client poll the resources of this function set every pollRate seconds.
     DER_: Optional[list[DER]] = element(default=None, tag="DER")
+
+    pollRate: Optional[int] = attr(default=types.DEFAULT_POLLRATE_SECONDS)

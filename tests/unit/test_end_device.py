@@ -3,7 +3,6 @@ from assertical.fake.generator import generate_class_instance
 from lxml import etree
 
 from envoy_schema.server.schema.sep2.end_device import EndDeviceListResponse, EndDeviceResponse
-from envoy_schema.server.schema.sep2.identification import Link, ListLink
 
 
 def test_missing_list_defaults_empty():
