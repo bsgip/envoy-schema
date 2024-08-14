@@ -23,7 +23,7 @@ dependencies = ["pydantic>=2.5.0,!=2.6.0", "pydantic_xml[lxml]"]
 
 [project.optional-dependencies]
 dev = ["bandit", "flake8", "mypy", "types-python-dateutil", "types-tzlocal"]
-test = ["pytest"]
+test = ["pytest", "assertical"]
 
 [tool.setuptools.package-data]
 "envoy_schema" = ["py.typed"]

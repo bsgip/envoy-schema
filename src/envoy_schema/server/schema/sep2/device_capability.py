@@ -3,8 +3,8 @@ from typing import Optional
 from pydantic_xml import attr, element
 
 from envoy_schema.server.schema import uri
-from envoy_schema.server.schema.sep2 import types
 from envoy_schema.server.schema.sep2.identification import ListLink, Resource
+from envoy_schema.server.schema.sep2.types import DEFAULT_POLLRATE_SECONDS
 
 
 # Per the Sep2, DeviceCapability should be a subclass of FunctionSetAssignmentsBase
@@ -15,7 +15,7 @@ from envoy_schema.server.schema.sep2.identification import ListLink, Resource
 # by not subclassing FunctionSetAssignmentsBase but subclassing Resource instead.
 class DeviceCapabilityResponse(Resource, tag="DeviceCapability"):
     href: str = attr(default=uri.DeviceCapabilityUri)
-    pollrate: types.PollRateType = types.DEFAULT_POLLRATE
+    pollRate: Optional[int] = attr(default=DEFAULT_POLLRATE_SECONDS)  # recommended client pollrate in seconds
 
     # (0..1) Link
     # Not supported at this time

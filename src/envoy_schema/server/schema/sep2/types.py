@@ -1,9 +1,9 @@
 from enum import IntEnum, IntFlag, auto
 from functools import reduce
-from typing import Annotated, Optional
+from typing import Annotated
 
 from pydantic import Field, Tag
-from pydantic_xml import attr, element
+from pydantic_xml import element
 
 from envoy_schema.server.schema.sep2 import base, primitive_types
 
@@ -182,11 +182,7 @@ class UnitValueType(base.BaseXmlModelWithNS):
     value: int = element()
 
 
-class PollRateType(base.BaseXmlModelWithNS):
-    pollRate: Optional[int] = attr(default=None)
-
-
-DEFAULT_POLLRATE = PollRateType(pollRate=900)
+DEFAULT_POLLRATE_SECONDS: int = 900  # pollrate default as defined by sep2 - Ends up being 15 minutes everywhere
 
 
 class DeviceCategory(IntFlag):

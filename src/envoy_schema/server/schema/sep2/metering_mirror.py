@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from pydantic_xml import element
+from pydantic_xml import attr, element
 
 from envoy_schema.server.schema.sep2 import primitive_types, types
 from envoy_schema.server.schema.sep2.identification import IdentifiedObject
@@ -32,7 +32,7 @@ class MirrorUsagePoint(UsagePointBase):
 
 
 class MirrorUsagePointList(Sep2List):
-    pollrate: types.PollRateType = types.DEFAULT_POLLRATE
+    pollRate: Optional[int] = attr(default=types.DEFAULT_POLLRATE_SECONDS)  # recommended client pollrate in seconds
     mirrorUsagePoints: Optional[List[MirrorUsagePoint]] = element(tag="MirrorUsagePoint", default=None)
 
 

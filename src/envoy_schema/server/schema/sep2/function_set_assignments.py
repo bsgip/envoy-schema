@@ -1,8 +1,7 @@
 from typing import Optional
 
-from pydantic_xml import element
+from pydantic_xml import attr, element
 
-from envoy_schema.server.schema.sep2 import types
 from envoy_schema.server.schema.sep2.identification import (
     IdentifiedObject,
     Link,
@@ -11,6 +10,7 @@ from envoy_schema.server.schema.sep2.identification import (
     SubscribableList,
     SubscribableResource,
 )
+from envoy_schema.server.schema.sep2.types import DEFAULT_POLLRATE_SECONDS
 
 
 class FunctionSetAssignmentsBase(Resource):
@@ -40,6 +40,6 @@ class FunctionSetAssignmentsResponse(
 
 
 class FunctionSetAssignmentsListResponse(SubscribableList, tag="FunctionSetAssignments"):
-    pollrate: types.PollRateType = types.DEFAULT_POLLRATE
+    pollRate: Optional[int] = attr(default=DEFAULT_POLLRATE_SECONDS)  # recommended client pollrate in seconds
 
     FunctionSetAssignments: list[FunctionSetAssignmentsResponse] = element(default_factory=list)
