@@ -2,8 +2,6 @@ import pytest
 import inspect
 import importlib
 import pkgutil
-import pydantic_xml
-from itertools import product
 from assertical.fake.generator import generate_class_instance
 from lxml import etree
 
@@ -34,18 +32,17 @@ def import_all_classes_from_module(package_name: str) -> dict:
     return classes_list
 
 
-def true_false_tuple(class_list: list) -> list[tuple[str, bool]]:
-    """Create list of tuples where optional_is_none provides either True or False values to the fixture"""
-    pairs = [[(item, True), (item, False)] for item in class_list]
-    return list(product(*pairs))
+def generate_class_and_optional_combinations(class_list: list[type]) -> list[tuple[type, bool]]:
+    return [(cls, optional_is_none) for cls in class_list for optional_is_none in [True, False]]
 
 
 @pytest.mark.parametrize("xml_class", import_all_classes_from_module("envoy_schema.server.schema"))
 def test_validate_xml_model_csip_aus(xml_class: type, csip_aus_schema: etree.XMLSchema, use_assertical_extensions):
+
     # Generate XML string
     entity: xml_class = generate_class_instance(
         xml_class,
-        optional_is_none=True,
+        optional_is_none=False,
         type=None,
     )
 
