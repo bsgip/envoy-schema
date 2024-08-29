@@ -4,6 +4,8 @@ import importlib
 import pkgutil
 from assertical.fake.generator import generate_class_instance
 from lxml import etree
+from itertools import product
+from pydantic_xml.model import XmlModelMeta
 
 
 def import_all_classes_from_module(package_name: str) -> dict:
@@ -25,25 +27,25 @@ def import_all_classes_from_module(package_name: str) -> dict:
             for _, obj in inspect.getmembers(module, inspect.isclass):
                 # Exclude built-in and internal classes
                 if obj.__module__ == module_name:
-                    classes_list.append(obj)
+                    # Filter out enum types, keep only xml models
+                    if issubclass(obj.__class__, XmlModelMeta):
+                        classes_list.append(obj)
         except Exception as e:
             print(f"Failed to import module {module_name}: {e}")
 
     return classes_list
 
 
-def generate_class_and_optional_combinations(class_list: list[type]) -> list[tuple[type, bool]]:
-    return [(cls, optional_is_none) for cls in class_list for optional_is_none in [True, False]]
-
-
-@pytest.mark.parametrize("xml_class", import_all_classes_from_module("envoy_schema.server.schema"))
-def test_validate_xml_model_csip_aus(xml_class: type, csip_aus_schema: etree.XMLSchema, use_assertical_extensions):
+@pytest.mark.parametrize(
+    "xml_class, optional_is_none", product(import_all_classes_from_module("envoy_schema.server.schema"), [True, False])
+)
+def test_validate_xml_model_csip_aus(
+    xml_class: type, csip_aus_schema: etree.XMLSchema, optional_is_none: bool, use_assertical_extensions
+):
 
     # Generate XML string
     entity: xml_class = generate_class_instance(
-        xml_class,
-        optional_is_none=False,
-        type=None,
+        xml_class, optional_is_none=optional_is_none, type=None, generate_relationships=True
     )
 
     xml = entity.to_xml(skip_empty=True).decode()
@@ -52,19 +54,3 @@ def test_validate_xml_model_csip_aus(xml_class: type, csip_aus_schema: etree.XML
     is_valid = csip_aus_schema.validate(xml_doc)
     errors = "\n".join((f"{e.line}: {e.message}" for e in csip_aus_schema.error_log))
     assert is_valid, f"{xml}\nErrors:\n{errors}"
-
-
-# Screwing around:
-# class_list = import_all_classes_from_module("envoy_schema.server.schema")
-# print((class_list[0]))
-
-# print(class_list[1].__class__)
-
-# for xml_class in class_list:
-#     # Filter for only xml models (not enum, flag etc)
-#     if issubclass(xml_class.__class__, pydantic_xml.model.XmlModelMeta):
-#         ns = xml_class.__xml_ns__
-#         if ns is not None:
-#             print(ns)
-#         else:
-#             print(xml_class.__xml_nsmap__)
