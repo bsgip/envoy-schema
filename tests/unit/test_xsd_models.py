@@ -2,10 +2,12 @@ import pytest
 import inspect
 import importlib
 import pkgutil
-from assertical.fake.generator import generate_class_instance
+from assertical.fake.generator import generate_class_instance, enumerate_class_properties
 from lxml import etree
 from itertools import product
 from pydantic_xml.model import XmlModelMeta
+
+from envoy_schema.server.schema.sep2.metering_mirror import MirrorUsagePoint
 
 
 def import_all_classes_from_module(package_name: str) -> dict:
@@ -36,6 +38,14 @@ def import_all_classes_from_module(package_name: str) -> dict:
     return classes_list
 
 
+def test_foo():
+    x = list(enumerate_class_properties(MirrorUsagePoint))
+
+    # generate_class_instance(MirrorUsagePoint, deviceLFDI="123")
+
+    raise NotImplementedError()
+
+
 @pytest.mark.parametrize(
     "xml_class, optional_is_none", product(import_all_classes_from_module("envoy_schema.server.schema"), [True, False])
 )
@@ -45,7 +55,7 @@ def test_validate_xml_model_csip_aus(
 
     # Generate XML string
     entity: xml_class = generate_class_instance(
-        xml_class, optional_is_none=optional_is_none, type=None, generate_relationships=True
+        t=xml_class, optional_is_none=optional_is_none, generate_relationships=True
     )
 
     xml = entity.to_xml(skip_empty=True).decode()
