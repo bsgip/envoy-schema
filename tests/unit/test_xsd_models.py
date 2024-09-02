@@ -1,9 +1,9 @@
-from typing import Any
+from typing import Any, Optional
 import pytest
 import inspect
 import importlib
 import pkgutil
-from assertical.fake.generator import generate_class_instance
+from assertical.fake.generator import generate_class_instance, register_value_generator
 from lxml import etree
 from itertools import product
 from pydantic_xml.model import XmlModelMeta
@@ -88,6 +88,14 @@ def apply_assertical_overrides(entity: Any):
                 if hasattr(entity, prop):
                     setattr(entity, prop, value)
 
+    # # replace all ints with values <= 127 as we don't care about the specific values
+    # # we're mainly focused on checking the schema definitions
+    # for pg in enumerate_class_properties(type(entity)):
+    #     if pg.type_to_generate == int:
+    #         current_int_val: Optional[int] = getattr(entity, pg.name)
+    #         if current_int_val is not None:
+    #             setattr(entity, pg.name, current_int_val % 64)
+
 
 @pytest.mark.parametrize(
     "xml_class, optional_is_none", product(import_all_classes_from_module("envoy_schema.server.schema"), [True, False])
@@ -98,6 +106,7 @@ def test_validate_xml_model_csip_aus(
     optional_is_none: bool,
     use_assertical_extensions,
 ):
+    register_value_generator(int, lambda x: x % 64)  # This will be unwound due to dep on use_assertical_extensions
 
     # Generate XML string
     entity: xml_class = generate_class_instance(
