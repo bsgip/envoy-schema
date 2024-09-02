@@ -6,7 +6,7 @@ from envoy_schema.server.schema.sep2 import base, primitive_types, types
 
 
 class Resource(base.BaseXmlModelWithNS):
-    href: Optional[str] = attr(default=None)
+    href: str = attr(default=None)
 
 
 class IdentifiedObject(Resource):

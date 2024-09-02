@@ -396,8 +396,8 @@ class DERAvailability(SubscribableResource):
 
 
 class DERCapability(SubscribableResource):
-    """Distributed energy resource type and nameplate ratings. Intentionally differs from sep which has this as a
-    Resource base class rather than subscribableresource."""
+    """Distributed energy resource type and nameplate ratings. Intentionally differs from sep which is defined with a
+    Resource base class rather than SubscribableResource."""
 
     modesSupported: primitive_types.HexBinary32 = element()  # HexBinary encoded DERControlType flags
     rtgAbnormalCategory: Optional[Uint8] = element(default=None)  #
