@@ -231,7 +231,7 @@ class TimeQualityType(IntEnum):
     intentionally_uncoordinated = 7
 
 
-class DateTimeIntervalType(base.BaseXmlModelWithNS):
+class DateTimeIntervalType(base.BaseXmlModelWithNS, tag="DateTimeInterval"):
     duration: int = element()
     start: TimeType = element()
 

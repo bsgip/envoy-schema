@@ -18,7 +18,12 @@ from envoy_schema.server.schema.sep2.der import (
     DERSettings,
 )
 from envoy_schema.server.schema.sep2.end_device import AbstractDevice
-from envoy_schema.server.schema.sep2.identification import RespondableResource, RespondableSubscribableIdentifiedObject
+from envoy_schema.server.schema.sep2.identification import (
+    RespondableResource,
+    RespondableSubscribableIdentifiedObject,
+    IdentifiedObject,
+    SubscribableIdentifiedObject,
+)
 from envoy_schema.server.schema.sep2.metering_mirror import MirrorUsagePoint
 from envoy_schema.server.schema.sep2.metering import ReadingBase, Reading
 from envoy_schema.server.schema.sep2.pub_sub import NotificationResourceCombined
@@ -59,6 +64,7 @@ ASSERTICAL_PROPERTY_OVERRIDES: dict[tuple[type, str], Any] = {
     (DERCapability, "modesSupported"): "aa",
     (DERSettings, "modesEnabled"): "aa",
     (AbstractDevice, "deviceCategory"): "aa",
+    (AbstractDevice, "lFDI"): "aa",
     (RespondableResource, "responseRequired"): "aa",
     (RespondableSubscribableIdentifiedObject, "mRID"): "aa",
     (MirrorUsagePoint, "deviceLFDI"): "aa",
@@ -67,6 +73,9 @@ ASSERTICAL_PROPERTY_OVERRIDES: dict[tuple[type, str], Any] = {
     (NotificationResourceCombined, "alarmStatus"): "aa",
     (NotificationResourceCombined, "modesSupported"): "aa",
     (NotificationResourceCombined, "modesEnabled"): "aa",
+    (IdentifiedObject, "mRID"): "aa",
+    (SubscribableIdentifiedObject, "mRID"): "aa",
+    (NotificationResourceCombined, "mRID"): "aa",
 }
 
 

@@ -228,8 +228,6 @@ class Notification(SubscriptionBase):
     passing the full representation."""
 
     newResourceURI: Optional[LocalAbsoluteUri] = element(default=None)  # The new location of the resource if moved.
-    status: NotificationStatus = element()
-    subscriptionURI: LocalAbsoluteUri = element()  # Subscription from which this notification was triggered.
 
     # A resource is an addressable unit of information, either a collection (List) or instance of an object
     # (identifiedObject, or simply, Resource)
@@ -256,6 +254,8 @@ class Notification(SubscriptionBase):
         # ]
         NotificationResourceCombined  # Instead we use this as our workaround for now
     ] = element(tag="Resource", default=None)
+    status: NotificationStatus = element()
+    subscriptionURI: LocalAbsoluteUri = element()  # Subscription from which this notification was triggered.
 
 
 class Condition(BaseXmlModelWithNS):
@@ -279,8 +279,8 @@ class Subscription(SubscriptionBase):
 
 
 class SubscriptionListResponse(Sep2List, tag="SubscriptionList"):
-    pollRate: Optional[int] = attr(default=None)  # The default polling rate for this function set in seconds
     subscriptions: Optional[list[Subscription]] = element(tag="Subscription", default=None)
+    pollRate: Optional[int] = attr(default=None)  # The default polling rate for this function set in seconds
 
 
 class NotificationListResponse(Sep2List, tag="NotificationList"):

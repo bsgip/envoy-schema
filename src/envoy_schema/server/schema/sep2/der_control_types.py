@@ -33,54 +33,54 @@ class PowerFactor(BaseXmlModelWithNS):
 class ReactivePower(BaseXmlModelWithNS):
     """The reactive power Q"""
 
-    value: int = element()  # Value in volt-amperes reactive (var) (uom 63)
     multiplier: int = element()  # Specifies exponent of 'value'.
+    value: int = element()  # Value in volt-amperes reactive (var) (uom 63)
 
 
 class ActivePower(BaseXmlModelWithNS):
     """The active/real power P"""
 
-    value: int = element()  # Value in volt-amperes reactive (var) (uom 63)
     multiplier: int = element()  # Specifies exponent of 'value'.
+    value: int = element()  # Value in volt-amperes reactive (var) (uom 63)
 
 
 class CurrentRMS(BaseXmlModelWithNS):
     """Average flow of charge through a conductor."""
 
-    value: int = element()  # Value in amperes RMS (uom 5)
     multiplier: int = element()  # Specifies exponent of 'value'.
+    value: int = element()  # Value in amperes RMS (uom 5)
 
 
 class VoltageRMS(BaseXmlModelWithNS):
     """Average electric potential difference between two points."""
 
-    value: int = element()  # Value in volts RMS (uom 29)
     multiplier: int = element()  # Specifies exponent of 'value'.
+    value: int = element()  # Value in volts RMS (uom 29)
 
 
 class AmpereHour(BaseXmlModelWithNS):
     """Available electric charge"""
 
-    value: int = element()  # Value in ampere-hours (uom 106)
     multiplier: int = element()  # Specifies exponent of 'value'.
+    value: int = element()  # Value in ampere-hours (uom 106)
 
 
 class WattHour(BaseXmlModelWithNS):
     """Active (real) energy"""
 
-    value: int = element()  # Value in watt-hours (uom 72)
     multiplier: int = element()  # Specifies exponent of 'value'.
+    value: int = element()  # Value in watt-hours (uom 72)
 
 
 class ApparentPower(BaseXmlModelWithNS):
     """The apparent power S (in VA) is the product of root mean square (RMS) voltage and RMS current."""
 
-    value: int = element()  # Value in volt-amperes (uom 61)
     multiplier: int = element()  # Specifies exponent of 'value'.
+    value: int = element()  # Value in volt-amperes (uom 61)
 
 
 class ReactiveSusceptance(BaseXmlModelWithNS):
     """Reactive susceptance"""
 
-    value: int = element()  # Value in siemens (uom 53)
     multiplier: int = element()  # Specifies exponent of 'value'.
+    value: int = element()  # Value in siemens (uom 53)

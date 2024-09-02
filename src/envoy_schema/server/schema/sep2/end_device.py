@@ -17,7 +17,7 @@ class AbstractDevice(SubscribableResource):
     DeviceStatusLink: Optional[Link] = element(default=None)
     FileStatusLink: Optional[Link] = element(default=None)
     IPInterfaceListLink: Optional[Link] = element(default=None)
-    lFDI: Optional[str] = element(default=None)
+    lFDI: Optional[primitive_types.HexBinary160] = element(default=None)
     LoadShedAvailabilityListLink: Optional[ListLink] = element(default=None)
     LogEventListLink: Optional[Link] = element(default=None)
     PowerStatusLink: Optional[Link] = element(default=None)

@@ -45,8 +45,8 @@ class TimeTariffIntervalResponse(RandomizableEvent, tag="TimeTariffInterval"):
     """Describes the time-differentiated portion of the RateComponent, if applicable, and provides the ability to
     specify multiple time intervals, each with its own consumption-based components and other attributes."""
 
-    touTier: TOUType = element()
     ConsumptionTariffIntervalListLink: ListLink = element()
+    touTier: TOUType = element()
 
 
 class ConsumptionTariffIntervalResponse(Resource, tag="ConsumptionTariffInterval"):

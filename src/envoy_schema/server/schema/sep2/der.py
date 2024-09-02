@@ -400,7 +400,7 @@ class DERCapability(SubscribableResource):
     Resource base class rather than SubscribableResource."""
 
     modesSupported: primitive_types.HexBinary32 = element()  # HexBinary encoded DERControlType flags
-    rtgAbnormalCategory: Optional[Uint8] = element(default=None)  #
+    rtgAbnormalCategory: Optional[AbnormalCategoryType] = element(default=None)  #
     rtgMaxA: Optional[CurrentRMS] = element(default=None)  # Maximum continuous AC current capability of the DER
     rtgMaxAh: Optional[AmpereHour] = element(default=None)  # Usable energy storage capacity of the DER, in AmpHours.
     rtgMaxChargeRateVA: Optional[ApparentPower] = element(

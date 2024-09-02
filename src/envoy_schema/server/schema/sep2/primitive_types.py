@@ -1,6 +1,6 @@
 from urllib.parse import urlparse
 
-from pydantic import AfterValidator
+from pydantic import AfterValidator, Field
 from typing_extensions import Annotated
 
 
@@ -13,12 +13,6 @@ def validate_String6(v: str):
 def validate_String192(v: str):
     if len(v) > 192:
         raise ValueError("String192 max length of 192.")
-    return v
-
-
-def validate_Uint8(v: int):
-    if not (0 <= v <= 255):
-        raise ValueError("Int must be between 0 and 255")
     return v
 
 
@@ -100,7 +94,7 @@ def validate_HttpUri(v: str):
     return v
 
 
-Uint8 = Annotated[int, AfterValidator(validate_Uint8)]
+Uint8 = Annotated[int, Field(ge=0, le=255)]
 
 String6 = Annotated[str, AfterValidator(validate_String6)]
 String192 = Annotated[str, AfterValidator(validate_String192)]
