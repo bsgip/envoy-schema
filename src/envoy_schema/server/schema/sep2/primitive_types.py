@@ -113,5 +113,6 @@ HexBinary64 = Annotated[str, AfterValidator(validate_HexBinary64)]
 HexBinary128 = Annotated[str, AfterValidator(validate_HexBinary128)]
 HexBinary160 = Annotated[str, AfterValidator(validate_HexBinary160)]
 
+
 LocalAbsoluteUri = Annotated[str, AfterValidator(validate_LocalAbsoluteUri)]
 HttpUri = Annotated[str, AfterValidator(validate_HttpUri)]

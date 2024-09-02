@@ -27,8 +27,10 @@ from envoy_schema.server.schema.sep2.identification import (
     SubscribableIdentifiedObject,
     SubscribableList,
     SubscribableResource,
+    Resource,
 )
 from envoy_schema.server.schema.sep2.pricing import PrimacyType
+from envoy_schema.server.schema.sep2.primitive_types import Uint8
 
 
 class DERType(IntEnum):
@@ -394,10 +396,11 @@ class DERAvailability(SubscribableResource):
 
 
 class DERCapability(SubscribableResource):
-    """Distributed energy resource type and nameplate ratings."""
+    """Distributed energy resource type and nameplate ratings. Intentionally differs from sep which has this as a
+    Resource base class rather than subscribableresource."""
 
     modesSupported: primitive_types.HexBinary32 = element()  # HexBinary encoded DERControlType flags
-    rtgAbnormalCategory: Optional[AbnormalCategoryType] = element(default=None)  #
+    rtgAbnormalCategory: Optional[Uint8] = element(default=None)  #
     rtgMaxA: Optional[CurrentRMS] = element(default=None)  # Maximum continuous AC current capability of the DER
     rtgMaxAh: Optional[AmpereHour] = element(default=None)  # Usable energy storage capacity of the DER, in AmpHours.
     rtgMaxChargeRateVA: Optional[ApparentPower] = element(

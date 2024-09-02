@@ -16,7 +16,7 @@ class EventStatus(BaseXmlModelWithNS):
 
     currentStatus: Uint8 = element()
     dateTime: TimeType = element()
-    potentiallySuperseeded: bool = element()
+    potentiallySuperseded: bool = element()
     potentiallySupersededTime: Optional[TimeType] = element()
     reason: Optional[String192] = element()
 

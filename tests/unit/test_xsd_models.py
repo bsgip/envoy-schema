@@ -38,14 +38,6 @@ def import_all_classes_from_module(package_name: str) -> dict:
     return classes_list
 
 
-def test_foo():
-    x = list(enumerate_class_properties(MirrorUsagePoint))
-
-    # generate_class_instance(MirrorUsagePoint, deviceLFDI="123")
-
-    raise NotImplementedError()
-
-
 @pytest.mark.parametrize(
     "xml_class, optional_is_none", product(import_all_classes_from_module("envoy_schema.server.schema"), [True, False])
 )

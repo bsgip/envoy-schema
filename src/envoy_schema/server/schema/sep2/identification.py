@@ -7,7 +7,6 @@ from envoy_schema.server.schema.sep2 import base, primitive_types, types
 
 class Resource(base.BaseXmlModelWithNS):
     href: Optional[str] = attr(default=None)
-    type: Optional[str] = attr(ns="xsi", default=None)
 
 
 class IdentifiedObject(Resource):
@@ -39,17 +38,16 @@ class RespondableResource(Resource):
     """A Resource to which a Response can be requested."""
 
     replyTo: Optional[str] = attr(default=None)
-    responseRequired: Optional[primitive_types.HexBinary32] = attr(default=None)
+    responseRequired: Optional[primitive_types.HexBinary8] = attr(default=00)
 
 
 class RespondableSubscribableIdentifiedObject(RespondableResource):
     """An IdentifiedObject to which a Response can be requested."""
 
-    subscribable: Optional[types.SubscribableType] = attr(default=None)
-
-    description: Optional[str] = element(default=None)
     mRID: primitive_types.HexBinary128 = element()
+    description: Optional[str] = element(default=None)
     version: Optional[types.VersionType] = element(default=None)
+    subscribable: Optional[types.SubscribableType] = attr(default=None)
 
 
 class List(Resource):
