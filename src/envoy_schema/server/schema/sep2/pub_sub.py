@@ -35,7 +35,7 @@ from envoy_schema.server.schema.sep2.identification import List as Sep2List
 from envoy_schema.server.schema.sep2.identification import Resource
 from envoy_schema.server.schema.sep2.metering import Reading
 from envoy_schema.server.schema.sep2.pricing import TimeTariffIntervalResponse
-from envoy_schema.server.schema.sep2.primitive_types import HexBinary32, HttpUri, LocalAbsoluteUri
+from envoy_schema.server.schema.sep2.primitive_types import HexBinary8, HexBinary32, HttpUri, LocalAbsoluteUri
 from envoy_schema.server.schema.sep2.types import PerCent, TimeType, VersionType, mRIDType
 
 XSI_TYPE_TIME_TARIFF_INTERVAL_LIST = "TimeTariffIntervalList"
@@ -219,7 +219,7 @@ class NotificationResourceCombined(Resource):
     setVRef: Optional[VoltageRMS] = element(default=None)
     setVRefOfs: Optional[VoltageRMS] = element(default=None)
     updatedTime: Optional[TimeType] = element(default=None)
-    doeModesEnabled: Optional[DOESupportedMode] = element(ns="csipaus", default=None)
+    doeModesEnabled: HexBinary8 = element(ns="csipaus", default=None)
 
 
 class Notification(SubscriptionBase):
@@ -269,13 +269,12 @@ class Condition(BaseXmlModelWithNS):
 class Subscription(SubscriptionBase):
     """Holds the information related to a client subscription to receive updates to a resource automatically."""
 
+    condition: Optional[Condition] = element(tag="Condition", default=None)
     encoding: SubscriptionEncoding = element()  # The resource for which the subscription applies.
     level: str = element()  # Contains the preferred schema and extensibility level indication such as "+S1"
     limit: int = element()  # This element is used to indicate the maximum number of list items that should be included
     # in a notification when the subscribed resource changes
     notificationURI: HttpUri = element()  # The resource to which to post the notifications
-
-    condition: Optional[Condition] = element(tag="Condition", default=None)
 
 
 class SubscriptionListResponse(Sep2List, tag="SubscriptionList"):

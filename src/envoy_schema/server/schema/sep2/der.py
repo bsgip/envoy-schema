@@ -30,7 +30,7 @@ from envoy_schema.server.schema.sep2.identification import (
     Resource,
 )
 from envoy_schema.server.schema.sep2.pricing import PrimacyType
-from envoy_schema.server.schema.sep2.primitive_types import Uint8
+from envoy_schema.server.schema.sep2.primitive_types import HexBinary8
 
 
 class DERType(IntEnum):
@@ -323,37 +323,37 @@ class DER(SubscribableResource):
     DERStatusLink: Optional[Link] = element(default=None)  # SHALL contain a Link to an instance of DERStatus.
 
 
-class ConnectStatusTypeValue(BaseXmlModelWithNS):
+class ConnectStatusTypeValue(BaseXmlModelWithNS, tag="ConnectStatusType"):
     dateTime: types.TimeType = element()  # The date and time at which the state applied.
     value: primitive_types.HexBinary8 = element()  # Should have bits set from ConnectStatusType
 
 
-class InverterStatusTypeValue(BaseXmlModelWithNS):
+class InverterStatusTypeValue(BaseXmlModelWithNS, tag="InverterStatusType"):
     dateTime: types.TimeType = element()  # The date and time at which the state applied.
     value: InverterStatusType = element()
 
 
-class LocalControlModeStatusTypeValue(BaseXmlModelWithNS):
+class LocalControlModeStatusTypeValue(BaseXmlModelWithNS, tag="LocalControlModeStatusType"):
     dateTime: types.TimeType = element()  # The date and time at which the state applied.
     value: LocalControlModeStatusType = element()
 
 
-class OperationalModeStatusTypeValue(BaseXmlModelWithNS):
+class OperationalModeStatusTypeValue(BaseXmlModelWithNS, tag="OperationalModeStatusType"):
     dateTime: types.TimeType = element()  # The date and time at which the state applied.
     value: OperationalModeStatusType = element()
 
 
-class StorageModeStatusTypeValue(BaseXmlModelWithNS):
+class StorageModeStatusTypeValue(BaseXmlModelWithNS, tag="StorageModeStatusType"):
     dateTime: types.TimeType = element()  # The date and time at which the state applied.
     value: StorageModeStatusType = element()
 
 
-class ManufacturerStatusValue(BaseXmlModelWithNS):
+class ManufacturerStatusValue(BaseXmlModelWithNS, tag="ManufacturerStatus"):
     dateTime: types.TimeType = element()  # The date and time at which the state applied.
     value: primitive_types.String6  # The manufacturer status value
 
 
-class StateOfChargeStatusValue(BaseXmlModelWithNS):
+class StateOfChargeStatusValue(BaseXmlModelWithNS, tag="StateOfChargeStatusType"):
     dateTime: types.TimeType = element()  # The date and time at which the state applied.
     value: types.PerCent = element()
 
@@ -449,7 +449,7 @@ class DERCapability(SubscribableResource):
     type_: DERType = element(tag="type")  # Type of DER; see DERType object
 
     # CSIP Aus Extensions (encoded here as it makes decoding a whole lot simpler)
-    doeModesSupported: Optional[DOESupportedMode] = element(ns="csipaus", default=None)
+    doeModesSupported: primitive_types.HexBinary8 = element(ns="csipaus", default=None)
 
 
 class DERSettings(SubscribableResource):
@@ -532,7 +532,7 @@ class DERSettings(SubscribableResource):
     updatedTime: types.TimeType = element()  # Specifies the time at which the DER information was last updated.
 
     # CSIP Aus Extensions (encoded here as it makes decoding a whole lot simpler)
-    doeModesEnabled: Optional[DOESupportedMode] = element(ns="csipaus", default=None)
+    doeModesEnabled: primitive_types.HexBinary8 = element(ns="csipaus", default=None)
 
 
 class DERListResponse(List, tag="DERList"):

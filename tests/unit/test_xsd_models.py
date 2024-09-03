@@ -7,9 +7,19 @@ from assertical.fake.generator import generate_class_instance, register_value_ge
 from lxml import etree
 from itertools import product
 from pydantic_xml.model import XmlModelMeta
-
+from envoy_schema.server.schema.sep2.base import BaseXmlModelWithNS
+from envoy_schema.server.schema.csip_aus.connection_point import ConnectionPointRequest
 
 # imports for asserticle generator override
+from envoy_schema.server.schema.sep2.primitive_types import (
+    HexBinary8,
+    HexBinary16,
+    HexBinary32,
+    HexBinary48,
+    HexBinary64,
+    HexBinary128,
+    HexBinary160,
+)
 from envoy_schema.server.schema.sep2.der import (
     DERControlResponse,
     ConnectStatusTypeValue,
@@ -29,9 +39,8 @@ from envoy_schema.server.schema.sep2.metering import ReadingBase, Reading
 from envoy_schema.server.schema.sep2.pub_sub import NotificationResourceCombined
 
 
-def import_all_classes_from_module(package_name: str) -> dict:
-    """Dynamically load all the classes from the specified module AND sub modules! Returns a list.
-    Used for testing purposes."""
+def import_all_classes_from_module(package_name: str) -> list:
+    """Dynamically load all the classes from the specified module AND sub modules. Returns a list."""
     classes_list = []
 
     package = importlib.import_module(package_name)
@@ -57,46 +66,6 @@ def import_all_classes_from_module(package_name: str) -> dict:
     return classes_list
 
 
-ASSERTICAL_PROPERTY_OVERRIDES: dict[tuple[type, str], Any] = {
-    (DERControlResponse, "modesSupported"): "aa",
-    (ConnectStatusTypeValue, "value"): "aa",
-    (DERStatus, "alarmStatus"): "aa",
-    (DERCapability, "modesSupported"): "aa",
-    (DERSettings, "modesEnabled"): "aa",
-    (AbstractDevice, "deviceCategory"): "aa",
-    (AbstractDevice, "lFDI"): "aa",
-    (RespondableResource, "responseRequired"): "aa",
-    (RespondableSubscribableIdentifiedObject, "mRID"): "aa",
-    (MirrorUsagePoint, "deviceLFDI"): "aa",
-    (ReadingBase, "qualityFlags"): "aa",
-    (Reading, "localID"): "aa",
-    (NotificationResourceCombined, "alarmStatus"): "aa",
-    (NotificationResourceCombined, "modesSupported"): "aa",
-    (NotificationResourceCombined, "modesEnabled"): "aa",
-    (IdentifiedObject, "mRID"): "aa",
-    (SubscribableIdentifiedObject, "mRID"): "aa",
-    (NotificationResourceCombined, "mRID"): "aa",
-}
-
-
-def apply_assertical_overrides(entity: Any):
-    """Applies the ASSERTICAL_PROPERTY_OVERRIDES dict values to a class. This is to circumvent the pydantic loss of
-    type information: hexbinary is being represented as str by assertical, so is overriden here."""
-    for type_in_hierarchy in inspect.getmro(type(entity)):
-        for (cls_key, prop), value in ASSERTICAL_PROPERTY_OVERRIDES.items():
-            if type_in_hierarchy is cls_key:
-                if hasattr(entity, prop):
-                    setattr(entity, prop, value)
-
-    # # replace all ints with values <= 127 as we don't care about the specific values
-    # # we're mainly focused on checking the schema definitions
-    # for pg in enumerate_class_properties(type(entity)):
-    #     if pg.type_to_generate == int:
-    #         current_int_val: Optional[int] = getattr(entity, pg.name)
-    #         if current_int_val is not None:
-    #             setattr(entity, pg.name, current_int_val % 64)
-
-
 @pytest.mark.parametrize(
     "xml_class, optional_is_none", product(import_all_classes_from_module("envoy_schema.server.schema"), [True, False])
 )
@@ -106,14 +75,24 @@ def test_validate_xml_model_csip_aus(
     optional_is_none: bool,
     use_assertical_extensions,
 ):
+    # Skip some classes which require individual handling for various reasons
+    for skip_classes in [
+        BaseXmlModelWithNS,
+        ConnectionPointRequest,
+    ]:
+        if xml_class is skip_classes:
+            return
+
+    # Circumvent issues with assertical generating invalid Int8, Uint8 etc values and hexbinary (str subclass)
     register_value_generator(int, lambda x: x % 64)  # This will be unwound due to dep on use_assertical_extensions
+    register_value_generator(
+        str, lambda x: f"{x % 256:02x}"
+    )  # This will be unwound due to dep on use_assertical_extensions
 
     # Generate XML string
     entity: xml_class = generate_class_instance(
         t=xml_class, optional_is_none=optional_is_none, generate_relationships=True
     )
-    # print(dir(entity))
-    apply_assertical_overrides(entity)
 
     xml = entity.to_xml(skip_empty=True).decode()
     xml_doc = etree.fromstring(xml)
