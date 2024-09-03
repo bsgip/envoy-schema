@@ -27,7 +27,7 @@ class Event(RespondableSubscribableIdentifiedObject):
 
     creationTime: TimeType = element()
     EventStatus_: EventStatus = element(tag="EventStatus")
-    interval: DateTimeIntervalType = element()
+    interval: DateTimeIntervalType = element(tag="interval")
 
 
 class RandomizableEvent(Event):

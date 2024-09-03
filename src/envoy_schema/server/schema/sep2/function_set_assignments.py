@@ -37,7 +37,7 @@ class FunctionSetAssignmentsResponse(
     pass
 
 
-class FunctionSetAssignmentsListResponse(SubscribableList, tag="FunctionSetAssignments"):
-    pollRate: Optional[int] = attr(default=DEFAULT_POLLRATE_SECONDS)  # recommended client pollrate in seconds
+class FunctionSetAssignmentsListResponse(SubscribableList, tag="FunctionSetAssignmentsList"):
 
     FunctionSetAssignments: list[FunctionSetAssignmentsResponse] = element(default_factory=list)
+    pollRate: Optional[int] = attr(default=DEFAULT_POLLRATE_SECONDS)  # recommended client pollrate in seconds

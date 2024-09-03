@@ -19,16 +19,16 @@ class MeterReadingBase(IdentifiedObject):
 
 class MirrorMeterReading(MeterReadingBase):
     lastUpdateTime: Optional[types.TimeType] = element(default=None)
+    mirrorReadingSets: Optional[List[MirrorReadingSet]] = element(tag="MirrorReadingSet", default=None)
     nextUpdateTime: Optional[types.TimeType] = element(default=None)
     reading: Optional[Reading] = element(tag="Reading", default=None)
     readingType: Optional[ReadingType] = element(tag="ReadingType", default=None)
-    mirrorReadingSets: Optional[List[MirrorReadingSet]] = element(tag="MirrorReadingSet", default=None)
 
 
 class MirrorUsagePoint(UsagePointBase):
     deviceLFDI: primitive_types.HexBinary160 = element()
-    postRate: Optional[int] = element(default=None)
     mirrorMeterReadings: Optional[List[MirrorMeterReading]] = element(tag="MirrorMeterReading", default=None)
+    postRate: Optional[int] = element(default=None)
 
 
 class MirrorUsagePointList(Sep2List):

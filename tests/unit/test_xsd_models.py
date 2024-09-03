@@ -1,4 +1,3 @@
-from typing import Any, Optional
 import pytest
 import inspect
 import importlib
@@ -9,34 +8,13 @@ from itertools import product
 from pydantic_xml.model import XmlModelMeta
 from envoy_schema.server.schema.sep2.base import BaseXmlModelWithNS
 from envoy_schema.server.schema.csip_aus.connection_point import ConnectionPointRequest
+from envoy_schema.server.schema.sep2.pricing import RateComponentListResponse
+from envoy_schema.server.schema.sep2.types import DateTimeIntervalType
+from envoy_schema.server.schema.sep2.error import ErrorResponse
+from envoy_schema.server.schema.sep2.der import DERCapability
 
-# imports for asserticle generator override
-from envoy_schema.server.schema.sep2.primitive_types import (
-    HexBinary8,
-    HexBinary16,
-    HexBinary32,
-    HexBinary48,
-    HexBinary64,
-    HexBinary128,
-    HexBinary160,
-)
-from envoy_schema.server.schema.sep2.der import (
-    DERControlResponse,
-    ConnectStatusTypeValue,
-    DERStatus,
-    DERCapability,
-    DERSettings,
-)
-from envoy_schema.server.schema.sep2.end_device import AbstractDevice
-from envoy_schema.server.schema.sep2.identification import (
-    RespondableResource,
-    RespondableSubscribableIdentifiedObject,
-    IdentifiedObject,
-    SubscribableIdentifiedObject,
-)
-from envoy_schema.server.schema.sep2.metering_mirror import MirrorUsagePoint
-from envoy_schema.server.schema.sep2.metering import ReadingBase, Reading
-from envoy_schema.server.schema.sep2.pub_sub import NotificationResourceCombined
+from envoy_schema.server.schema.sep2.metering_mirror import MirrorMeterReadingListRequest
+from envoy_schema.server.schema.sep2.pub_sub import NotificationResourceCombined, NotificationListResponse, Notification
 
 
 def import_all_classes_from_module(package_name: str) -> list:
@@ -76,9 +54,25 @@ def test_validate_xml_model_csip_aus(
     use_assertical_extensions,
 ):
     # Skip some classes which require individual handling for various reasons
+    # Notes for later:
+    # BaseXmlModelWithNS is not part of the 2030.5 framework
+    # ConnectionPointRequest has differences between the csipaus311 and 311a frameworks which will both be supported
+    # DERCapability is made subscribable intentionally differing from the framework, same for RateComponentListResponse
+    # NotificationResourceCombined is a pydantic workaround, which affects NotificationListResponse and Notification
+    # DateTimeIntervalType skipped as only used as a sub-class for other classes, will never be instantiated by itself.
+    # MirrorMeterReadingListRequest intentionally differs to remove unnecessary info
+    # ErrorResponse has an additional item in it
     for skip_classes in [
         BaseXmlModelWithNS,
         ConnectionPointRequest,
+        DERCapability,
+        RateComponentListResponse,
+        NotificationResourceCombined,
+        NotificationListResponse,
+        Notification,
+        DateTimeIntervalType,
+        MirrorMeterReadingListRequest,
+        ErrorResponse,
     ]:
         if xml_class is skip_classes:
             return

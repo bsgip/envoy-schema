@@ -262,8 +262,8 @@ class Condition(BaseXmlModelWithNS):
     """Indicates a condition that must be satisfied for the Notification to be triggered."""
 
     attributeIdentifier: ConditionAttributeIdentifier = element()
-    lowerThreshold: Optional[int] = element(default=None)  # The value of the lower threshold
-    upperThreshold: Optional[int] = element(default=None)  # The value of the upper threshold
+    lowerThreshold: int = element(default=None)  # The value of the lower threshold
+    upperThreshold: int = element(default=None)  # The value of the upper threshold
 
 
 class Subscription(SubscriptionBase):

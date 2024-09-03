@@ -280,11 +280,11 @@ class DERProgramListResponse(SubscribableList, tag="DERProgramList"):
 class DemandResponseProgramResponse(IdentifiedObject, tag="DemandResponseProgram"):
     """sep2 Demand response program"""
 
+    ActiveEndDeviceControlListLink: Optional[ListLink] = element(default=None)
     availabilityUpdatePercentChangeThreshold: Optional[types.PerCent] = element(default=None)
     availabilityUpdatePowerChangeThreshold: Optional[ActivePower] = element(default=None)
-    primacy: PrimacyType = element()
-    ActiveEndDeviceControlListLink: Optional[ListLink] = element(default=None)
     EndDeviceControlListLink: Optional[ListLink] = element(default=None)
+    primacy: PrimacyType = element()
 
 
 class DemandResponseProgramListResponse(Sep2List, tag="DemandResponseProgramList"):
