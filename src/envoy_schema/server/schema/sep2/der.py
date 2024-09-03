@@ -227,6 +227,7 @@ class DERControlBase(BaseXmlModelWithNS):
 class DefaultDERControl(SubscribableIdentifiedObject):
     """Contains control mode information to be used if no active DERControl is found."""
 
+    DERControlBase_: DERControlBase = element(tag="DERControlBase")
     setESDelay: Optional[int] = element(default=None)  # Enter service delay, in hundredths of a second.
     setESHighFreq: Optional[int] = element(default=None)  # Enter service frequency high. Specified in hundredths of Hz
     setESHighVolt: Optional[int] = element(
@@ -244,7 +245,6 @@ class DefaultDERControl(SubscribableIdentifiedObject):
     setSoftGradW: Optional[int] = element(
         default=None
     )  # Set soft-start rate of change (soft-start ramp rate) of AP output
-    DERControlBase_: DERControlBase = element(tag="DERControlBase")
 
 
 class DERControlResponse(RandomizableEvent, tag="DERControl"):
@@ -348,7 +348,7 @@ class StorageModeStatusTypeValue(BaseXmlModelWithNS, tag="StorageModeStatusType"
     value: StorageModeStatusType = element()
 
 
-class ManufacturerStatusValue(BaseXmlModelWithNS, tag="ManufacturerStatus"):
+class ManufacturerStatusValue(BaseXmlModelWithNS, tag="ManufacturerStatusType"):
     dateTime: types.TimeType = element()  # The date and time at which the state applied.
     value: primitive_types.String6  # The manufacturer status value
 

@@ -12,6 +12,7 @@ from envoy_schema.server.schema.sep2.pricing import RateComponentListResponse
 from envoy_schema.server.schema.sep2.types import DateTimeIntervalType
 from envoy_schema.server.schema.sep2.error import ErrorResponse
 from envoy_schema.server.schema.sep2.der import DERCapability
+from envoy_schema.server.schema.sep2.end_device import EndDeviceRequest
 
 from envoy_schema.server.schema.sep2.metering_mirror import MirrorMeterReadingListRequest
 from envoy_schema.server.schema.sep2.pub_sub import NotificationResourceCombined, NotificationListResponse, Notification
@@ -60,8 +61,10 @@ def test_validate_xml_model_csip_aus(
     # DERCapability is made subscribable intentionally differing from the framework, same for RateComponentListResponse
     # NotificationResourceCombined is a pydantic workaround, which affects NotificationListResponse and Notification
     # DateTimeIntervalType skipped as only used as a sub-class for other classes, will never be instantiated by itself.
-    # MirrorMeterReadingListRequest intentionally differs to remove unnecessary info
+    # Same for StateofChargeStatusValue and FixedVar
+    # MirrorMeterReadingListRequest intentionally differs to remove unnecessary info, as for EndDeviceRequest
     # ErrorResponse has an additional item in it
+    #
     for skip_classes in [
         BaseXmlModelWithNS,
         ConnectionPointRequest,
@@ -73,6 +76,7 @@ def test_validate_xml_model_csip_aus(
         DateTimeIntervalType,
         MirrorMeterReadingListRequest,
         ErrorResponse,
+        EndDeviceRequest,
     ]:
         if xml_class is skip_classes:
             return
