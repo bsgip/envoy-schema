@@ -171,6 +171,16 @@ class DOESupportedMode(IntFlag):
     OP_MOD_LOAD_LIMIT_W = auto()
 
 
+class FreqDroopType(BaseXmlModelWithNS):
+    """Type for Frequency-Droop (Frequency-Watt) operation."""
+
+    dBOF: int = element()  # Frequency droop dead band for over-frequency conditions.
+    dBUF: int = element()  # Frequency droop dead band for under-frequency conditions.
+    kOF: int = element()  # droop per-unit frequency change OF conditions corresponding to 1 power output change.
+    kUF: int = element()  # # droop per-unit frequency change UF conditions corresponding to 1 power output change.
+    openLoopTms: int = element()  # Open loop response time
+
+
 class DERControlBase(BaseXmlModelWithNS):
     """Distributed Energy Resource (DER) control values."""
 
@@ -186,7 +196,7 @@ class DERControlBase(BaseXmlModelWithNS):
     opModFixedW: Optional[types.SignedPerCent] = element(
         default=None
     )  # specifies a requested charge/discharge mode setpoint
-    opModFreqDroop: Optional[int] = element(default=None)  # Specifies a frequency-watt operation
+    opModFreqDroop: Optional[FreqDroopType] = element(default=None)  # Specifies a frequency-watt operation
     opModFreqWatt: Optional[Link] = element(default=None)  # Specify DERCurveLink for curveType == 0
     opModHFRTMayTrip: Optional[Link] = element(default=None)  # Specify DERCurveLink for curveType == 1
     opModHFRTMustTrip: Optional[Link] = element(default=None)  # Specify DERCurveLink for curveType == 2
@@ -250,10 +260,10 @@ class DefaultDERControl(SubscribableIdentifiedObject):
 class DERControlResponse(RandomizableEvent, tag="DERControl"):
     """Distributed Energy Resource (DER) time/event-based control."""
 
+    DERControlBase_: DERControlBase = element(tag="DERControlBase")
     deviceCategory: Optional[primitive_types.HexBinary32] = element(
         default=None
     )  # the bitmap indicating device categories that SHOULD respond.
-    DERControlBase_: DERControlBase = element(tag="DERControlBase")
 
 
 class DERControlListResponse(SubscribableList, tag="DERControlList"):
@@ -294,7 +304,7 @@ class DemandResponseProgramListResponse(Sep2List, tag="DemandResponseProgramList
 class EndDeviceControlResponse(RandomizableEvent, tag="EndDeviceControl"):
     """Instructs an EndDevice to perform a specified action."""
 
-    deviceCategory: types.DeviceCategory = element()
+    deviceCategory: primitive_types.HexBinary32 = element()  # HexBinary Encoded types.DeviceCategory enum
     drProgramMandatory: bool = element()
     loadShiftForward: bool = element()
     overrideDuration: Optional[int] = element(default=None)
@@ -350,7 +360,7 @@ class StorageModeStatusTypeValue(BaseXmlModelWithNS, tag="StorageModeStatusType"
 
 class ManufacturerStatusValue(BaseXmlModelWithNS, tag="ManufacturerStatusType"):
     dateTime: types.TimeType = element()  # The date and time at which the state applied.
-    value: primitive_types.String6  # The manufacturer status value
+    value: primitive_types.String6 = element()  # The manufacturer status value
 
 
 class StateOfChargeStatusValue(BaseXmlModelWithNS, tag="StateOfChargeStatusType"):

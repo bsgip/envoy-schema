@@ -10,7 +10,7 @@ class Resource(base.BaseXmlModelWithNS):
 
 
 class IdentifiedObject(Resource):
-    mRID: types.mRIDType = element()
+    mRID: primitive_types.HexBinary128 = element()
     description: Optional[str] = element(default=None)
     version: Optional[types.VersionType] = element(default=None)
 
@@ -27,7 +27,7 @@ class SubscribableList(SubscribableResource):
 
 
 class SubscribableIdentifiedObject(SubscribableResource):
-    mRID: types.mRIDType = element()  # The global identifier of the object
+    mRID: primitive_types.HexBinary128 = element()  # The global identifier of the object
     description: Optional[str] = element(
         default=None
     )  # The description is a human readable text describing or naming the object.

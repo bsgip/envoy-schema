@@ -35,8 +35,14 @@ from envoy_schema.server.schema.sep2.identification import List as Sep2List
 from envoy_schema.server.schema.sep2.identification import Resource
 from envoy_schema.server.schema.sep2.metering import Reading
 from envoy_schema.server.schema.sep2.pricing import TimeTariffIntervalResponse
-from envoy_schema.server.schema.sep2.primitive_types import HexBinary8, HexBinary32, HttpUri, LocalAbsoluteUri
-from envoy_schema.server.schema.sep2.types import PerCent, TimeType, VersionType, mRIDType
+from envoy_schema.server.schema.sep2.primitive_types import (
+    HexBinary8,
+    HexBinary32,
+    HttpUri,
+    LocalAbsoluteUri,
+    HexBinary128,
+)
+from envoy_schema.server.schema.sep2.types import PerCent, TimeType, VersionType
 
 XSI_TYPE_TIME_TARIFF_INTERVAL_LIST = "TimeTariffIntervalList"
 XSI_TYPE_DER_CONTROL_LIST = "DERControlList"
@@ -126,7 +132,7 @@ class NotificationResourceCombined(Resource):
 
     # SubscribableIdentifiedObject
     description: Optional[str] = element(default=None)
-    mRID: Optional[mRIDType] = element(default=None)
+    mRID: Optional[HexBinary128] = element(default=None)
     version: Optional[VersionType] = element(default=None)
 
     # DefaultDERControl
