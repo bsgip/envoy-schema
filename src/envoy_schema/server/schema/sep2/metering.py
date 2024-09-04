@@ -11,7 +11,7 @@ class ReadingBase(Resource):
     qualityFlags: Optional[primitive_types.HexBinary16] = element(
         default=primitive_types.HexBinary16("00")
     )  # string (hex encoded) form that maps to QualityFlagsType
-    timePeriod: Optional[types.DateTimeIntervalType] = element(default=None)
+    timePeriod: Optional[types.DateTimeIntervalType] = element(default=None, tag="timePeriod")
     touTier: Optional[types.TOUType] = element(default=0)
     value: Optional[int] = element(default=None)
 
@@ -22,7 +22,7 @@ class Reading(ReadingBase):
 
 
 class ReadingSetBase(IdentifiedObject):
-    timePeriod: types.DateTimeIntervalType = element()
+    timePeriod: types.DateTimeIntervalType = element(tag="timePeriod")
 
 
 class ReadingType(Resource):

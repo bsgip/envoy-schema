@@ -16,6 +16,7 @@ from envoy_schema.server.schema.sep2.end_device import EndDeviceRequest
 
 from envoy_schema.server.schema.sep2.metering_mirror import MirrorMeterReadingListRequest
 from envoy_schema.server.schema.sep2.pub_sub import NotificationResourceCombined, NotificationListResponse, Notification
+from envoy_schema.server.schema.sep2.identification import Resource
 
 
 def import_all_classes_from_module(package_name: str) -> list:
@@ -52,31 +53,25 @@ def test_validate_xml_model_csip_aus(
     xml_class: type,
     csip_aus_schema: etree.XMLSchema,
     optional_is_none: bool,
-    use_assertical_extensions,
 ):
-    # Skip some classes which require individual handling for various reasons
-    # Notes for later:
-    # BaseXmlModelWithNS is not part of the 2030.5 framework
+    # Skip some classes which require individual handling for various reasons (separate tests provided where needed)
+
     # ConnectionPointRequest has differences between the csipaus311 and 311a frameworks which will both be supported
     # DERCapability is made subscribable intentionally differing from the framework, same for RateComponentListResponse
     # NotificationResourceCombined is a pydantic workaround, which affects NotificationListResponse and Notification
-    # DateTimeIntervalType skipped as only used as a sub-class for other classes, will never be instantiated by itself.
-    # Same for StateofChargeStatusValue and FixedVar
-    # MirrorMeterReadingListRequest intentionally differs to remove unnecessary info, as for EndDeviceRequest
-    # ErrorResponse has an additional item in it
-    #
+    # MirrorMeterReadingListRequest and EndDeviceRequest intentionally remove unnecessary information
+
     for skip_classes in [
-        BaseXmlModelWithNS,
-        ConnectionPointRequest,
-        DERCapability,
-        RateComponentListResponse,
+        BaseXmlModelWithNS,  # Not necessary to xsd validate
+        ConnectionPointRequest,  # Not necessary to xsd validate
+        DERCapability,  # See Separate test below
+        RateComponentListResponse,  # See Separate test below
         NotificationResourceCombined,
-        NotificationListResponse,
-        Notification,
-        DateTimeIntervalType,
-        MirrorMeterReadingListRequest,
-        ErrorResponse,
-        EndDeviceRequest,
+        NotificationListResponse,  # See Separate test below
+        Notification,  # See Separate test below
+        MirrorMeterReadingListRequest,  # Not necessary to xsd validate
+        ErrorResponse,  # See Separate test below
+        EndDeviceRequest,  # Not necessary to xsd validate, is not generated, only sent by clients
     ]:
         if xml_class is skip_classes:
             return
@@ -92,9 +87,152 @@ def test_validate_xml_model_csip_aus(
         t=xml_class, optional_is_none=optional_is_none, generate_relationships=True
     )
 
-    xml = entity.to_xml(skip_empty=True).decode()
+    xml = entity.to_xml(skip_empty=False, exclude_none=True, exclude_unset=True).decode()
     xml_doc = etree.fromstring(xml)
 
     is_valid = csip_aus_schema.validate(xml_doc)
     errors = "\n".join((f"{e.line}: {e.message}" for e in csip_aus_schema.error_log))
     assert is_valid, f"{xml}\nErrors:\n{errors}"
+
+
+def generate_non_standard_xml_models(
+    xml_class: type,
+    csip_aus_schema: etree.XMLSchema,
+    optional_is_none: bool,
+) -> tuple[bool, str]:
+
+    # Circumvent issues with assertical generating invalid Int8, Uint8 etc values and hexbinary (str subclass)
+    register_value_generator(int, lambda x: x % 64)  # This will be unwound due to dep on use_assertical_extensions
+    register_value_generator(
+        str, lambda x: f"{x % 256:02x}"
+    )  # This will be unwound due to dep on use_assertical_extensions
+
+    # Generate XML string
+    entity: xml_class = generate_class_instance(
+        t=xml_class, optional_is_none=optional_is_none, generate_relationships=True
+    )
+
+    xml = entity.to_xml(skip_empty=False, exclude_none=True, exclude_unset=True).decode()
+    xml_doc = etree.fromstring(xml)
+
+    is_valid = csip_aus_schema.validate(xml_doc)
+    errors = "\n".join((f"{e.line}: {e.message}" for e in csip_aus_schema.error_log))
+    return is_valid, errors
+
+
+@pytest.mark.parametrize("optional_is_none", [True, False])
+def test_error_response_xsd(
+    csip_aus_schema: etree.XMLSchema,
+    optional_is_none: bool,
+):
+    """Test ErrorResponse separately as an additional optional element (message) causes xsd validation issues"""
+    is_valid, errors = generate_non_standard_xml_models(
+        xml_class=ErrorResponse, csip_aus_schema=csip_aus_schema, optional_is_none=optional_is_none
+    )
+
+    # ErrorResponse passes validation where True as the xsd addition is optional
+    if optional_is_none is True:
+        assert is_valid, errors
+    # The only error should be that the message element is not expected.
+    elif optional_is_none is False:
+        assert errors == "1: Element '{urn:ieee:std:2030.5:ns}message': This element is not expected."
+
+
+@pytest.mark.parametrize("optional_is_none", [True, False])
+def test_DERCapability_xsd(
+    csip_aus_schema: etree.XMLSchema,
+    optional_is_none: bool,
+):
+    """Test DERCapability separately as it is intentionally a subscribable resource rather than simply a resource"""
+
+    is_valid, errors = generate_non_standard_xml_models(
+        xml_class=DERCapability, csip_aus_schema=csip_aus_schema, optional_is_none=optional_is_none
+    )
+
+    # if optional_is_none is True there should be no difference from the schema (subscribable is optional)
+    if optional_is_none is True:
+        assert is_valid, errors
+
+    # The only issue should be an error about the subscribable definition
+    if optional_is_none is False:
+        assert errors == (
+            "1: Element '{urn:ieee:std:2030.5:ns}DERCapability', attribute 'subscribable': "
+            "The attribute 'subscribable' is not allowed."
+        )
+
+
+@pytest.mark.parametrize("optional_is_none", [True, False])
+def test_RateComponentListResponse_xsd(
+    csip_aus_schema: etree.XMLSchema,
+    optional_is_none: bool,
+):
+    """Test RateComponentListResponse separately as it is intentionally a subscribable resource rather than
+    simply a resource"""
+
+    is_valid, errors = generate_non_standard_xml_models(
+        xml_class=RateComponentListResponse, csip_aus_schema=csip_aus_schema, optional_is_none=optional_is_none
+    )
+
+    # if optional_is_none is True there should be no difference from the schema (subscribable is optional)
+    if optional_is_none is True:
+        assert is_valid, errors
+
+    # The only issue should be an error about the subscribable definition
+    if optional_is_none is False:
+        print(errors)
+        assert errors == (
+            "1: Element '{urn:ieee:std:2030.5:ns}RateComponentList', attribute 'subscribable': "
+            "The attribute 'subscribable' is not allowed."
+        )
+
+
+@pytest.mark.parametrize("optional_is_none", [True, False])
+def test_Notification_xsd(
+    csip_aus_schema: etree.XMLSchema,
+    optional_is_none: bool,
+):
+    """Notification contains NotificationResourceCombined which only exists because pydantic-xml has limited
+    support for pydantic discriminated unions, here NotificationResourceCombined is not testsed, simply set to a
+    valid value"""
+
+    # Generate XML string
+    entity: Notification = generate_class_instance(
+        t=Notification, optional_is_none=optional_is_none, generate_relationships=True
+    )
+    # Set 'href' to "04" and delete all other attributes from 'resource'
+    entity.resource = NotificationResourceCombined(href="04")
+
+    xml = entity.to_xml(skip_empty=False, exclude_none=True, exclude_unset=True).decode()
+    xml_doc = etree.fromstring(xml)
+
+    is_valid = csip_aus_schema.validate(xml_doc)
+    errors = "\n".join((f"{e.line}: {e.message}" for e in csip_aus_schema.error_log))
+    assert is_valid, f"{xml}\nErrors:\n{errors}"
+
+
+@pytest.mark.parametrize("optional_is_none", [True, False])
+def test_NotificationListResponse_xsd(
+    optional_is_none: bool,
+):
+    """NotificationListResponse contains NotificationResourceCombined which only exists because pydantic-xml has limited
+    support for pydantic discriminated unions"""
+    # Generate XML string
+    entity: NotificationListResponse = generate_class_instance(
+        t=NotificationListResponse, optional_is_none=optional_is_none, generate_relationships=True
+    )
+
+    xml = entity.to_xml(skip_empty=False, exclude_none=True, exclude_unset=True).decode()
+
+    assert (
+        '<NotificationList xmlns="urn:ieee:std:2030.5:ns" xmlns:csipaus="https://csipaus.org/ns" '
+        'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" href="'
+    ) in xml
+    assert "all=" in xml
+    assert "results=" in xml
+
+    # Check notification is included as an optional element, but not its contents
+    if optional_is_none is True:
+        assert "</Notification>" not in xml
+        assert "</NotificationList>" not in xml
+    else:
+        assert "</Notification></NotificationList>" in xml

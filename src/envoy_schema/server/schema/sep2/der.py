@@ -262,7 +262,7 @@ class DERControlResponse(RandomizableEvent, tag="DERControl"):
 
     DERControlBase_: DERControlBase = element(tag="DERControlBase")
     deviceCategory: Optional[primitive_types.HexBinary32] = element(
-        default=None
+        default=None,
     )  # the bitmap indicating device categories that SHOULD respond.
 
 
@@ -371,16 +371,26 @@ class StateOfChargeStatusValue(BaseXmlModelWithNS, tag="StateOfChargeStatusType"
 class DERStatus(SubscribableResource):
     """DER status information"""
 
+    # Pydantic looks for tags in subclasses if one isnt explicitly defined. Hence redundant tags are placed here,
+    # e.g. genConnectStatus, otherwise they will be renamed. Removing the tags in the subclasses would remove them
+    # from xsd validation
+
     alarmStatus: Optional[primitive_types.HexBinary32] = element(default=None)  # AlarmStatusType encoded HexBinary str
-    genConnectStatus: Optional[ConnectStatusTypeValue] = element(default=None)  # Connection status for generator
-    inverterStatus: Optional[InverterStatusTypeValue] = element(default=None)
-    localControlModeStatus: Optional[LocalControlModeStatusTypeValue] = element(default=None)
-    manufacturerStatus: Optional[ManufacturerStatusValue] = element(default=None)
-    operationalModeStatus: Optional[OperationalModeStatusTypeValue] = element(default=None)
+    genConnectStatus: Optional[ConnectStatusTypeValue] = element(
+        default=None, tag="genConnectStatus"
+    )  # Connection status for generator
+    inverterStatus: Optional[InverterStatusTypeValue] = element(default=None, tag="inverterStatus")
+    localControlModeStatus: Optional[LocalControlModeStatusTypeValue] = element(
+        default=None, tag="localControlModeStatus"
+    )
+    manufacturerStatus: Optional[ManufacturerStatusValue] = element(default=None, tag="manufacturerStatus")
+    operationalModeStatus: Optional[OperationalModeStatusTypeValue] = element(default=None, tag="operationalModeStatus")
     readingTime: types.TimeType = element()
-    stateOfChargeStatus: Optional[StateOfChargeStatusValue] = element(default=None)
-    storageModeStatus: Optional[StorageModeStatusTypeValue] = element(default=None)
-    storConnectStatus: Optional[ConnectStatusTypeValue] = element(default=None)  # Connection status for storage
+    stateOfChargeStatus: Optional[StateOfChargeStatusValue] = element(default=None, tag="stateOfChargeStatus")
+    storageModeStatus: Optional[StorageModeStatusTypeValue] = element(default=None, tag="storageModeStatus")
+    storConnectStatus: Optional[ConnectStatusTypeValue] = element(
+        default=None, tag="storConnectStatus"
+    )  # Connection status for storage
 
 
 class DERAvailability(SubscribableResource):
