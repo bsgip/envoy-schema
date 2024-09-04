@@ -1,8 +1,14 @@
+from typing import Any
 import pytest
 import inspect
 import importlib
 import pkgutil
-from assertical.fake.generator import generate_class_instance, register_value_generator
+from assertical.fake.generator import (
+    generate_class_instance,
+    register_value_generator,
+    enumerate_class_properties,
+    generate_value,
+)
 from lxml import etree
 from itertools import product
 from pydantic_xml.model import XmlModelMeta
@@ -11,7 +17,7 @@ from envoy_schema.server.schema.csip_aus.connection_point import ConnectionPoint
 from envoy_schema.server.schema.sep2.pricing import RateComponentListResponse
 from envoy_schema.server.schema.sep2.types import DateTimeIntervalType
 from envoy_schema.server.schema.sep2.error import ErrorResponse
-from envoy_schema.server.schema.sep2.der import DERCapability
+from envoy_schema.server.schema.sep2.der import DERCapability, DERStatus, DefaultDERControl
 from envoy_schema.server.schema.sep2.end_device import EndDeviceRequest
 
 from envoy_schema.server.schema.sep2.metering_mirror import MirrorMeterReadingListRequest
@@ -236,3 +242,25 @@ def test_NotificationListResponse_xsd(
         assert "</NotificationList>" not in xml
     else:
         assert "</Notification></NotificationList>" in xml
+
+
+@pytest.mark.parametrize("sub_type", [DERCapability, DefaultDERControl, DERStatus])
+def test_NotificationResourceCombined(csip_aus_schema, sub_type: type):
+    NotificationResourceCombined
+    kvps: dict[str, Any] = {}
+    for p in enumerate_class_properties(sub_type):
+        kvps[p.name] = (
+            generate_value(p.type_to_generate) if p.is_primitive_type else generate_class_instance(p.type_to_generate)
+        )
+
+    resource: NotificationResourceCombined = generate_class_instance(
+        NotificationResourceCombined, optional_is_none=True, **kvps
+    )
+    entity: Notification = generate_class_instance(Notification, optional_is_none=True, resource=resource)
+
+    xml = entity.to_xml(skip_empty=False, exclude_none=True, exclude_unset=True).decode()
+    xml_doc = etree.fromstring(xml)
+
+    is_valid = csip_aus_schema.validate(xml_doc)
+    errors = "\n".join((f"{e.line}: {e.message}" for e in csip_aus_schema.error_log))
+    assert is_valid, f"{xml}\nErrors:\n{errors}"

@@ -42,7 +42,7 @@ from envoy_schema.server.schema.sep2.primitive_types import (
     LocalAbsoluteUri,
     HexBinary128,
 )
-from envoy_schema.server.schema.sep2.types import PerCent, TimeType, VersionType
+from envoy_schema.server.schema.sep2.types import PerCent, SubscribableType, TimeType, VersionType
 
 XSI_TYPE_TIME_TARIFF_INTERVAL_LIST = "TimeTariffIntervalList"
 XSI_TYPE_DER_CONTROL_LIST = "DERControlList"
@@ -113,6 +113,8 @@ class NotificationResourceCombined(Resource):
     the xsi:type attribute). Clients using this to parse Notifications will have to manually map the fields to
     the appropriate types.
     """
+
+    subscribable: Optional[SubscribableType] = attr(default=None)
 
     # List
     all_: Optional[int] = attr(name="all", default=None)
