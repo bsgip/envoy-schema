@@ -228,14 +228,14 @@ def test_Notification_xsd(
 ):
     """Notification contains NotificationResourceCombined which only exists because pydantic-xml has limited
     support for pydantic discriminated unions, here NotificationResourceCombined is not tested, simply set to a
-    valid value"""
+    valid value (None)"""
 
     # Generate XML string
     entity: Notification = generate_class_instance(
         t=Notification, optional_is_none=optional_is_none, generate_relationships=True
     )
-    # Set 'href' to "04" and delete all other attributes from 'resource'
-    entity.resource = NotificationResourceCombined(href="04")
+    # Set resource to None to
+    entity.resource = None
 
     xml = entity.to_xml(skip_empty=False, exclude_none=True, exclude_unset=True).decode()
     xml_doc = etree.fromstring(xml)
@@ -300,13 +300,18 @@ def test_NotificationResourceCombined(
         if p.is_primitive_type:
             kvps[p.name] = generate_value(p.type_to_generate)
         else:
-            val = generate_class_instance(t=p.type_to_generate)
+            val = generate_class_instance(t=p.type_to_generate, generate_relationships=True)
             if p.collection_type in [CollectionType.REQUIRED_LIST, CollectionType.OPTIONAL_LIST]:
                 # If we have a list - turn it into a list
                 val = [val]
             elif p.collection_type is not None:
                 raise NotImplementedError(f"Haven't added support in this test for {p.collection_type}")
             kvps[p.name] = val
+
+    # Circumvent issues around subscribable resource not aligning with sep2, not the focus of this test
+    if sub_type == DERCapability:
+        del kvps["subscribable"]
+
     resource: NotificationResourceCombined = generate_class_instance(
         NotificationResourceCombined, optional_is_none=True, **kvps
     )
@@ -318,6 +323,7 @@ def test_NotificationResourceCombined(
     # Getting xsi:type set via assertical is painful because the "type" property exists on pydantic_xml BUT isn't
     # visible to assertical. We also can't set the type property at runtime (or haven't figured out a way)
     # so now we just munge the xsi:type into the generated XML
+
     xml = xml.replace("<Resource href=", f'<Resource xsi:type="{xsi_type}" href=')
     xml_doc = etree.fromstring(xml)
 

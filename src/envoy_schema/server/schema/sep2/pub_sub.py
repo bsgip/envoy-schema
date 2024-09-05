@@ -133,11 +133,12 @@ class NotificationResourceCombined(Resource):
     Readings: Optional[list[Reading]] = element(default=None, tag="Reading")
 
     # SubscribableIdentifiedObject
-    description: Optional[str] = element(default=None)
     mRID: Optional[HexBinary128] = element(default=None)
+    description: Optional[str] = element(default=None)
     version: Optional[VersionType] = element(default=None)
 
     # DefaultDERControl
+    DERControlBase_: Optional[DERControlBase] = element(tag="DERControlBase")
     setESDelay: Optional[int] = element(default=None)
     setESHighFreq: Optional[int] = element(default=None)
     setESHighVolt: Optional[int] = element(default=None)
@@ -147,24 +148,25 @@ class NotificationResourceCombined(Resource):
     setESRandomDelay: Optional[int] = element(default=None)
     setGradW: Optional[int] = element(default=None)
     setSoftGradW: Optional[int] = element(default=None)
-    DERControlBase_: Optional[DERControlBase] = element(tag="DERControlBase", default=None)
 
     # DERStatus
     alarmStatus: Optional[HexBinary32] = element(default=None)
-    genConnectStatus: Optional[ConnectStatusTypeValue] = element(default=None)
-    inverterStatus: Optional[InverterStatusTypeValue] = element(default=None)
-    localControlModeStatus: Optional[LocalControlModeStatusTypeValue] = element(default=None)
-    manufacturerStatus: Optional[ManufacturerStatusValue] = element(default=None)
-    operationalModeStatus: Optional[OperationalModeStatusTypeValue] = element(default=None)
+    genConnectStatus: Optional[ConnectStatusTypeValue] = element(default=None, tag="genConnectStatus")
+    inverterStatus: Optional[InverterStatusTypeValue] = element(default=None, tag="inverterStatus")
+    localControlModeStatus: Optional[LocalControlModeStatusTypeValue] = element(
+        default=None, tag="localControlModeStatus"
+    )
+    manufacturerStatus: Optional[ManufacturerStatusValue] = element(default=None, tag="manufacturerStatus")
+    operationalModeStatus: Optional[OperationalModeStatusTypeValue] = element(default=None, tag="operationalModeStatus")
     readingTime: Optional[TimeType] = element(default=None)
-    stateOfChargeStatus: Optional[StateOfChargeStatusValue] = element(default=None)
-    storageModeStatus: Optional[StorageModeStatusTypeValue] = element(default=None)
-    storConnectStatus: Optional[ConnectStatusTypeValue] = element(default=None)
+    stateOfChargeStatus: Optional[StateOfChargeStatusValue] = element(default=None, tag="stateOfChargeStatus")
+    storageModeStatus: Optional[StorageModeStatusTypeValue] = element(default=None, tag="storageModeStatus")
+    storConnectStatus: Optional[ConnectStatusTypeValue] = element(default=None, tag="storConnectStatus")
 
     # DERAvailability
     availabilityDuration: Optional[int] = element(default=None)
     maxChargeDuration: Optional[int] = element(default=None)
-    # readingTime: TimeType = element() # Duplicated from DERStatus
+    # readingTime: TimeType = element()  # Duplicated from DERStatus
     reserveChargePercent: Optional[PerCent] = element(default=None)
     reservePercent: Optional[PerCent] = element(default=None)
     statVarAvail: Optional[ReactivePower] = element(default=None)
@@ -227,7 +229,7 @@ class NotificationResourceCombined(Resource):
     setVRef: Optional[VoltageRMS] = element(default=None)
     setVRefOfs: Optional[VoltageRMS] = element(default=None)
     updatedTime: Optional[TimeType] = element(default=None)
-    doeModesEnabled: HexBinary8 = element(ns="csipaus", default=None)
+    doeModesEnabled: Optional[HexBinary8] = element(ns="csipaus", default=None)
 
 
 class Notification(SubscriptionBase):
