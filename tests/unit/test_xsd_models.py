@@ -308,7 +308,8 @@ def test_NotificationResourceCombined(
                 raise NotImplementedError(f"Haven't added support in this test for {p.collection_type}")
             kvps[p.name] = val
 
-    # Circumvent issues around subscribable resource not aligning with sep2, not the focus of this test
+    # Subscribable on DERCap was something unique to this implementation - it's not in the standard
+    # but was added because it was a nice feature - here we unpick it so we can XSD validate
     if sub_type == DERCapability:
         del kvps["subscribable"]
 

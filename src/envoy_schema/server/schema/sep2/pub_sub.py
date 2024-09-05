@@ -112,6 +112,12 @@ class NotificationResourceCombined(Resource):
     The plan is for the server to only fill out the fields relevant for the notification being served (based on
     the xsi:type attribute). Clients using this to parse Notifications will have to manually map the fields to
     the appropriate types.
+
+    HERE BE DRAGONS FOR XSD VALIDITY:
+        In order to keep XSD element ordering, we've had to do a few "creative" element orderings to ensure that
+        generated notifications have elements in the XSD valid order. Because a couple of element names are shared
+        between the combined resource types (eg setESDelay on DefaultDERControl / DERSettings) - We've had to define
+        things in a confusing order - There isn't another way around this. See highlighted items marked with SORRY.
     """
 
     subscribable: Optional[SubscribableType] = attr(default=None)
@@ -137,6 +143,10 @@ class NotificationResourceCombined(Resource):
     description: Optional[str] = element(default=None)
     version: Optional[VersionType] = element(default=None)
 
+    # SORRY (see docstring): DERSettings:  but because of the shared elements with DefaultDERControl, this must
+    # appear above DefaultDERControl
+    modesEnabled: Optional[HexBinary32] = element(default=None)  # SORRY
+
     # DefaultDERControl
     DERControlBase_: Optional[DERControlBase] = element(tag="DERControlBase")
     setESDelay: Optional[int] = element(default=None)
@@ -147,7 +157,12 @@ class NotificationResourceCombined(Resource):
     setESRampTms: Optional[int] = element(default=None)
     setESRandomDelay: Optional[int] = element(default=None)
     setGradW: Optional[int] = element(default=None)
-    setSoftGradW: Optional[int] = element(default=None)
+    # setSoftGradW: Optional[int] = element(default=None) # Duplicated from DERSettings
+
+    # SORRY (see docstring): DERAvailability but unfortunately DERAvailability/DERStatus: both share readingTime, these
+    # need to be brought up there to ensure they work if either resource type is populated
+    availabilityDuration: Optional[int] = element(default=None)  # SORRY
+    maxChargeDuration: Optional[int] = element(default=None)  # SORRY
 
     # DERStatus
     alarmStatus: Optional[HexBinary32] = element(default=None)
@@ -164,8 +179,6 @@ class NotificationResourceCombined(Resource):
     storConnectStatus: Optional[ConnectStatusTypeValue] = element(default=None, tag="storConnectStatus")
 
     # DERAvailability
-    availabilityDuration: Optional[int] = element(default=None)
-    maxChargeDuration: Optional[int] = element(default=None)
     # readingTime: TimeType = element()  # Duplicated from DERStatus
     reserveChargePercent: Optional[PerCent] = element(default=None)
     reservePercent: Optional[PerCent] = element(default=None)
@@ -201,7 +214,6 @@ class NotificationResourceCombined(Resource):
     doeModesSupported: Optional[DOESupportedMode] = element(ns="csipaus", default=None)
 
     # DERSettings
-    modesEnabled: Optional[HexBinary32] = element(default=None)
     # setESDelay: Optional[int] = element(default=None)  # Duplicated from DERControl
     # setESHighFreq: Optional[int] = element(default=None) # Duplicated from DERControl
     # setESHighVolt: Optional[int] = element(default=None) # Duplicated from DERControl
@@ -224,7 +236,7 @@ class NotificationResourceCombined(Resource):
     setMinPFOverExcited: Optional[PowerFactor] = element(default=None)
     setMinPFUnderExcited: Optional[PowerFactor] = element(default=None)
     setMinV: Optional[VoltageRMS] = element(default=None)
-    # setSoftGradW: Optional[int] = element(default=None)  # Duplicated from DERControl
+    setSoftGradW: Optional[int] = element(default=None)
     setVNom: Optional[VoltageRMS] = element(default=None)
     setVRef: Optional[VoltageRMS] = element(default=None)
     setVRefOfs: Optional[VoltageRMS] = element(default=None)

@@ -1,17 +1,14 @@
 import pytest
-from assertical.fake.generator import generate_class_instance
-from lxml import etree
+
 from pydantic_core import ValidationError
 
 from envoy_schema.server.schema.sep2.der import (
-    DER,
     DemandResponseProgramListResponse,
     DERAvailability,
     DERCapability,
     DERControlListResponse,
     DERListResponse,
     DERProgramListResponse,
-    DERProgramResponse,
     DERSettings,
     DERStatus,
     DERType,
@@ -73,45 +70,3 @@ def test_DERStatus_long_manufacturer():
 
     assert max_len.manufacturerStatus.dateTime == 123
     assert max_len.manufacturerStatus.value == "maxlen"
-
-
-@pytest.mark.parametrize("optional_is_none", [True, False])
-def test_DERProgramList_xsd(optional_is_none: bool, csip_aus_schema: etree.XMLSchema, use_assertical_extensions):
-    """Placeholder test for validating EndDeviceResponse against the csip-aus XSD"""
-
-    # Generate XML string
-    entity: DERProgramListResponse = generate_class_instance(
-        DERProgramListResponse,
-        optional_is_none=optional_is_none,
-        type=None,
-    )
-    entity.DERProgram = [
-        generate_class_instance(
-            DERProgramResponse, optional_is_none=optional_is_none, mRID="1234567890abcdef", type=None
-        )
-    ]
-    xml = entity.to_xml(skip_empty=True).decode()
-    xml_doc = etree.fromstring(xml)
-
-    is_valid = csip_aus_schema.validate(xml_doc)
-    errors = "\n".join((f"{e.line}: {e.message}" for e in csip_aus_schema.error_log))
-    assert is_valid, f"{xml}\nErrors:\n{errors}"
-
-
-@pytest.mark.parametrize("optional_is_none", [True, False])
-def test_DERList_xsd(optional_is_none: bool, csip_aus_schema: etree.XMLSchema, use_assertical_extensions):
-    """Placeholder test for validating EndDeviceResponse against the csip-aus XSD"""
-
-    # Generate XML string
-    entity: DERListResponse = generate_class_instance(
-        DERListResponse,
-        optional_is_none=optional_is_none,
-        type=None,
-    )
-    entity.DER_ = [generate_class_instance(DER, optional_is_none=optional_is_none, type=None)]
-    xml = entity.to_xml(skip_empty=True).decode()
-    xml_doc = etree.fromstring(xml)
-
-    is_valid = csip_aus_schema.validate(xml_doc)
-    errors = "\n".join((f"{e.line}: {e.message}" for e in csip_aus_schema.error_log))
-    assert is_valid, f"{xml}\nErrors:\n{errors}"
