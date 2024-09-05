@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Generator
 import pytest
 import inspect
 import importlib
@@ -8,21 +8,44 @@ from assertical.fake.generator import (
     register_value_generator,
     enumerate_class_properties,
     generate_value,
+    CollectionType,
+    BASE_CLASS_PUBLIC_MEMBERS,
 )
 from lxml import etree
 from itertools import product
 from pydantic_xml.model import XmlModelMeta
 from envoy_schema.server.schema.sep2.base import BaseXmlModelWithNS
 from envoy_schema.server.schema.csip_aus.connection_point import ConnectionPointRequest
-from envoy_schema.server.schema.sep2.pricing import RateComponentListResponse
+from envoy_schema.server.schema.sep2.metering import Reading, ReadingListResponse
+from envoy_schema.server.schema.sep2.pricing import RateComponentListResponse, TimeTariffIntervalListResponse
 from envoy_schema.server.schema.sep2.types import DateTimeIntervalType
 from envoy_schema.server.schema.sep2.error import ErrorResponse
-from envoy_schema.server.schema.sep2.der import DERCapability, DERStatus, DefaultDERControl
-from envoy_schema.server.schema.sep2.end_device import EndDeviceRequest
+from envoy_schema.server.schema.sep2.der import (
+    DERAvailability,
+    DERCapability,
+    DERControlListResponse,
+    DERSettings,
+    DERStatus,
+    DefaultDERControl,
+)
+from envoy_schema.server.schema.sep2.end_device import EndDeviceListResponse, EndDeviceRequest
 
 from envoy_schema.server.schema.sep2.metering_mirror import MirrorMeterReadingListRequest
-from envoy_schema.server.schema.sep2.pub_sub import NotificationResourceCombined, NotificationListResponse, Notification
-from envoy_schema.server.schema.sep2.identification import Resource
+from envoy_schema.server.schema.sep2.pub_sub import (
+    XSI_TYPE_DEFAULT_DER_CONTROL,
+    XSI_TYPE_DER_AVAILABILITY,
+    XSI_TYPE_DER_CAPABILITY,
+    XSI_TYPE_DER_CONTROL_LIST,
+    XSI_TYPE_DER_SETTINGS,
+    XSI_TYPE_DER_STATUS,
+    XSI_TYPE_END_DEVICE_LIST,
+    XSI_TYPE_READING_LIST,
+    XSI_TYPE_TIME_TARIFF_INTERVAL_LIST,
+    NotificationResourceCombined,
+    NotificationListResponse,
+    Notification,
+)
+from envoy_schema.server.schema.sep2.identification import Resource, SubscribableIdentifiedObject, List
 
 
 def import_all_classes_from_module(package_name: str) -> list:
@@ -52,12 +75,23 @@ def import_all_classes_from_module(package_name: str) -> list:
     return classes_list
 
 
+@pytest.fixture
+def custom_assertical_registrations(csip_aus_schema):
+    # Circumvent issues with assertical generating invalid Int8, Uint8 etc values and hexbinary (str subclass)
+    register_value_generator(int, lambda x: x % 64)  # This will be unwound due to dep on use_assertical_extensions
+    register_value_generator(
+        str, lambda x: f"{x % 256:02x}"
+    )  # This will be unwound due to dep on use_assertical_extensions
+
+
+# Main test against almost all xsd schema models with a few exceptions treated below
 @pytest.mark.parametrize(
     "xml_class, optional_is_none", product(import_all_classes_from_module("envoy_schema.server.schema"), [True, False])
 )
 def test_validate_xml_model_csip_aus(
     xml_class: type,
     csip_aus_schema: etree.XMLSchema,
+    custom_assertical_registrations,
     optional_is_none: bool,
 ):
     # Skip some classes which require individual handling for various reasons (separate tests provided where needed)
@@ -82,12 +116,6 @@ def test_validate_xml_model_csip_aus(
         if xml_class is skip_classes:
             return
 
-    # Circumvent issues with assertical generating invalid Int8, Uint8 etc values and hexbinary (str subclass)
-    register_value_generator(int, lambda x: x % 64)  # This will be unwound due to dep on use_assertical_extensions
-    register_value_generator(
-        str, lambda x: f"{x % 256:02x}"
-    )  # This will be unwound due to dep on use_assertical_extensions
-
     # Generate XML string
     entity: xml_class = generate_class_instance(
         t=xml_class, optional_is_none=optional_is_none, generate_relationships=True
@@ -106,6 +134,8 @@ def generate_non_standard_xml_models(
     csip_aus_schema: etree.XMLSchema,
     optional_is_none: bool,
 ) -> tuple[bool, str]:
+    """Perform setup of xml by generating class instance, converting to xml and validating against the schema.
+    Returns is_valid: bool and errors: str as a tuple."""
 
     # Circumvent issues with assertical generating invalid Int8, Uint8 etc values and hexbinary (str subclass)
     register_value_generator(int, lambda x: x % 64)  # This will be unwound due to dep on use_assertical_extensions
@@ -185,7 +215,6 @@ def test_RateComponentListResponse_xsd(
 
     # The only issue should be an error about the subscribable definition
     if optional_is_none is False:
-        print(errors)
         assert errors == (
             "1: Element '{urn:ieee:std:2030.5:ns}RateComponentList', attribute 'subscribable': "
             "The attribute 'subscribable' is not allowed."
@@ -198,7 +227,7 @@ def test_Notification_xsd(
     optional_is_none: bool,
 ):
     """Notification contains NotificationResourceCombined which only exists because pydantic-xml has limited
-    support for pydantic discriminated unions, here NotificationResourceCombined is not testsed, simply set to a
+    support for pydantic discriminated unions, here NotificationResourceCombined is not tested, simply set to a
     valid value"""
 
     # Generate XML string
@@ -221,7 +250,7 @@ def test_NotificationListResponse_xsd(
     optional_is_none: bool,
 ):
     """NotificationListResponse contains NotificationResourceCombined which only exists because pydantic-xml has limited
-    support for pydantic discriminated unions"""
+    support for pydantic discriminated unions. The test is very simple as it is a single element only"""
     # Generate XML string
     entity: NotificationListResponse = generate_class_instance(
         t=NotificationListResponse, optional_is_none=optional_is_none, generate_relationships=True
@@ -244,21 +273,52 @@ def test_NotificationListResponse_xsd(
         assert "</Notification></NotificationList>" in xml
 
 
-@pytest.mark.parametrize("sub_type", [DERCapability, DefaultDERControl, DERStatus])
-def test_NotificationResourceCombined(csip_aus_schema, sub_type: type):
-    NotificationResourceCombined
+@pytest.mark.parametrize(
+    "sub_type, xsi_type",
+    [
+        (TimeTariffIntervalListResponse, XSI_TYPE_TIME_TARIFF_INTERVAL_LIST),
+        (EndDeviceListResponse, XSI_TYPE_END_DEVICE_LIST),
+        (DERControlListResponse, XSI_TYPE_DER_CONTROL_LIST),
+        (ReadingListResponse, XSI_TYPE_READING_LIST),
+        (DefaultDERControl, XSI_TYPE_DEFAULT_DER_CONTROL),
+        (DERStatus, XSI_TYPE_DER_STATUS),
+        (DERAvailability, XSI_TYPE_DER_AVAILABILITY),
+        (DERCapability, XSI_TYPE_DER_CAPABILITY),
+        (DERSettings, XSI_TYPE_DER_SETTINGS),
+    ],
+)
+def test_NotificationResourceCombined(
+    csip_aus_schema: etree.XMLSchema, sub_type: type, xsi_type: str, custom_assertical_registrations
+):
+
+    # There are a ton sub_types that have been munged together into NotificationResourceCombined (see comments on type)
+    # This will generate ONLY the subtype specific properties and assign them into NotificationResourceCombined
+    # in an effort to simplify the generation (and guard against future property changes)
     kvps: dict[str, Any] = {}
     for p in enumerate_class_properties(sub_type):
-        kvps[p.name] = (
-            generate_value(p.type_to_generate) if p.is_primitive_type else generate_class_instance(p.type_to_generate)
-        )
 
+        if p.is_primitive_type:
+            kvps[p.name] = generate_value(p.type_to_generate)
+        else:
+            val = generate_class_instance(t=p.type_to_generate)
+            if p.collection_type in [CollectionType.REQUIRED_LIST, CollectionType.OPTIONAL_LIST]:
+                # If we have a list - turn it into a list
+                val = [val]
+            elif p.collection_type is not None:
+                raise NotImplementedError(f"Haven't added support in this test for {p.collection_type}")
+            kvps[p.name] = val
     resource: NotificationResourceCombined = generate_class_instance(
         NotificationResourceCombined, optional_is_none=True, **kvps
     )
-    entity: Notification = generate_class_instance(Notification, optional_is_none=True, resource=resource)
+
+    entity: Notification = generate_class_instance(Notification, seed=201, optional_is_none=True, resource=resource)
 
     xml = entity.to_xml(skip_empty=False, exclude_none=True, exclude_unset=True).decode()
+
+    # Getting xsi:type set via assertical is painful because the "type" property exists on pydantic_xml BUT isn't
+    # visible to assertical. We also can't set the type property at runtime (or haven't figured out a way)
+    # so now we just munge the xsi:type into the generated XML
+    xml = xml.replace("<Resource href=", f'<Resource xsi:type="{xsi_type}" href=')
     xml_doc = etree.fromstring(xml)
 
     is_valid = csip_aus_schema.validate(xml_doc)
