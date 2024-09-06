@@ -148,7 +148,7 @@ class NotificationResourceCombined(Resource):
     modesEnabled: Optional[HexBinary32] = element(default=None)  # SORRY
 
     # DefaultDERControl
-    DERControlBase_: Optional[DERControlBase] = element(tag="DERControlBase")
+    DERControlBase_: Optional[DERControlBase] = element(tag="DERControlBase", default=None)
     setESDelay: Optional[int] = element(default=None)
     setESHighFreq: Optional[int] = element(default=None)
     setESHighVolt: Optional[int] = element(default=None)

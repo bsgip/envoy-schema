@@ -357,10 +357,10 @@ def test_notification_encode_resource_TimeTariffIntervalListResponse():
         "TimeTariffInterval": [
             {
                 "creationTime": 123,
-                "mRID": "abc",
+                "mRID": "AABB",
                 "interval": {
-                    "start": 456,
                     "duration": 789,
+                    "start": 456,
                 },
                 "touTier": TOUType.NOT_APPLICABLE,
                 "ConsumptionTariffIntervalListLink": {"all_": 1, "href": "/my/price/at/time/554433"},
