@@ -1,6 +1,6 @@
-<Notification xmlns="urn:ieee:std:2030.5:ns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<Notification xmlns="urn:ieee:std:2030.5:ns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" href="/foo/bar">
     <subscribedResource>/upt/0/mr/4/r</subscribedResource>
-    <Resource xsi:type="ReadingList" all="1" results="1" href="/my/list">
+    <Resource xsi:type="Reading" all="1" results="1" href="/my/list">
         <Reading>
             <timePeriod>
                 <duration>0</duration>

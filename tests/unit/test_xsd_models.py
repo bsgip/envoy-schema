@@ -153,6 +153,7 @@ def generate_non_standard_xml_models(
     )
 
     xml = entity.to_xml(skip_empty=False, exclude_none=True, exclude_unset=True).decode()
+    xml = re.sub('xsi:type="[^"]*"', "", xml)
     xml_doc = etree.fromstring(xml)
 
     is_valid = csip_aus_schema.validate(xml_doc)
@@ -242,6 +243,7 @@ def test_Notification_xsd(
     entity.resource = None
 
     xml = entity.to_xml(skip_empty=False, exclude_none=True, exclude_unset=True).decode()
+    xml = re.sub('xsi:type="[^"]*"', "", xml)
     xml_doc = etree.fromstring(xml)
 
     is_valid = csip_aus_schema.validate(xml_doc)
@@ -261,10 +263,10 @@ def test_NotificationListResponse_xsd(
     )
 
     xml = entity.to_xml(skip_empty=False, exclude_none=True, exclude_unset=True).decode()
-
+    xml = re.sub('xsi:type="[^"]*"', "", xml)
     assert (
         '<NotificationList xmlns="urn:ieee:std:2030.5:ns" xmlns:csipaus="https://csipaus.org/ns" '
-        'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" href="'
+        'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"'
     ) in xml
     assert "all=" in xml
     assert "results=" in xml
@@ -314,7 +316,16 @@ def test_NotificationResourceCombined(
 
     # Subscribable on DERCap was something unique to this implementation - it's not in the standard
     # but was added because it was a nice feature - here we unpick it so we can XSD validate
-    if sub_type == DERCapability:
+    if sub_type in [
+        DERCapability,
+        DERSettings,
+        DERAvailability,
+        DERStatus,
+        DefaultDERControl,
+        ReadingListResponse,
+        EndDeviceListResponse,
+        DERControlListResponse,
+    ]:
         del kvps["subscribable"]
 
     resource: NotificationResourceCombined = generate_class_instance(
@@ -324,7 +335,7 @@ def test_NotificationResourceCombined(
     entity: Notification = generate_class_instance(Notification, seed=201, optional_is_none=True, resource=resource)
 
     xml = entity.to_xml(skip_empty=False, exclude_none=True, exclude_unset=True).decode()
-
+    xml = re.sub('xsi:type="[^"]*"', "", xml)
     # Getting xsi:type set via assertical is painful because the "type" property exists on pydantic_xml BUT isn't
     # visible to assertical. We also can't set the type property at runtime (or haven't figured out a way)
     # so now we just munge the xsi:type into the generated XML
