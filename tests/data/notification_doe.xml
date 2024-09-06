@@ -2,17 +2,22 @@
     <subscribedResource>/upt/0/mr/4/r</subscribedResource>
     <Resource xsi:type="DERControlList" all="1" results="1" href="/my/list">
         <DERControl>
+            <mRID>AABB</mRID>
             <creationTime>123</creationTime>
-            <mRID>abc</mRID>
+            <EventStatus>
+                <currentStatus>9</currentStatus>
+                <dateTime>10</dateTime>
+                <potentiallySuperseded>false</potentiallySuperseded>
+            </EventStatus>
             <interval>
-                <start>456</start>
                 <duration>789</duration>
+                <start>456</start>
             </interval>
             <DERControlBase>
-                <csipaus:opModImpLimW><value>100</value><multiplier>1</multiplier></csipaus:opModImpLimW>
-                <csipaus:opModExpLimW><value>200</value><multiplier>1</multiplier></csipaus:opModExpLimW>
-                <csipaus:opModGenLimW><value>300</value><multiplier>1</multiplier></csipaus:opModGenLimW>
-                <csipaus:opModLoadLimW><value>400</value><multiplier>1</multiplier></csipaus:opModLoadLimW>
+                <csipaus:opModImpLimW><multiplier>1</multiplier><value>100</value></csipaus:opModImpLimW>
+                <csipaus:opModExpLimW><multiplier>1</multiplier><value>200</value></csipaus:opModExpLimW>
+                <csipaus:opModGenLimW><multiplier>1</multiplier><value>300</value></csipaus:opModGenLimW>
+                <csipaus:opModLoadLimW><multiplier>1</multiplier><value>400</value></csipaus:opModLoadLimW>
             </DERControlBase>
         </DERControl>
     </Resource>
