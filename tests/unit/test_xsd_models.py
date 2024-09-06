@@ -335,7 +335,7 @@ def test_NotificationResourceCombined(
     entity: Notification = generate_class_instance(Notification, seed=201, optional_is_none=True, resource=resource)
 
     xml = entity.to_xml(skip_empty=False, exclude_none=True, exclude_unset=True).decode()
-    xml = re.sub('xsi:type="[^"]*"', "", xml)
+    xml = re.sub('xsi:type="[^"]*" *', "", xml)
     # Getting xsi:type set via assertical is painful because the "type" property exists on pydantic_xml BUT isn't
     # visible to assertical. We also can't set the type property at runtime (or haven't figured out a way)
     # so now we just munge the xsi:type into the generated XML
