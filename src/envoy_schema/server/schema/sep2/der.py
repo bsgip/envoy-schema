@@ -27,10 +27,8 @@ from envoy_schema.server.schema.sep2.identification import (
     SubscribableIdentifiedObject,
     SubscribableList,
     SubscribableResource,
-    Resource,
 )
 from envoy_schema.server.schema.sep2.pricing import PrimacyType
-from envoy_schema.server.schema.sep2.primitive_types import HexBinary8
 
 
 class DERType(IntEnum):

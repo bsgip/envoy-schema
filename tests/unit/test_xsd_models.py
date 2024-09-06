@@ -1,4 +1,4 @@
-from typing import Any, Generator
+from typing import Any
 import pytest
 import inspect
 import importlib
@@ -10,16 +10,14 @@ from assertical.fake.generator import (
     enumerate_class_properties,
     generate_value,
     CollectionType,
-    BASE_CLASS_PUBLIC_MEMBERS,
 )
 from lxml import etree
 from itertools import product
 from pydantic_xml.model import XmlModelMeta
 from envoy_schema.server.schema.sep2.base import BaseXmlModelWithNS
 from envoy_schema.server.schema.csip_aus.connection_point import ConnectionPointRequest
-from envoy_schema.server.schema.sep2.metering import Reading, ReadingListResponse
+from envoy_schema.server.schema.sep2.metering import ReadingListResponse
 from envoy_schema.server.schema.sep2.pricing import RateComponentListResponse, TimeTariffIntervalListResponse
-from envoy_schema.server.schema.sep2.types import DateTimeIntervalType
 from envoy_schema.server.schema.sep2.error import ErrorResponse
 from envoy_schema.server.schema.sep2.der import (
     DERAvailability,
@@ -46,7 +44,6 @@ from envoy_schema.server.schema.sep2.pub_sub import (
     NotificationListResponse,
     Notification,
 )
-from envoy_schema.server.schema.sep2.identification import Resource, SubscribableIdentifiedObject, List
 
 
 def import_all_classes_from_module(package_name: str) -> list:

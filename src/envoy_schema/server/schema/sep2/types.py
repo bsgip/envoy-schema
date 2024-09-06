@@ -1,8 +1,6 @@
 from enum import IntEnum, IntFlag, auto
 from functools import reduce
-from typing import Annotated
 
-from pydantic import Field
 from pydantic_xml import element
 
 from envoy_schema.server.schema.sep2 import base
