@@ -3,6 +3,7 @@ import pytest
 import inspect
 import importlib
 import pkgutil
+import re
 from assertical.fake.generator import (
     generate_class_instance,
     register_value_generator,
@@ -118,10 +119,13 @@ def test_validate_xml_model_csip_aus(
 
     # Generate XML string
     entity: xml_class = generate_class_instance(
-        t=xml_class, optional_is_none=optional_is_none, generate_relationships=True
+        t=xml_class,
+        optional_is_none=optional_is_none,
+        generate_relationships=True,
     )
 
     xml = entity.to_xml(skip_empty=False, exclude_none=True, exclude_unset=True).decode()
+    xml = re.sub('xsi:type="[^"]*"', "", xml)
     xml_doc = etree.fromstring(xml)
 
     is_valid = csip_aus_schema.validate(xml_doc)

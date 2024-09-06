@@ -6,7 +6,8 @@ from envoy_schema.server.schema.sep2 import base, primitive_types, types
 
 
 class Resource(base.BaseXmlModelWithNS):
-    href: str = attr(default=None)
+    type: Optional[str] = attr(ns="xsi", default=None)
+    href: Optional[str] = attr(default=None)
 
 
 class IdentifiedObject(Resource):
@@ -58,8 +59,8 @@ class List(Resource):
     results: int = attr()  # Indicates the number of items in this page of results.
 
 
-class Link(Resource):
-    pass
+class Link(base.BaseXmlModelWithNS):
+    href: str = attr()
 
 
 class ListLink(Link):

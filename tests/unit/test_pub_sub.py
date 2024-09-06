@@ -116,11 +116,16 @@ def test_notification_encode_resource_DERControlListResponse():
         "href": "/my/list",
         "DERControl": [
             {
-                "creationTime": 123,
                 "mRID": "abc",
+                "creationTime": 123,
                 "interval": {
                     "start": 456,
                     "duration": 789,
+                },
+                "EventStatus_": {
+                    "currentStatus": 1,
+                    "dateTime": 2,
+                    "potentiallySuperseded": False,
                 },
                 "DERControlBase_": {
                     "opModImpLimW": {"value": 100, "multiplier": 1},
@@ -247,7 +252,7 @@ def test_notification_encode_resource_DERSettings():
         "statVarAvail": {"multiplier": 2, "value": 7},
         "statWAvail": {"multiplier": 3, "value": 8},
         "updatedTime": 17000001,
-        "doeModesEnabled": 1,
+        "doeModesEnabled": "be",
     }
 
     # Quick sanity check on the raw XML
@@ -261,7 +266,7 @@ def test_notification_encode_resource_DERSettings():
     assert notif.resource.modesEnabled == "feed"
     assert notif.resource.setMaxW.value == 44
     assert notif.resource.updatedTime == 17000001
-    assert notif.resource.doeModesEnabled == 1
+    assert notif.resource.doeModesEnabled == "be"
 
 
 def test_notification_encode_resource_DERCapability():
@@ -356,6 +361,11 @@ def test_notification_encode_resource_TimeTariffIntervalListResponse():
         "href": "/my/list",
         "TimeTariffInterval": [
             {
+                "EventStatus_": {
+                    "currentStatus": 1,
+                    "dateTime": 2,
+                    "potentiallySuperseded": False,
+                },
                 "creationTime": 123,
                 "mRID": "AABB",
                 "interval": {
