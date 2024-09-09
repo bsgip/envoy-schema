@@ -153,13 +153,13 @@ def test_all_xml_models_csip_aus(
 
 
 @pytest.mark.parametrize("optional_is_none", [True, False])
-def test_error_response_xsd(
-    csip_aus_schema: etree.XMLSchema,
-    optional_is_none: bool,
-):
+def test_error_response_xsd(csip_aus_schema: etree.XMLSchema, optional_is_none: bool, custom_assertical_registrations):
     """Test ErrorResponse separately as an additional optional element (message) causes xsd validation issues"""
     is_valid, errors = generate_and_validate_xml(
-        xml_class=ErrorResponse, csip_aus_schema=csip_aus_schema, optional_is_none=optional_is_none
+        xml_class=ErrorResponse,
+        csip_aus_schema=csip_aus_schema,
+        optional_is_none=optional_is_none,
+        custom_assertical_registrations=custom_assertical_registrations,
     )
 
     # ErrorResponse passes validation where True as the xsd addition is optional
@@ -174,11 +174,15 @@ def test_error_response_xsd(
 def test_DERCapability_xsd(
     csip_aus_schema: etree.XMLSchema,
     optional_is_none: bool,
+    custom_assertical_registrations,
 ):
     """Test DERCapability separately as it is intentionally a subscribable resource rather than simply a resource"""
 
     is_valid, errors = generate_and_validate_xml(
-        xml_class=DERCapability, csip_aus_schema=csip_aus_schema, optional_is_none=optional_is_none
+        xml_class=DERCapability,
+        csip_aus_schema=csip_aus_schema,
+        optional_is_none=optional_is_none,
+        custom_assertical_registrations=custom_assertical_registrations,
     )
 
     # if optional_is_none is True there should be no difference from the schema (subscribable is optional)
@@ -195,14 +199,16 @@ def test_DERCapability_xsd(
 
 @pytest.mark.parametrize("optional_is_none", [True, False])
 def test_RateComponentListResponse_xsd(
-    csip_aus_schema: etree.XMLSchema,
-    optional_is_none: bool,
+    csip_aus_schema: etree.XMLSchema, optional_is_none: bool, custom_assertical_registrations
 ):
     """Test RateComponentListResponse separately as it is intentionally a subscribable resource rather than
     simply a resource"""
 
     is_valid, errors = generate_and_validate_xml(
-        xml_class=RateComponentListResponse, csip_aus_schema=csip_aus_schema, optional_is_none=optional_is_none
+        xml_class=RateComponentListResponse,
+        csip_aus_schema=csip_aus_schema,
+        optional_is_none=optional_is_none,
+        custom_assertical_registrations=custom_assertical_registrations,
     )
 
     # if optional_is_none is True there should be no difference from the schema (subscribable is optional)
