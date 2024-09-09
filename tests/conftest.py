@@ -1,5 +1,3 @@
-from typing import Any, Callable
-
 import pytest
 from lxml import etree
 from assertical.fixtures.generator import generator_registry_snapshot

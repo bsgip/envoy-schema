@@ -46,8 +46,9 @@ from envoy_schema.server.schema.sep2.pub_sub import (
 )
 
 
-def import_all_classes_from_module(package_name: str) -> list:
-    """Dynamically load all the classes from the specified module AND sub modules. Returns a list."""
+def import_all_classes_from_module(package_name: str) -> list[type]:
+    """Dynamically load all the classes from the specified module AND sub modules.
+    Returns a list of classes"""
     classes_list = []
 
     package = importlib.import_module(package_name)
@@ -75,87 +76,80 @@ def import_all_classes_from_module(package_name: str) -> list:
 
 @pytest.fixture
 def custom_assertical_registrations(csip_aus_schema):
-    # Circumvent issues with assertical generating invalid Int8, Uint8 etc values and hexbinary (str subclass)
-    register_value_generator(int, lambda x: x % 64)  # This will be unwound due to dep on use_assertical_extensions
+    """Assertical does not get passed the correct pydantic_xml types: e.g. Int8, Uint8, hexbinary will generate as
+    integers only and cause type issues for xml validation. This overwrites these with valid generated values.
+    This will be unwound due to dep on the use_assertical_extensions fixture (see conftest)."""
+    register_value_generator(int, lambda x: x % 64)
     register_value_generator(
         str, lambda x: f"{x % 256:02x}"
     )  # This will be unwound due to dep on use_assertical_extensions
 
 
-# Main test against almost all xsd schema models with a few exceptions treated below
-@pytest.mark.parametrize(
-    "xml_class, optional_is_none", product(import_all_classes_from_module("envoy_schema.server.schema"), [True, False])
-)
-def test_validate_xml_model_csip_aus(
+def generate_and_validate_xml(
     xml_class: type,
     csip_aus_schema: etree.XMLSchema,
     custom_assertical_registrations,
     optional_is_none: bool,
-):
-    # Skip some classes which require individual handling for various reasons (separate tests provided where needed)
-
-    # ConnectionPointRequest has differences between the csipaus311 and 311a frameworks which will both be supported
-    # DERCapability is made subscribable intentionally differing from the framework, same for RateComponentListResponse
-    # NotificationResourceCombined is a pydantic workaround, which affects NotificationListResponse and Notification
-    # MirrorMeterReadingListRequest and EndDeviceRequest intentionally remove unnecessary information
-
-    for skip_classes in [
-        BaseXmlModelWithNS,  # Not necessary to xsd validate
-        ConnectionPointRequest,  # Not necessary to xsd validate
-        DERCapability,  # See Separate test below
-        RateComponentListResponse,  # See Separate test below
-        NotificationResourceCombined,
-        NotificationListResponse,  # See Separate test below
-        Notification,  # See Separate test below
-        MirrorMeterReadingListRequest,  # Not necessary to xsd validate
-        ErrorResponse,  # See Separate test below
-        EndDeviceRequest,  # Not necessary to xsd validate, is not generated, only sent by clients
-    ]:
-        if xml_class is skip_classes:
-            return
-
+) -> tuple[bool, str]:
+    """Generate class instances using assertical, convert to xml and then validate against csip_aus_schema which
+    contains sep, csipaus-core and csipaus-ext xsd files."""
     # Generate XML string
     entity: xml_class = generate_class_instance(
         t=xml_class,
         optional_is_none=optional_is_none,
         generate_relationships=True,
     )
-
     xml = entity.to_xml(skip_empty=False, exclude_none=True, exclude_unset=True).decode()
+
+    # Getting xsi:type set via assertical is painful because the "type" property exists on pydantic_xml BUT isn't
+    # visible to assertical. We also can't set the type property at runtime (or haven't figured out a way)
+    # so now we just munge the xsi:type into the generated XML
     xml = re.sub('xsi:type="[^"]*"', "", xml)
     xml_doc = etree.fromstring(xml)
 
-    is_valid = csip_aus_schema.validate(xml_doc)
-    errors = "\n".join((f"{e.line}: {e.message}" for e in csip_aus_schema.error_log))
-    assert is_valid, f"{xml}\nErrors:\n{errors}"
-
-
-def generate_non_standard_xml_models(
-    xml_class: type,
-    csip_aus_schema: etree.XMLSchema,
-    optional_is_none: bool,
-) -> tuple[bool, str]:
-    """Perform setup of xml by generating class instance, converting to xml and validating against the schema.
-    Returns is_valid: bool and errors: str as a tuple."""
-
-    # Circumvent issues with assertical generating invalid Int8, Uint8 etc values and hexbinary (str subclass)
-    register_value_generator(int, lambda x: x % 64)  # This will be unwound due to dep on use_assertical_extensions
-    register_value_generator(
-        str, lambda x: f"{x % 256:02x}"
-    )  # This will be unwound due to dep on use_assertical_extensions
-
-    # Generate XML string
-    entity: xml_class = generate_class_instance(
-        t=xml_class, optional_is_none=optional_is_none, generate_relationships=True
-    )
-
-    xml = entity.to_xml(skip_empty=False, exclude_none=True, exclude_unset=True).decode()
-    xml = re.sub('xsi:type="[^"]*"', "", xml)
-    xml_doc = etree.fromstring(xml)
-
+    # Validate
     is_valid = csip_aus_schema.validate(xml_doc)
     errors = "\n".join((f"{e.line}: {e.message}" for e in csip_aus_schema.error_log))
     return is_valid, errors
+
+
+# Main test against almost all xsd schema models with a few exceptions treated below
+@pytest.mark.parametrize(
+    "xml_class, optional_is_none", product(import_all_classes_from_module("envoy_schema.server.schema"), [True, False])
+)
+def test_all_xml_models_csip_aus(
+    xml_class: type,
+    csip_aus_schema: etree.XMLSchema,
+    custom_assertical_registrations,
+    optional_is_none: bool,
+):
+    """Generate class instances using assertical, convert to xml and then validate against csip_aus_schema which
+    contains sep, csipaus-core and csipaus-ext xsd files"""
+
+    # Skip some classes which require individual handling for various reasons (separate tests provided where needed)
+    for skip_classes in [
+        BaseXmlModelWithNS,  # Not necessary to xsd validate.
+        ConnectionPointRequest,  # Not necessary to xsd validate, but supports both csipaus311 and 311a.
+        DERCapability,  # See separate test below, is made subscribable intentionally differing from the framework.
+        RateComponentListResponse,  # See separate test below, is also made subscribable.
+        NotificationResourceCombined,  # Separate test below, this pydantic workaround affects two classes below.
+        NotificationListResponse,  # See separate test below.
+        Notification,  # See separate test below.
+        MirrorMeterReadingListRequest,  # Not necessary to xsd validate.
+        ErrorResponse,  # See separate test below, intentionally removes unnecessary information.
+        EndDeviceRequest,  # Not necessary to xsd validate, is not generated, only sent by clients.
+    ]:
+        if xml_class is skip_classes:
+            return
+
+    is_valid, errors = generate_and_validate_xml(
+        xml_class=xml_class,
+        csip_aus_schema=csip_aus_schema,
+        optional_is_none=optional_is_none,
+        custom_assertical_registrations=custom_assertical_registrations,
+    )
+
+    assert is_valid, errors
 
 
 @pytest.mark.parametrize("optional_is_none", [True, False])
@@ -164,7 +158,7 @@ def test_error_response_xsd(
     optional_is_none: bool,
 ):
     """Test ErrorResponse separately as an additional optional element (message) causes xsd validation issues"""
-    is_valid, errors = generate_non_standard_xml_models(
+    is_valid, errors = generate_and_validate_xml(
         xml_class=ErrorResponse, csip_aus_schema=csip_aus_schema, optional_is_none=optional_is_none
     )
 
@@ -183,7 +177,7 @@ def test_DERCapability_xsd(
 ):
     """Test DERCapability separately as it is intentionally a subscribable resource rather than simply a resource"""
 
-    is_valid, errors = generate_non_standard_xml_models(
+    is_valid, errors = generate_and_validate_xml(
         xml_class=DERCapability, csip_aus_schema=csip_aus_schema, optional_is_none=optional_is_none
     )
 
@@ -207,7 +201,7 @@ def test_RateComponentListResponse_xsd(
     """Test RateComponentListResponse separately as it is intentionally a subscribable resource rather than
     simply a resource"""
 
-    is_valid, errors = generate_non_standard_xml_models(
+    is_valid, errors = generate_and_validate_xml(
         xml_class=RateComponentListResponse, csip_aus_schema=csip_aus_schema, optional_is_none=optional_is_none
     )
 
@@ -231,12 +225,13 @@ def test_Notification_xsd(
     """Notification contains NotificationResourceCombined which only exists because pydantic-xml has limited
     support for pydantic discriminated unions, here NotificationResourceCombined is not tested, simply set to a
     valid value (None)"""
+    # These steps are common with the generate_and_validate_xml function but sets a resource to none prior to xml
+    # conversion
 
-    # Generate XML string
     entity: Notification = generate_class_instance(
         t=Notification, optional_is_none=optional_is_none, generate_relationships=True
     )
-    # Set resource to None to
+    # Set resource to None to leave that aspects checking to another test
     entity.resource = None
 
     xml = entity.to_xml(skip_empty=False, exclude_none=True, exclude_unset=True).decode()
@@ -253,7 +248,8 @@ def test_NotificationListResponse_xsd(
     optional_is_none: bool,
 ):
     """NotificationListResponse contains NotificationResourceCombined which only exists because pydantic-xml has limited
-    support for pydantic discriminated unions. The test is very simple as it is a single element only"""
+    support for pydantic discriminated unions. The test is very simple as it is a single element only, but cannot use
+    the xsd validation function, so requires more manual matches."""
     # Generate XML string
     entity: NotificationListResponse = generate_class_instance(
         t=NotificationListResponse, optional_is_none=optional_is_none, generate_relationships=True
@@ -268,7 +264,7 @@ def test_NotificationListResponse_xsd(
     assert "all=" in xml
     assert "results=" in xml
 
-    # Check notification is included as an optional element, but not its contents
+    # Check Notification is included as an optional element
     if optional_is_none is True:
         assert "</Notification>" not in xml
         assert "</NotificationList>" not in xml
@@ -276,9 +272,10 @@ def test_NotificationListResponse_xsd(
         assert "</Notification></NotificationList>" in xml
 
 
-@pytest.mark.parametrize(
-    "sub_type, xsi_type",
-    [
+def notification_resource_combined_parameters() -> list[tuple[type, str, bool]]:
+    """Used to flatten the product of classes, xsi_types and optional_is_none values to pass to
+    test_NotificationResourceCombined"""
+    classes_list = [
         (TimeTariffIntervalListResponse, XSI_TYPE_TIME_TARIFF_INTERVAL_LIST),
         (EndDeviceListResponse, XSI_TYPE_END_DEVICE_LIST),
         (DERControlListResponse, XSI_TYPE_DER_CONTROL_LIST),
@@ -288,10 +285,18 @@ def test_NotificationListResponse_xsd(
         (DERAvailability, XSI_TYPE_DER_AVAILABILITY),
         (DERCapability, XSI_TYPE_DER_CAPABILITY),
         (DERSettings, XSI_TYPE_DER_SETTINGS),
-    ],
-)
+    ]
+    bools = [True, False]
+    return [(elem1, elem2, boolean) for (elem1, elem2) in classes_list for boolean in bools]
+
+
+@pytest.mark.parametrize("sub_type, xsi_type, optional_is_none", notification_resource_combined_parameters())
 def test_NotificationResourceCombined(
-    csip_aus_schema: etree.XMLSchema, sub_type: type, xsi_type: str, custom_assertical_registrations
+    sub_type: type,
+    xsi_type: str,
+    optional_is_none: bool,
+    csip_aus_schema: etree.XMLSchema,
+    custom_assertical_registrations,
 ):
 
     # There are a ton sub_types that have been munged together into NotificationResourceCombined (see comments on type)
@@ -311,7 +316,7 @@ def test_NotificationResourceCombined(
                 raise NotImplementedError(f"Haven't added support in this test for {p.collection_type}")
             kvps[p.name] = val
 
-    # Subscribable on DERCap was something unique to this implementation - it's not in the standard
+    # Subscribable on some classes was something unique to this implementation - it's not in the standard
     # but was added because it was a nice feature - here we unpick it so we can XSD validate
     if sub_type in [
         DERCapability,
@@ -332,14 +337,14 @@ def test_NotificationResourceCombined(
     entity: Notification = generate_class_instance(Notification, seed=201, optional_is_none=True, resource=resource)
 
     xml = entity.to_xml(skip_empty=False, exclude_none=True, exclude_unset=True).decode()
-    xml = re.sub('xsi:type="[^"]*" *', "", xml)
+
     # Getting xsi:type set via assertical is painful because the "type" property exists on pydantic_xml BUT isn't
     # visible to assertical. We also can't set the type property at runtime (or haven't figured out a way)
     # so now we just munge the xsi:type into the generated XML
-
+    xml = re.sub('xsi:type="[^"]*" *', "", xml)
     xml = xml.replace("<Resource href=", f'<Resource xsi:type="{xsi_type}" href=')
-    xml_doc = etree.fromstring(xml)
 
+    xml_doc = etree.fromstring(xml)
     is_valid = csip_aus_schema.validate(xml_doc)
     errors = "\n".join((f"{e.line}: {e.message}" for e in csip_aus_schema.error_log))
     assert is_valid, f"{xml}\nErrors:\n{errors}"
