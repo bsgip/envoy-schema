@@ -88,7 +88,6 @@ def custom_assertical_registrations(csip_aus_schema):
 def generate_and_validate_xml(
     xml_class: type,
     csip_aus_schema: etree.XMLSchema,
-    custom_assertical_registrations,
     optional_is_none: bool,
 ) -> tuple[bool, str]:
     """Generate class instances using assertical, convert to xml and then validate against csip_aus_schema which
@@ -146,7 +145,6 @@ def test_all_xml_models_csip_aus(
         xml_class=xml_class,
         csip_aus_schema=csip_aus_schema,
         optional_is_none=optional_is_none,
-        custom_assertical_registrations=custom_assertical_registrations,
     )
 
     assert is_valid, errors
@@ -159,7 +157,6 @@ def test_error_response_xsd(csip_aus_schema: etree.XMLSchema, optional_is_none: 
         xml_class=ErrorResponse,
         csip_aus_schema=csip_aus_schema,
         optional_is_none=optional_is_none,
-        custom_assertical_registrations=custom_assertical_registrations,
     )
 
     # ErrorResponse passes validation where True as the xsd addition is optional
@@ -182,7 +179,6 @@ def test_DERCapability_xsd(
         xml_class=DERCapability,
         csip_aus_schema=csip_aus_schema,
         optional_is_none=optional_is_none,
-        custom_assertical_registrations=custom_assertical_registrations,
     )
 
     # if optional_is_none is True there should be no difference from the schema (subscribable is optional)
@@ -208,7 +204,6 @@ def test_RateComponentListResponse_xsd(
         xml_class=RateComponentListResponse,
         csip_aus_schema=csip_aus_schema,
         optional_is_none=optional_is_none,
-        custom_assertical_registrations=custom_assertical_registrations,
     )
 
     # if optional_is_none is True there should be no difference from the schema (subscribable is optional)
