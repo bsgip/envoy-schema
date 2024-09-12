@@ -18,7 +18,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "envoy_schema"
-version = "0.5.1"
+version = "0.5.2"
 dependencies = ["pydantic>=2.5.0,!=2.6.0", "pydantic_xml[lxml]"]
 
 [project.optional-dependencies]
