@@ -363,6 +363,7 @@ def test_hexbinary_doe_types():
     ]
 
     for xml_class, value in class_values:
+        # This is a workaround to identify an annotated type that uses one of our validate_HexBinaryXXX funcs
         value_type = xml_class.__annotations__.get(value)
         assert "HexBinary" in str(value_type), f"Expected a HexBinary type in {value} of the {xml_class}"
 
