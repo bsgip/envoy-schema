@@ -14,10 +14,8 @@ from assertical.fake.generator import (
 from lxml import etree
 from itertools import product
 from pydantic_xml.model import XmlModelMeta
-from envoy_schema.server.schema.sep2 import primitive_types
 from envoy_schema.server.schema.sep2.base import BaseXmlModelWithNS
 from envoy_schema.server.schema.csip_aus.connection_point import ConnectionPointRequest
-from envoy_schema.server.schema.sep2.der_control_types import ActivePower
 from envoy_schema.server.schema.sep2.metering import ReadingListResponse
 from envoy_schema.server.schema.sep2.pricing import RateComponentListResponse, TimeTariffIntervalListResponse
 from envoy_schema.server.schema.sep2.error import ErrorResponse
