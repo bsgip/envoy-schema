@@ -10,7 +10,6 @@ from envoy_schema.server.schema.sep2.der import (
     DERControlBase,
     DERControlResponse,
     DERType,
-    DOESupportedMode,
     InverterStatusTypeValue,
     LocalControlModeStatusTypeValue,
     ManufacturerStatusValue,
