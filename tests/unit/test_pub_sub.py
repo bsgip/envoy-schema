@@ -286,7 +286,7 @@ def test_notification_encode_resource_DERCapability():
         "modesSupported": "dead",
         "rtgMaxV": {"multiplier": 1, "value": 11},
         "rtgMaxW": {"multiplier": 2, "value": 22},
-        "doeModesSupported": 1,
+        "doeModesSupported": "1",
     }
 
     # Quick sanity check on the raw XML
@@ -300,7 +300,7 @@ def test_notification_encode_resource_DERCapability():
     assert notif.resource.modesSupported == "dead"
     assert notif.resource.rtgMaxV.value == 11
     assert notif.resource.rtgMaxW.value == 22
-    assert notif.resource.doeModesSupported == 1
+    assert notif.resource.doeModesSupported == "1"
 
 
 def test_notification_encode_resource_DefaultDERControl():

@@ -211,7 +211,7 @@ class NotificationResourceCombined(Resource):
     rtgUnderExcitedW: Optional[ActivePower] = element(default=None)
     rtgVNom: Optional[VoltageRMS] = element(default=None)
     type_: Optional[DERType] = element(tag="type", default=None)
-    doeModesSupported: Optional[DOESupportedMode] = element(ns="csipaus", default=None)
+    doeModesSupported: Optional[HexBinary8] = element(ns="csipaus", default=None)
 
     # DERSettings
     # setESDelay: Optional[int] = element(default=None)  # Duplicated from DERControl

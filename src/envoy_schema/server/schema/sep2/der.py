@@ -467,6 +467,7 @@ class DERCapability(SubscribableResource):
     type_: DERType = element(tag="type")  # Type of DER; see DERType object
 
     # CSIP Aus Extensions (encoded here as it makes decoding a whole lot simpler)
+    # This is an encoded version of DOESupportedMode
     doeModesSupported: primitive_types.HexBinary8 = element(ns="csipaus", default=None)
 
 
@@ -550,7 +551,8 @@ class DERSettings(SubscribableResource):
     updatedTime: types.TimeType = element()  # Specifies the time at which the DER information was last updated.
 
     # CSIP Aus Extensions (encoded here as it makes decoding a whole lot simpler)
-    doeModesEnabled: primitive_types.HexBinary8 = element(ns="csipaus", default=None)
+    # This is an encoded version of DOESupportedMode
+    doeModesEnabled: Optional[primitive_types.HexBinary8] = element(ns="csipaus", default=None)
 
 
 class DERListResponse(List, tag="DERList"):
