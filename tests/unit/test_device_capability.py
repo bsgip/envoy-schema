@@ -11,5 +11,5 @@ def test_DeviceCapabilityResponse_pollRate(optional_is_none: bool):
         DeviceCapabilityResponse, optional_is_none=optional_is_none
     )
     entity.pollRate = 123654
-    xml = entity.to_xml(skip_empty=True).decode()
+    xml = entity.to_xml(skip_empty=False, exclude_none=True, exclude_unset=True).decode()
     assert f'pollRate="{entity.pollRate}"' in xml

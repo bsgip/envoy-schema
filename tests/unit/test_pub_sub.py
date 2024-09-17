@@ -138,7 +138,9 @@ def test_notification_encode_resource_DERControlListResponse():
     }
 
     # Quick sanity check on the raw XML
-    updated_xml = Notification.model_validate(notif_dict).to_xml(skip_empty=True).decode()
+    updated_xml = (
+        Notification.model_validate(notif_dict).to_xml(skip_empty=False, exclude_none=True, exclude_unset=True).decode()
+    )
     assert 'xsi:type="DERControlList"' in updated_xml
     assert 'href="/my/list"' in updated_xml
     assert "<value>100</value>" in updated_xml
@@ -180,7 +182,9 @@ def test_notification_encode_resource_DERStatus():
     }
 
     # Quick sanity check on the raw XML
-    updated_xml = Notification.model_validate(notif_dict).to_xml(skip_empty=True).decode()
+    updated_xml = (
+        Notification.model_validate(notif_dict).to_xml(skip_empty=False, exclude_none=True, exclude_unset=True).decode()
+    )
     assert 'xsi:type="DERStatus"' in updated_xml
     assert 'href="/my/der/status"' in updated_xml
     assert "<dateTime>1700009</dateTime>" in updated_xml
@@ -217,7 +221,9 @@ def test_notification_encode_resource_DERAvailability():
     }
 
     # Quick sanity check on the raw XML
-    updated_xml = Notification.model_validate(notif_dict).to_xml(skip_empty=True).decode()
+    updated_xml = (
+        Notification.model_validate(notif_dict).to_xml(skip_empty=False, exclude_none=True, exclude_unset=True).decode()
+    )
     assert 'xsi:type="DERAvailability"' in updated_xml
     assert 'href="/my/der/avail"' in updated_xml
     assert "<readingTime>1700002</readingTime>" in updated_xml
@@ -256,7 +262,9 @@ def test_notification_encode_resource_DERSettings():
     }
 
     # Quick sanity check on the raw XML
-    updated_xml = Notification.model_validate(notif_dict).to_xml(skip_empty=True).decode()
+    updated_xml = (
+        Notification.model_validate(notif_dict).to_xml(skip_empty=False, exclude_none=True, exclude_unset=True).decode()
+    )
     assert 'xsi:type="DERSettings"' in updated_xml
     assert 'href="/my/der/settings"' in updated_xml
     assert "<updatedTime>17000001</updatedTime>" in updated_xml
@@ -290,7 +298,9 @@ def test_notification_encode_resource_DERCapability():
     }
 
     # Quick sanity check on the raw XML
-    updated_xml = Notification.model_validate(notif_dict).to_xml(skip_empty=True).decode()
+    updated_xml = (
+        Notification.model_validate(notif_dict).to_xml(skip_empty=False, exclude_none=True, exclude_unset=True).decode()
+    )
     assert 'xsi:type="DERCapability"' in updated_xml
     assert 'href="/my/der/cap"' in updated_xml
     assert "<multiplier>2</multiplier>" in updated_xml
@@ -330,7 +340,9 @@ def test_notification_encode_resource_DefaultDERControl():
     }
 
     # Quick sanity check on the raw XML
-    updated_xml = Notification.model_validate(notif_dict).to_xml(skip_empty=True).decode()
+    updated_xml = (
+        Notification.model_validate(notif_dict).to_xml(skip_empty=False, exclude_none=True, exclude_unset=True).decode()
+    )
     assert 'xsi:type="DefaultDERControl"' in updated_xml
     assert "<value>100</value>" in updated_xml
 
@@ -379,7 +391,9 @@ def test_notification_encode_resource_TimeTariffIntervalListResponse():
     }
 
     # Quick sanity check on the raw XML
-    updated_xml = Notification.model_validate(notif_dict).to_xml(skip_empty=True).decode()
+    updated_xml = (
+        Notification.model_validate(notif_dict).to_xml(skip_empty=False, exclude_none=True, exclude_unset=True).decode()
+    )
     assert 'xsi:type="TimeTariffIntervalList"' in updated_xml
     assert 'href="/my/list"' in updated_xml
     assert 'href="/my/price/at/time/554433"' in updated_xml
@@ -419,7 +433,9 @@ def test_notification_encode_resource_EndDeviceListResponse():
     }
 
     # Quick sanity check on the raw XML
-    updated_xml = Notification.model_validate(notif_dict).to_xml(skip_empty=True).decode()
+    updated_xml = (
+        Notification.model_validate(notif_dict).to_xml(skip_empty=False, exclude_none=True, exclude_unset=True).decode()
+    )
     assert 'xsi:type="EndDeviceListResponse"' in updated_xml
     assert 'href="/href/cp"' in updated_xml
 
