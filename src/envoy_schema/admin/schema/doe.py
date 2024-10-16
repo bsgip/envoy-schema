@@ -9,6 +9,7 @@ class DynamicOperatingEnvelopeRequest(BaseModel):
     """Dynamic Operating Envelope basic model"""
 
     site_id: int  # Corresponds to EndDevice id
+    calculation_log_id: Optional[int]  # The ID of the CalculationLog that created this DOE (or NULL if no link)
     duration_seconds: int
     import_limit_active_watts: Decimal
     export_limit_watts: Decimal
