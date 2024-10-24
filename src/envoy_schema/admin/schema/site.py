@@ -24,6 +24,7 @@ class DERConfiguration(BaseModel):
     value (if specified) otherwise they will fallback to the nameplate rating (if available)"""
 
     # Mandatory values
+    created_time: datetime
     changed_time: datetime
     modes_supported: DERControlType
     type: DERType
@@ -53,6 +54,7 @@ class DERAvailability(BaseModel):
     the current snapshot of DER energy held in reserve"""
 
     # Mandatory values
+    created_time: datetime
     changed_time: datetime
 
     # Optional values
@@ -69,6 +71,7 @@ class DERStatus(BaseModel):
     the current snapshot of DER status"""
 
     # Mandatory values
+    created_time: datetime
     changed_time: datetime
 
     # Optional values
@@ -90,6 +93,7 @@ class SiteGroup(BaseModel):
 
     site_group_id: int
     name: str
+    created_time: datetime
     changed_time: datetime
 
 
@@ -100,6 +104,7 @@ class SiteResponse(BaseModel):
     site_id: int
     nmi: Optional[str]
     timezone_id: str
+    created_time: datetime
     changed_time: datetime
     lfdi: str
     sfdi: int

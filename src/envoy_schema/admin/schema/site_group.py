@@ -8,6 +8,7 @@ class SiteGroupResponse(BaseModel):
 
     site_group_id: int
     name: str
+    created_time: datetime
     changed_time: datetime
     total_sites: int  # How many sites are linked to this group
 

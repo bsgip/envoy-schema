@@ -21,6 +21,7 @@ class TariffResponse(BaseModel):
     name: str
     dnsp_code: str
     currency_code: CurrencyCode
+    created_time: datetime
     changed_time: datetime
 
 
@@ -40,4 +41,5 @@ class TariffGeneratedRateRequest(BaseModel):
 
 class TariffGeneratedRateResponse(TariffGeneratedRateRequest):
     tariff_generated_rate_id: int
+    created_time: datetime
     changed_time: datetime

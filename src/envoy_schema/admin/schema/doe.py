@@ -20,6 +20,7 @@ class DynamicOperatingEnvelopeResponse(DynamicOperatingEnvelopeRequest):
     """Dynamic Operating Envelope basic model when being queried externally"""
 
     dynamic_operating_envelope_id: int  # Internal identifier for this DOE
+    created_time: datetime
     changed_time: datetime  # When this DOE was last changed/created
 
 

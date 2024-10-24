@@ -7,6 +7,7 @@ class AggregatorDomain(BaseModel):
     """A domain whitelisted by the utility server as being controlled by the parent aggregator"""
 
     domain: str
+    created_time: datetime
     changed_time: datetime
 
 
