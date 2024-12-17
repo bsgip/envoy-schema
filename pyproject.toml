@@ -18,10 +18,36 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "envoy_schema"
-version = "0.9.0"
+version = "0.10.0"
+description = "Envoy Schema - a collection of pydantic models compatible with the Envoy utility server"
+authors = [{ name = "Battery Storage and Grid Integration Program" }]
+readme = "README.md"
+license = { file = "LICENSE" }
+keywords = ["envoy", "csip-aus", "2030.5", "csip", "pydantic"]
+requires-python = ">=3.9"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Testing",
+
+    # Pick your license as you wish (see also "license" above)
+    "Framework :: Pydantic",
+    "License :: OSI Approved :: MIT License",
+
+    # Specify the Python versions you support here.
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+]
 dependencies = ["pydantic>=2.5.0,!=2.6.0", "pydantic_xml[lxml]>=2.12.0"]
 
+[project.urls]
+Homepage = "https://github.com/bsgip/envoy-schema"
+
+
 [project.optional-dependencies]
+all = ["envoy_schema[dev, test]"]
 dev = ["bandit", "flake8", "mypy", "types-python-dateutil", "types-tzlocal"]
 test = ["pytest", "assertical"]
 
