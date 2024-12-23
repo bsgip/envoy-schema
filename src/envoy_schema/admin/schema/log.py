@@ -4,10 +4,18 @@ from typing import Optional
 from pydantic import BaseModel
 
 
-class CalculationLogMetadata(BaseModel):
+class CalculationLogVariableMetadata(BaseModel):
     """This is purely descriptive metadata to highlight what an opaque CalculationLogVariable represents"""
 
     variable_id: int  # The variable that this metadata applies to
+    name: str  # Short, human readable name for the referenced variable
+    description: str  # Longer, human readable description of the variable
+
+
+class CalculationLogLabelMetadata(BaseModel):
+    """This is purely descriptive metadata to highlight what an opaque CalculationLogLabel represents"""
+
+    label_id: int  # The variable that this metadata applies to
     name: str  # Short, human readable name for the referenced variable
     description: str  # Longer, human readable description of the variable
 
@@ -60,6 +68,47 @@ class CalculationLogVariableValues(BaseModel):
     values: list[float]  # Must correspond 1-1 with each other list in this type
 
 
+class CalculationLogLabelValues(BaseModel):
+    """This is a compact representation of MANY label instances. It's expected that EVERY property list has the
+    same number of elements (i.e. there is a 1-1 correspondence between lists).
+
+    eg: {
+      label_ids: [1,2]
+      site_ids: [3, None]
+      values: ["Label 1", "Label 2"]
+    }
+
+    Logically represents:
+
+    [
+        {label_id: 1, site_id: 3, value: "Label 1"},
+        {label_id: 2, site_id: None, value: "Label 2"},
+    ]
+
+    A single label value represents a free text descriptor for tagging a site/log with some extra information. The
+    definition of what the label represents is opaque to the utility server.
+
+    Within a CalculationLog, the combination of label_id and site_id are a unique index
+
+    The values (when returned from the server) will have the following sort order applied:
+        variable_id ASCENDING
+        site_id_snapshot ASCENDING
+    """
+
+    # ID defined by the client that disambiguate one set of labels from another. eg: a value of 1
+    # might represent an upstream transformer ID and a value of 2 might represent the name of a cohort that
+    # dictates how the site was treated during this calculation run.
+    # The actual definitions are completely opaque to utility server.
+    label_ids: list[int]  # Must correspond 1-1 with each other list in this type
+
+    # Foreign key reference to a specific site ID that the label applies to or NONE if this label is NOT tied to a
+    # specific site.
+    site_ids: list[Optional[int]]  # Must correspond 1-1 with each other list in this type
+
+    # The actual label values associated with the linked label_id and site_id
+    values: list[str]  # Must correspond 1-1 with each other list in this type
+
+
 class CalculationLogRequest(BaseModel):
     """Represents the top level entity describing a single audit log of a historical calculation run.
 
@@ -73,6 +122,8 @@ class CalculationLogRequest(BaseModel):
           are aligned with these intervals. Eg - A 24 hour period is broken down into intervals of length 1 hour.
         * A calculation log has logged "variable" data representing input/intermediate/output data. This data is opaque
           to the utility server but it WILL align with intervals.
+        * A calculation log has free-text "label" data associated with sites. This data is opaque to the utility server
+          and is NOT time varying.
     """
 
     calculation_range_start: datetime  # The start time of the first interval within this calculation log.
@@ -92,11 +143,19 @@ class CalculationLogRequest(BaseModel):
     weather_forecast_creation_time: Optional[datetime] = None  # Datetime for when any weather forecast was created
     weather_forecast_location_id: Optional[str] = None  # ID associated the weather location that the forecast is for
 
-    variable_metadata: list[CalculationLogMetadata]  # Metadata associated with the variables defined in variable_values
+    variable_metadata: list[
+        CalculationLogVariableMetadata
+    ]  # Metadata associated with the variables defined in variable_values
 
-    # The actual time series observations in this calculation
+    # The actual time series observations in this calculation log
     # The values will have a defined sort order (see docs on CalculationLogVariableValues)
     variable_values: Optional[CalculationLogVariableValues]
+
+    label_metadata: list[CalculationLogLabelMetadata]  # Metadata associated with the labels defined in label_values
+
+    # The actual labels in this calculation log
+    # The labels will have a defined sort order (see docs on CalculationLogLabelValues)
+    label_values: Optional[CalculationLogVariableValues]
 
 
 class CalculationLogResponse(CalculationLogRequest):
