@@ -2,6 +2,9 @@
 
 AggregatorListUri = "/aggregator"
 AggregatorUri = "/aggregator/{aggregator_id}"
+ArchiveForPeriodSites = "/archive/{period_start}/{period_end}/sites"
+ArchiveForPeriodDoes = "/archive/{period_start}/{period_end}/does"
+ArchiveForPeriodTariffGeneratedRate = "/archive/{period_start}/{period_end}/tariff_generated_rates"
 TariffCreateUri = "/tariff"
 TariffUpdateUri = "/tariff/{tariff_id}"
 TariffGeneratedRateCreateUri = "/tariff_generated_rate"
