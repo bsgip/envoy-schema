@@ -1,5 +1,6 @@
 from datetime import datetime
 from decimal import Decimal
+from typing import Optional
 
 from pydantic import BaseModel, Field
 
@@ -14,6 +15,9 @@ class BillingReading(BaseModel):
 
 
 class BillingTariffRate(BaseModel):
+    """A simplified "minimum" set of information for describing a dynamic tariff rate in a billing context"""
+
+    calculation_log_id: Optional[int]  # The calculation log that created this rate or None if it DNE
     site_id: int
     period_start: datetime
     duration_seconds: int
@@ -24,6 +28,9 @@ class BillingTariffRate(BaseModel):
 
 
 class BillingDoe(BaseModel):
+    """A simplified "minimum" set of information for describing a dynamic operating envelope in a billing context"""
+
+    calculation_log_id: Optional[int]  # The calculation log that created this DOE or None if it DNE
     site_id: int
     period_start: datetime
     duration_seconds: int
