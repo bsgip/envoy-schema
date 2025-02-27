@@ -1,11 +1,18 @@
 from typing import Optional
 
-from pydantic_xml import element
+from pydantic_xml import attr, element
 
 from envoy_schema.server.schema.csip_aus.connection_point import ConnectionPointLink as ConnectionPointLinkType
 from envoy_schema.server.schema.sep2 import primitive_types
-from envoy_schema.server.schema.sep2.identification import Link, ListLink, SubscribableList, SubscribableResource
+from envoy_schema.server.schema.sep2.identification import (
+    Link,
+    ListLink,
+    Resource,
+    SubscribableList,
+    SubscribableResource,
+)
 from envoy_schema.server.schema.sep2.time import TimeType
+from envoy_schema.server.schema.sep2.types import DEFAULT_POLLRATE_SECONDS, PINType
 
 
 class AbstractDevice(SubscribableResource):
@@ -45,3 +52,11 @@ class EndDeviceResponse(AbstractDevice, tag="EndDevice"):
 
 class EndDeviceListResponse(SubscribableList, tag="EndDeviceList"):
     EndDevice: Optional[list[EndDeviceResponse]] = element(default=None)
+
+
+class RegistrationResponse(Resource, tag="Registration"):
+    pollRate: Optional[int] = attr(default=DEFAULT_POLLRATE_SECONDS)  # recommended client pollrate in seconds
+    dateTimeRegistered: TimeType = element()  # Contains the time at which this registration was created
+    pIN: PINType = (
+        element()
+    )  # Contains the registration PIN number associated with the device, includes checksum digit.

@@ -304,6 +304,9 @@ SignedPerCent = int
 # Used for percentages, specified in hundredths of a percent, 0 - 10000. (10000 = 100%)
 PerCent = int
 
+# 6 digit unsigned decimal integer 0 -> 999,999 (last digit being a checksum digit)
+PINType = int
+
 
 class DERUnitRefType(IntEnum):
     """Specifies context for interpreting percent values:. All other values are reserved"""
