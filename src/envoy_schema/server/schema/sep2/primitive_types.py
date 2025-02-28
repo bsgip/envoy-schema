@@ -1,6 +1,6 @@
 from urllib.parse import urlparse
 
-from pydantic import AfterValidator, Field
+from pydantic import AfterValidator
 from typing_extensions import Annotated
 
 
@@ -93,8 +93,6 @@ def validate_HttpUri(v: str):
 
     return v
 
-
-Uint8 = Annotated[int, Field(ge=0, le=255)]
 
 String6 = Annotated[str, AfterValidator(validate_String6)]
 String192 = Annotated[str, AfterValidator(validate_String192)]

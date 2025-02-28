@@ -7,7 +7,7 @@ testpaths = "tests"
 filterwarnings = ["error::DeprecationWarning"]
 
 [tool.mypy]
-exclude = ["tests"]
+exclude = ["tests", "build"]
 
 [tool.bandit]
 exclude_dirs = ["tests"]
