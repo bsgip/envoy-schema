@@ -12,7 +12,7 @@ from envoy_schema.server.schema.sep2.time import TimeType
 from envoy_schema.server.schema.sep2.types import DEFAULT_POLLRATE_SECONDS, PerCent
 
 
-class DERType(IntEnum):
+class ResponseType(IntEnum):
     """Derived from sep2 Table 27 - Response types by function set. All other values reserved"""
 
     EVENT_RECEIVED = 1
@@ -55,7 +55,7 @@ class Response(Resource):
 
     createdDateTime: Optional[TimeType] = element(default=None)
     endDeviceLFDI: primitive_types.HexBinary160 = element()
-    status: Optional[DERType] = element(default=None)
+    status: Optional[ResponseType] = element(default=None)
     subject: primitive_types.HexBinary128 = element()
 
 
