@@ -62,14 +62,14 @@ class Response(Resource):
 class ResponseListResponse(Sep2List, tag="ResponseList"):
     """List element for holding Response objects"""
 
-    Response_: Optional[list["Response"]] = element(default=None, tag="Response")
+    Response_: Optional[list[Response]] = element(default=None, tag="Response")
 
 
 class ResponseSetList(Sep2List):
     """A List element to hold ResponseSet objects."""
 
     pollRate: Optional[int] = attr(default=DEFAULT_POLLRATE_SECONDS)  # recommended client pollrate in seconds
-    ResponseSet_: Optional[list["ResponseSet"]] = element(default=None, tag="ResponseSet")
+    ResponseSet_: Optional[list[ResponseSet]] = element(default=None, tag="ResponseSet")
 
 
 class DERControlResponse(Response):
