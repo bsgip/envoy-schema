@@ -26,7 +26,7 @@ class AbstractDevice(SubscribableResource):
     IPInterfaceListLink: Optional[Link] = element(default=None)
     lFDI: Optional[str] = element(default=None)
     LoadShedAvailabilityListLink: Optional[ListLink] = element(default=None)
-    LogEventListLink: Optional[Link] = element(default=None)
+    LogEventListLink: Optional[ListLink] = element(default=None)
     PowerStatusLink: Optional[Link] = element(default=None)
     sFDI: int = element()
 
