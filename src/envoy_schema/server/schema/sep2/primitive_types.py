@@ -10,6 +10,12 @@ def validate_String6(v: str):
     return v
 
 
+def validate_String32(v: str):
+    if len(v) > 6:
+        raise ValueError("String32 max length of 32.")
+    return v
+
+
 def validate_String192(v: str):
     if len(v) > 192:
         raise ValueError("String192 max length of 192.")
@@ -95,6 +101,7 @@ def validate_HttpUri(v: str):
 
 
 String6 = Annotated[str, AfterValidator(validate_String6)]
+String32 = Annotated[str, AfterValidator(validate_String32)]
 String192 = Annotated[str, AfterValidator(validate_String192)]
 
 HexBinary8 = Annotated[str, AfterValidator(validate_HexBinary8)]
