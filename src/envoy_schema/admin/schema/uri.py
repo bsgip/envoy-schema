@@ -26,4 +26,5 @@ SiteControlRangeUri = (
     "/site_control/{group_id}/{period_start}/{period_end}"  # Fetching / deleting controls that are active in range
 )
 
-RuntimeServerConfigUri = "/config"
+ServerConfigRuntimeUri = "/server_config/run_time"  # For getting/setting ServerRuntimeConfig
+ServerConfigControlDefaultUri = "/server_config/control_default"  # For getting/setting ControlServerDefaultConfig

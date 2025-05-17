@@ -11,6 +11,35 @@ class UpdateDefaultValue(BaseModel):
     value: Optional[Decimal]  # The decimal value to update (or None to update the value to None)
 
 
+class ControlServerDefaultConfigRequest(BaseModel):
+    """Used for updating the "failover" SiteControl defaults that are used if no site specific default is in place"""
+
+    import_limit_watts: Optional[
+        UpdateDefaultValue
+    ]  # If set - update The server default "import limit watts" used if site specific overrides aren't used
+    export_limit_watts: Optional[
+        UpdateDefaultValue
+    ]  # If set - update The server default "export limit watts" used if site specific overrides aren't used
+    generation_limit_watts: Optional[
+        UpdateDefaultValue
+    ]  # If set - update The server default "generation limit watts" used if site specific overrides aren't used
+    load_limit_watts: Optional[
+        UpdateDefaultValue
+    ]  # If set - update The server default "load limit watts" used if site specific overrides aren't used
+
+
+class ControlServerDefaultConfigResponse(BaseModel):
+    """Snapshot of the current server configuration associated with failover server default control values"""
+
+    server_default_import_limit_watts: Optional[Decimal]
+    server_default_export_limit_watts: Optional[Decimal]
+    server_default_generation_limit_watts: Optional[Decimal]
+    server_default_load_limit_watts: Optional[Decimal]
+
+    created_time: datetime
+    changed_time: datetime
+
+
 class RuntimeServerConfigRequest(BaseModel):
     """Used for updating the server configuration associated with runtime behavior"""
 
@@ -27,19 +56,6 @@ class RuntimeServerConfigRequest(BaseModel):
     site_control_pow10_encoding: Optional[int] = None  # If set - update the pow10 encoded for sent DERControl values.
     tariff_pow10_encoding: Optional[int] = None  # If set - update the pow10 encoded for sent RateComponent values
 
-    server_default_import_limit_watts: Optional[
-        UpdateDefaultValue
-    ]  # If set - update The server default "import limit watts" used if site specific overrides aren't used
-    server_default_export_limit_watts: Optional[
-        UpdateDefaultValue
-    ]  # If set - update The server default "export limit watts" used if site specific overrides aren't used
-    server_default_generation_limit_watts: Optional[
-        UpdateDefaultValue
-    ]  # If set - update The server default "generation limit watts" used if site specific overrides aren't used
-    server_default_load_limit_watts: Optional[
-        UpdateDefaultValue
-    ]  # If set - update The server default "load limit watts" used if site specific overrides aren't used
-
 
 class RuntimeServerConfigResponse(BaseModel):
     """Snapshot of the server configuration associated with runtime behavior"""
@@ -53,11 +69,6 @@ class RuntimeServerConfigResponse(BaseModel):
 
     site_control_pow10_encoding: int
     tariff_pow10_encoding: int
-
-    server_default_import_limit_watts: Optional[Decimal]
-    server_default_export_limit_watts: Optional[Decimal]
-    server_default_generation_limit_watts: Optional[Decimal]
-    server_default_load_limit_watts: Optional[Decimal]
 
     created_time: datetime
     changed_time: datetime
