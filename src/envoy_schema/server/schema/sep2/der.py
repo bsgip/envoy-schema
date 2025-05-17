@@ -275,7 +275,7 @@ class DERProgramResponse(SubscribableIdentifiedObject, tag="DERProgram"):
     DefaultDERControlLink: Optional[Link] = element(default=None)
     DERControlListLink: Optional[ListLink] = element(default=None)
     DERCurveListLink: Optional[ListLink] = element(default=None)
-    primacy: PrimacyType = element()
+    primacy: int = element()  # Encodes a value from PrimacyType
 
 
 class DERProgramListResponse(SubscribableList, tag="DERProgramList"):

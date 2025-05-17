@@ -50,7 +50,6 @@ class SiteControlPageResponse(BaseModel):
 class SiteControlGroupRequest(BaseModel):
     """Used for creating new SiteControlGroups (used for grouping SiteControls)"""
 
-    group_code: str  # Unique, alphanumeric code used in hrefs to describe this group (32 char max)
     description: str  # Human readable description (32 char max)
     primacy: int  # Lower = Higher priority. Affects "child" controls relative priority when compared to other groups
 
