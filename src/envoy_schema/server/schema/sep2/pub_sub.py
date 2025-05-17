@@ -37,9 +37,9 @@ from envoy_schema.server.schema.sep2.pricing import TimeTariffIntervalResponse
 from envoy_schema.server.schema.sep2.primitive_types import (
     HexBinary8,
     HexBinary32,
+    HexBinary128,
     HttpUri,
     LocalAbsoluteUri,
-    HexBinary128,
 )
 from envoy_schema.server.schema.sep2.types import PerCent, SubscribableType, TimeType, VersionType
 
@@ -122,6 +122,7 @@ class NotificationResourceCombined(Resource):
     subscribable: Optional[SubscribableType] = attr(default=None)
 
     # List
+    pollRate: Optional[int] = attr(default=None)
     all_: Optional[int] = attr(name="all", default=None)
     results: Optional[int] = attr(default=None)
 
