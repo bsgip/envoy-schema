@@ -1,11 +1,20 @@
+from enum import IntEnum
 from typing import Optional
 
 from pydantic_xml import element
 
-from envoy_schema.server.schema.sep2.identification import RespondableSubscribableIdentifiedObject
-from envoy_schema.server.schema.sep2.types import DateTimeIntervalType, OneHourRangeType, TimeType
-from envoy_schema.server.schema.sep2.primitive_types import String192
 from envoy_schema.server.schema.sep2.base import BaseXmlModelWithNS
+from envoy_schema.server.schema.sep2.identification import RespondableSubscribableIdentifiedObject
+from envoy_schema.server.schema.sep2.primitive_types import String192
+from envoy_schema.server.schema.sep2.types import DateTimeIntervalType, OneHourRangeType, TimeType
+
+
+class EventStatusType(IntEnum):
+    SCHEDULED = 0
+    ACTIVE = 1
+    CANCELLED = 2
+    CANCELLED_WITH_RANDOMIZATION = 3
+    SUPERSEDED = 4
 
 
 class EventStatus(BaseXmlModelWithNS):
@@ -14,7 +23,7 @@ class EventStatus(BaseXmlModelWithNS):
     the event.  Devices can also subscribe to a specific resource instance to get updates when any of its attributes
     change, including the Status object."""
 
-    currentStatus: int = element()
+    currentStatus: int = element()  # encodes EventStatusType enum values
     dateTime: TimeType = element()
     potentiallySuperseded: bool = element()
     potentiallySupersededTime: Optional[TimeType] = element(default=None)
