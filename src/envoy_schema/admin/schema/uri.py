@@ -11,6 +11,7 @@ TariffGeneratedRateCreateUri = "/tariff_generated_rate"
 DoeUri = "/doe"
 SiteUri = "/site"
 SiteUri = "/site/{site_id}"  # Supports deleting single sites
+SiteControlDefaultConfigUri = "/site/{site_id}/control_default"  # For managing ControlDefaultConfig per site
 SiteGroupUri = "/site_group/{group_name}"
 SiteGroupListUri = "/site_group"
 AggregatorBillingUri = "/billing/aggregator/{aggregator_id}/tariff/{tariff_id}/period/{period_start}/{period_end}"
@@ -27,4 +28,4 @@ SiteControlRangeUri = (
 )
 
 ServerConfigRuntimeUri = "/server_config/run_time"  # For getting/setting ServerRuntimeConfig
-ServerConfigControlDefaultUri = "/server_config/control_default"  # For getting/setting ControlServerDefaultConfig
+ServerConfigControlDefaultUri = "/server_config/control_default"  # For getting/setting ControlDefaultConfig
