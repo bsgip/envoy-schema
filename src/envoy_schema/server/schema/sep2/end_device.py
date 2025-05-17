@@ -51,6 +51,7 @@ class EndDeviceResponse(AbstractDevice, tag="EndDevice"):
 
 
 class EndDeviceListResponse(SubscribableList, tag="EndDeviceList"):
+    pollRate: Optional[int] = attr(default=DEFAULT_POLLRATE_SECONDS)  # recommended client pollrate in seconds
     EndDevice: Optional[list[EndDeviceResponse]] = element(default=None)
 
 
