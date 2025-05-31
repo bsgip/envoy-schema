@@ -60,6 +60,8 @@ class RuntimeServerConfigRequest(BaseModel):
     site_control_pow10_encoding: Optional[int] = None  # If set - update the pow10 encoded for sent DERControl values.
     tariff_pow10_encoding: Optional[int] = None  # If set - update the pow10 encoded for sent RateComponent values
 
+    disable_edev_registration: Optional[bool] = None  # If True - EndDevice RegistrationLink's will be disabled
+
 
 class RuntimeServerConfigResponse(BaseModel):
     """Snapshot of the server configuration associated with runtime behavior"""
@@ -73,6 +75,8 @@ class RuntimeServerConfigResponse(BaseModel):
 
     site_control_pow10_encoding: int
     tariff_pow10_encoding: int
+
+    disable_edev_registration: bool
 
     created_time: datetime
     changed_time: datetime
