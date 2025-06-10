@@ -56,7 +56,7 @@ class AdminSiteReadingPageResponse(BaseModel):
     total_count: int  # Total number of readings matching the query
     limit: int  # Maximum number of readings that could be returned
     start: int  # Number of readings skipped for pagination
-    site_ids: list[int]  # Site IDs filter used in the query
+    site_id: int  # Site ID filter used in the query
     start_time: datetime  # Start time filter used in the query
     end_time: datetime  # End time filter used in the query
     readings: list[AdminSiteReading]  # The readings in this page
