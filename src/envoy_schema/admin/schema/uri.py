@@ -7,7 +7,7 @@ AggregatorCertificateListUri = (
 )
 AggregatorDomainListUri = "/aggregator/{aggregator_id}/aggregator_domain"  # Adding domain to an aggregator
 AggregatorDomainUri = "/aggregator_domain/{aggregator_domain_id}"  # Update / Delete domain
-CertificateListUri = "/certficate"  # Adding / Listing certificates
+CertificateListUri = "/certificate"  # Adding / Listing certificates
 CertificateUri = "/certificate/{certificate_id}"  # Update / Delete certificate
 CertificateAggregatorListUri = "/certificate/{certificate_id}/aggregator"  # Listing aggregators per certificate
 ArchiveForPeriodSites = "/archive/{period_start}/{period_end}/sites"
