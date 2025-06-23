@@ -2,6 +2,12 @@
 
 AggregatorListUri = "/aggregator"
 AggregatorUri = "/aggregator/{aggregator_id}"
+AggregatorCertificateListUri = (
+    "/aggregator/{aggregator_id}/certificate"  # Adding / Listing certificates to an aggregator
+)
+AggregatorDomainListUri = "/aggregator/{aggregator_id}/aggregator_domain"  # Adding domain to an aggregator
+CertificateUri = "/certificate/{certificate_id}"  # Add / Update / Delete certificate
+AggregatorDomainUri = "/aggregator_domain/{aggregator_domain_id}"  # Update / Delete domain
 ArchiveForPeriodSites = "/archive/{period_start}/{period_end}/sites"
 ArchiveForPeriodDoes = "/archive/{period_start}/{period_end}/does"
 ArchiveForPeriodTariffGeneratedRate = "/archive/{period_start}/{period_end}/tariff_generated_rates"

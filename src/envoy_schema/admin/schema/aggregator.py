@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from pydantic import BaseModel
+from envoy_schema.admin.schema import base
 
 
 class AggregatorDomain(BaseModel):
@@ -19,10 +20,23 @@ class AggregatorResponse(BaseModel):
     domains: list[AggregatorDomain]
 
 
-class AggregatorPageResponse(BaseModel):
+class AggregatorPageResponse(base.BasePageModel):
     """Represents a paginated response of Aggregators"""
 
-    total_count: int  # The total number of aggregators (independent of this page of results)
-    limit: int  # The maximum number of aggregators that could've been returned (the limit set by the query)
-    start: int  # The number of aggregators that have been skipped as part of this query (the start set by the query)
     aggregators: list[AggregatorResponse]  # The aggregator models in this page
+
+
+class AggregatorDomainResponse(BaseModel):
+    """Represents a specific aggregator domain registered in the utility server"""
+
+    aggregator_domain_id: int
+    aggregator_id: int
+    created_time: datetime
+    changed_time: datetime
+    domain: str
+
+
+class AggregatorDomainPageResponse(base.BasePageModel):
+    """Represents a paginated response of aggregator domains"""
+
+    aggregator_domains: list[AggregatorDomainResponse]
