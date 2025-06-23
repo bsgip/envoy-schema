@@ -1,10 +1,10 @@
 from datetime import datetime
 
-from pydantic import BaseModel
+import pydantic
 from envoy_schema.admin.schema import base
 
 
-class AggregatorDomain(BaseModel):
+class AggregatorDomain(pydantic.BaseModel):
     """A domain whitelisted by the utility server as being controlled by the parent aggregator"""
 
     domain: str
@@ -12,7 +12,7 @@ class AggregatorDomain(BaseModel):
     changed_time: datetime
 
 
-class AggregatorResponse(BaseModel):
+class AggregatorResponse(pydantic.BaseModel):
     """Metadata about a specific aggregator registered in the utility server"""
 
     aggregator_id: int
@@ -26,7 +26,7 @@ class AggregatorPageResponse(base.BasePageModel):
     aggregators: list[AggregatorResponse]  # The aggregator models in this page
 
 
-class AggregatorDomainResponse(BaseModel):
+class AggregatorDomainResponse(pydantic.BaseModel):
     """Represents a specific aggregator domain registered in the utility server"""
 
     aggregator_domain_id: int
