@@ -5,6 +5,9 @@ AggregatorUri = "/aggregator/{aggregator_id}"
 AggregatorCertificateListUri = (
     "/aggregator/{aggregator_id}/certificate"  # Adding / Listing certificates to an aggregator
 )
+AggregatorCertificateUri = (
+    "/aggregator/{aggregator_id}/certificate/{certificate_id}"  # Unassigning certificate from aggregator
+)
 AggregatorDomainListUri = "/aggregator/{aggregator_id}/aggregator_domain"  # Adding domain to an aggregator
 AggregatorDomainUri = "/aggregator_domain/{aggregator_domain_id}"  # Update / Delete domain
 CertificateListUri = "/certificate"  # Adding / Listing certificates
