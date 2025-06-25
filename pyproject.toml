@@ -18,7 +18,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "envoy_schema"
-version = "0.17.2"
+version = "0.17.3"
 description = "Envoy Schema - a collection of pydantic models compatible with the Envoy utility server"
 authors = [{ name = "Battery Storage and Grid Integration Program" }]
 readme = "README.md"
