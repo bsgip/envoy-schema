@@ -1,48 +1,53 @@
-from typing import Any
-import pytest
-import inspect
 import importlib
+import inspect
 import pkgutil
 import re
+from itertools import product
+from typing import Any
+
+import pytest
 from assertical.fake.generator import (
-    generate_class_instance,
-    register_value_generator,
-    enumerate_class_properties,
-    generate_value,
     CollectionType,
+    enumerate_class_properties,
+    generate_class_instance,
+    generate_value,
+    register_value_generator,
 )
 from lxml import etree
-from itertools import product
 from pydantic_xml.model import XmlModelMeta
-from envoy_schema.server.schema.sep2.base import BaseXmlModelWithNS
+
 from envoy_schema.server.schema.csip_aus.connection_point import ConnectionPointRequest
-from envoy_schema.server.schema.sep2.metering import ReadingListResponse
-from envoy_schema.server.schema.sep2.pricing import RateComponentListResponse, TimeTariffIntervalListResponse
-from envoy_schema.server.schema.sep2.error import ErrorResponse
+from envoy_schema.server.schema.sep2.base import BaseXmlModelWithNS
 from envoy_schema.server.schema.sep2.der import (
+    DefaultDERControl,
     DERAvailability,
     DERCapability,
     DERControlListResponse,
+    DERProgramListResponse,
     DERSettings,
     DERStatus,
-    DefaultDERControl,
 )
 from envoy_schema.server.schema.sep2.end_device import EndDeviceListResponse, EndDeviceRequest
-
+from envoy_schema.server.schema.sep2.error import ErrorResponse
+from envoy_schema.server.schema.sep2.function_set_assignments import FunctionSetAssignmentsListResponse
+from envoy_schema.server.schema.sep2.metering import ReadingListResponse
 from envoy_schema.server.schema.sep2.metering_mirror import MirrorMeterReadingListRequest
+from envoy_schema.server.schema.sep2.pricing import RateComponentListResponse, TimeTariffIntervalListResponse
 from envoy_schema.server.schema.sep2.pub_sub import (
     XSI_TYPE_DEFAULT_DER_CONTROL,
     XSI_TYPE_DER_AVAILABILITY,
     XSI_TYPE_DER_CAPABILITY,
     XSI_TYPE_DER_CONTROL_LIST,
+    XSI_TYPE_DER_PROGRAM_LIST,
     XSI_TYPE_DER_SETTINGS,
     XSI_TYPE_DER_STATUS,
     XSI_TYPE_END_DEVICE_LIST,
+    XSI_TYPE_FUNCTION_SET_ASSIGNMENTS_LIST,
     XSI_TYPE_READING_LIST,
     XSI_TYPE_TIME_TARIFF_INTERVAL_LIST,
-    NotificationResourceCombined,
-    NotificationListResponse,
     Notification,
+    NotificationListResponse,
+    NotificationResourceCombined,
 )
 
 
@@ -286,6 +291,8 @@ def notification_resource_combined_parameters() -> list[tuple[type, str, bool]]:
         (DERAvailability, XSI_TYPE_DER_AVAILABILITY),
         (DERCapability, XSI_TYPE_DER_CAPABILITY),
         (DERSettings, XSI_TYPE_DER_SETTINGS),
+        (DERProgramListResponse, XSI_TYPE_DER_PROGRAM_LIST),
+        (FunctionSetAssignmentsListResponse, XSI_TYPE_FUNCTION_SET_ASSIGNMENTS_LIST),
     ]
     bools = [True, False]
     return [(elem1, elem2, boolean) for (elem1, elem2) in classes_list for boolean in bools]
@@ -321,13 +328,6 @@ def test_NotificationResourceCombined(
     # but was added because it was a nice feature - here we unpick it so we can XSD validate
     if sub_type in [
         DERCapability,
-        DERSettings,
-        DERAvailability,
-        DERStatus,
-        DefaultDERControl,
-        ReadingListResponse,
-        EndDeviceListResponse,
-        DERControlListResponse,
     ]:
         del kvps["subscribable"]
 

@@ -9,6 +9,7 @@ from envoy_schema.server.schema.sep2.der import (
     ConnectStatusTypeValue,
     DERControlBase,
     DERControlResponse,
+    DERProgramResponse,
     DERType,
     InverterStatusTypeValue,
     LocalControlModeStatusTypeValue,
@@ -30,6 +31,7 @@ from envoy_schema.server.schema.sep2.der_control_types import (
     WattHour,
 )
 from envoy_schema.server.schema.sep2.end_device import EndDeviceResponse
+from envoy_schema.server.schema.sep2.function_set_assignments import FunctionSetAssignmentsResponse
 from envoy_schema.server.schema.sep2.identification import List as Sep2List
 from envoy_schema.server.schema.sep2.identification import Resource
 from envoy_schema.server.schema.sep2.metering import Reading
@@ -49,6 +51,8 @@ XSI_TYPE_DER_AVAILABILITY = "DERAvailability"
 XSI_TYPE_DER_CAPABILITY = "DERCapability"
 XSI_TYPE_DER_SETTINGS = "DERSettings"
 XSI_TYPE_DER_STATUS = "DERStatus"
+XSI_TYPE_DER_PROGRAM_LIST = "DERProgramList"
+XSI_TYPE_FUNCTION_SET_ASSIGNMENTS_LIST = "FunctionSetAssignmentsList"
 XSI_TYPE_DEFAULT_DER_CONTROL = "DefaultDERControl"
 XSI_TYPE_END_DEVICE_LIST = "EndDeviceList"
 XSI_TYPE_READING_LIST = "ReadingList"
@@ -137,6 +141,12 @@ class NotificationResourceCombined(Resource):
 
     # ReadingListResponse
     Readings: Optional[list[Reading]] = element(default=None, tag="Reading")
+
+    # DERProgramListResponse
+    DERProgram: Optional[list[DERProgramResponse]] = element(default=None)
+
+    # FunctionSetAssignmentsListResponse
+    FunctionSetAssignments: Optional[list[FunctionSetAssignmentsResponse]] = element(default=None)
 
     # SubscribableIdentifiedObject
     mRID: Optional[HexBinary128] = element(default=None)
