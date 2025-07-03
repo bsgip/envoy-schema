@@ -109,6 +109,7 @@ class SiteResponse(BaseModel):
     lfdi: str
     sfdi: int
     device_category: DeviceCategory
+    post_rate_seconds: Optional[int] = None  # The current post rate (in seconds) set for this Site (if Any)
 
     groups: list[SiteGroup]
 
@@ -126,3 +127,14 @@ class SitePageResponse(BaseModel):
     group: Optional[str]  # The "group" filter set by the query (if any)
     after: Optional[datetime]  # The "after" filter set by the query (if any)
     sites: list[SiteResponse]  # The site models in this page
+
+
+class SiteUpdateRequest(BaseModel):
+    """Used for updating a specific site's configuration"""
+
+    nmi: Optional[str]  # If set - update the NMI value for the site. Set to empty string to "delete" the NMI
+    timezone_id: Optional[str]  # If set - update the timezone_id for the site
+    device_category: Optional[DeviceCategory]  # If set - update the device_category for the site
+    post_rate_seconds: Optional[int] = (
+        None  # If set - update the site's post rate. Setting a zero or negative value will "delete" the post rate
+    )
