@@ -48,6 +48,7 @@ DERListUri = "/edev/{site_id}/der"
 # DERProgramUri = "/derp/{id1}"
 # Modify DERProgram URIs to be site-scoped
 DERProgramListUri = "/edev/{site_id}/derp"
+DERProgramFSAListUri = "/edev/{site_id}/fsa/{fsa_id}/derp"  # This will be all DERPs under a FSA
 DERProgramUri = "/edev/{site_id}/derp/{der_program_id}"
 DERSettingsUri = "/edev/{site_id}/der/{der_id}/derg"
 DERStatusUri = "/edev/{site_id}/der/{der_id}/ders"
@@ -111,6 +112,7 @@ SupportedLocaleListUri = "/edev/{site_id}/di/loc"
 TargetReadingListUri = "/bill/{id1}/ca/{id2}/tar"
 TariffProfileListUnscopedUri = "/tp"
 TariffProfileListUri = "/edev/{site_id}/tp"
+TariffProfileFSAListUri = "/edev/{site_id}/fsa/{fsa_id}/tp"  # This will be all TariffProfiles under a FSA
 TariffProfileUnscopedUri = "/tp/{tariff_id}"
 TariffProfileUri = "/edev/{site_id}/tp/{tariff_id}"
 TextMessageListUri = "/msg/{id1}/txt"

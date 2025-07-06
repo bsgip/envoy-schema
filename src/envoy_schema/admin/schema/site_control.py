@@ -52,6 +52,7 @@ class SiteControlGroupRequest(BaseModel):
 
     description: str  # Human readable description (32 char max)
     primacy: int  # Lower = Higher priority. Affects "child" controls relative priority when compared to other groups
+    fsa_id: int = 1  # The function set assignment ID that this SiteControl group will be grouped under
 
 
 class SiteControlGroupResponse(SiteControlGroupRequest):

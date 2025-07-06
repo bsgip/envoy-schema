@@ -132,9 +132,9 @@ class SitePageResponse(BaseModel):
 class SiteUpdateRequest(BaseModel):
     """Used for updating a specific site's configuration"""
 
-    nmi: Optional[str]  # If set - update the NMI value for the site. Set to empty string to "delete" the NMI
-    timezone_id: Optional[str]  # If set - update the timezone_id for the site
-    device_category: Optional[DeviceCategory]  # If set - update the device_category for the site
+    nmi: Optional[str] = None  # If set - update the NMI value for the site. Set to empty string to "delete" the NMI
+    timezone_id: Optional[str] = None  # If set - update the timezone_id for the site
+    device_category: Optional[DeviceCategory] = None  # If set - update the device_category for the site
     post_rate_seconds: Optional[int] = (
         None  # If set - update the site's post rate. Setting a zero or negative value will "delete" the post rate
     )

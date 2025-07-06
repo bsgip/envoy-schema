@@ -13,6 +13,7 @@ class TariffRequest(BaseModel):
     name: str
     dnsp_code: str
     currency_code: CurrencyCode
+    fsa_id: int = 1  # The function set assignment ID that this Tariff will be grouped under
 
 
 class TariffResponse(BaseModel):
