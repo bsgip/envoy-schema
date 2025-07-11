@@ -27,6 +27,9 @@ class SiteControlRequest(BaseModel):
         None  # Corresponds to CSIP-Aus opModGenLimW (None will not encode anything)
     )
     load_limit_watts: Optional[Decimal] = None  # Corresponds to CSIP-Aus opModLoadLimW (None will not encode anything)
+    set_point_percentage: Optional[Decimal] = (
+        None  # percent of device max power settings to charge (if negative) or discharge (if positive) at. 100 = 100%
+    )
 
 
 class SiteControlResponse(SiteControlRequest):
