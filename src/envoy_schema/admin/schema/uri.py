@@ -1,6 +1,7 @@
 """Defines all the URIs"""
 
 AggregatorListUri = "/aggregator"
+AggregatorCreateUri = "/aggregator"
 AggregatorUri = "/aggregator/{aggregator_id}"
 AggregatorCertificateListUri = (
     "/aggregator/{aggregator_id}/certificate"  # Adding / Listing certificates to an aggregator
