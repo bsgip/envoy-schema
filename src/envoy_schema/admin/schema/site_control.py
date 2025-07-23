@@ -30,6 +30,9 @@ class SiteControlRequest(BaseModel):
     set_point_percentage: Optional[Decimal] = (
         None  # percent of device max power settings to charge (if negative) or discharge (if positive) at. 100 = 100%
     )
+    ramp_time_seconds: Optional[Decimal] = (
+        None  # Corresponds to rampTms (None will not encode anything). 100 = 100 seconds
+    )
 
 
 class SiteControlResponse(SiteControlRequest):
