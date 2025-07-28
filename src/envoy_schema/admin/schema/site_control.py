@@ -41,6 +41,7 @@ class SiteControlResponse(SiteControlRequest):
     site_control_id: int  # Internal identifier for this DOE
     created_time: datetime  # When this control was created
     changed_time: datetime  # When this control was last changed
+    superseded: bool  # Whether this control has been superseded by a higher priority control since its creation
 
 
 class SiteControlPageResponse(BaseModel):
