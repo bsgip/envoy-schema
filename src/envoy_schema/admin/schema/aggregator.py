@@ -4,6 +4,12 @@ import pydantic
 from envoy_schema.admin.schema import base
 
 
+class AggregatorRequest(pydantic.BaseModel):
+    """Basic attributes for the creation of a new aggregator."""
+
+    name: str
+
+
 class AggregatorDomain(pydantic.BaseModel):
     """A domain whitelisted by the utility server as being controlled by the parent aggregator"""
 
