@@ -1,6 +1,8 @@
+from typing import Union
+
 from urllib.parse import urlparse
 
-from pydantic import AfterValidator
+from pydantic import AfterValidator, PlainSerializer
 from typing_extensions import Annotated
 
 
@@ -100,17 +102,26 @@ def validate_HttpUri(v: str):
     return v
 
 
+def serialize_octet(v: Union[str, int, None]):
+    """Ensures only octet strings are produced from serialization, pairs of hex characters"""
+
+    if v is None:
+        return None
+    v = v.strip() if isinstance(v, str) else f"{v:x}"
+    return v if len(v) % 2 == 0 else "0" + v
+
+
 String6 = Annotated[str, AfterValidator(validate_String6)]
 String32 = Annotated[str, AfterValidator(validate_String32)]
 String192 = Annotated[str, AfterValidator(validate_String192)]
 
-HexBinary8 = Annotated[str, AfterValidator(validate_HexBinary8)]
-HexBinary16 = Annotated[str, AfterValidator(validate_HexBinary16)]
-HexBinary32 = Annotated[str, AfterValidator(validate_HexBinary32)]
-HexBinary48 = Annotated[str, AfterValidator(validate_HexBinary48)]
-HexBinary64 = Annotated[str, AfterValidator(validate_HexBinary64)]
-HexBinary128 = Annotated[str, AfterValidator(validate_HexBinary128)]
-HexBinary160 = Annotated[str, AfterValidator(validate_HexBinary160)]
+HexBinary8 = Annotated[str, AfterValidator(validate_HexBinary8), PlainSerializer(serialize_octet, return_type=str)]
+HexBinary16 = Annotated[str, AfterValidator(validate_HexBinary16), PlainSerializer(serialize_octet, return_type=str)]
+HexBinary32 = Annotated[str, AfterValidator(validate_HexBinary32), PlainSerializer(serialize_octet, return_type=str)]
+HexBinary48 = Annotated[str, AfterValidator(validate_HexBinary48), PlainSerializer(serialize_octet, return_type=str)]
+HexBinary64 = Annotated[str, AfterValidator(validate_HexBinary64), PlainSerializer(serialize_octet, return_type=str)]
+HexBinary128 = Annotated[str, AfterValidator(validate_HexBinary128), PlainSerializer(serialize_octet, return_type=str)]
+HexBinary160 = Annotated[str, AfterValidator(validate_HexBinary160), PlainSerializer(serialize_octet, return_type=str)]
 
 
 LocalAbsoluteUri = Annotated[str, AfterValidator(validate_LocalAbsoluteUri)]

@@ -192,10 +192,10 @@ def test_notification_encode_resource_DERStatus():
     # Now return to the original type and see if everything is there
     notif: Notification = Notification.from_xml(updated_xml)
     assert notif.resource.alarmStatus == "deadbeef"
-    assert notif.resource.genConnectStatus.value == "1"
+    assert notif.resource.genConnectStatus.value == "01"
     assert notif.resource.inverterStatus.value == 2
     assert notif.resource.localControlModeStatus.dateTime == 1700003
-    assert notif.resource.storConnectStatus.value == "9"
+    assert notif.resource.storConnectStatus.value == "09"
 
 
 def test_notification_encode_resource_DERAvailability():
@@ -310,7 +310,7 @@ def test_notification_encode_resource_DERCapability():
     assert notif.resource.modesSupported == "dead"
     assert notif.resource.rtgMaxV.value == 11
     assert notif.resource.rtgMaxW.value == 22
-    assert notif.resource.doeModesSupported == "1"
+    assert notif.resource.doeModesSupported == "01"
 
 
 def test_notification_encode_resource_DefaultDERControl():
