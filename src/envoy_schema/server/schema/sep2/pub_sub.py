@@ -239,6 +239,7 @@ class NotificationResourceCombined(Resource):
     setMaxDischargeRateVA: Optional[ApparentPower] = element(default=None)
     setMaxDischargeRateW: Optional[ActivePower] = element(default=None)
     setMaxV: Optional[VoltageRMS] = element(default=None)
+    setMaxVA: Optional[ApparentPower] = element(default=None)
     setMaxVar: Optional[ReactivePower] = element(default=None)
     setMaxVarNeg: Optional[ReactivePower] = element(default=None)
     setMaxW: Optional[ActivePower] = element(default=None)
