@@ -513,6 +513,9 @@ class DERSettings(SubscribableResource):
         default=None
     )  # Maximum rate of energy transfer delivered by the storage device, in Watts. Defaults to rtgMaxDischargeRateW.
     setMaxV: Optional[VoltageRMS] = element(default=None)  # AC voltage maximum setting.
+    setMaxVA: Optional[ApparentPower] = element(
+        default=None
+    )  # Set limit for maximum apparent power capability of the DER (in VA).
     setMaxVar: Optional[ReactivePower] = element(
         default=None
     )  # Set limit for maximum apparent power capability of the DER (in VA). Defaults to rtgMaxVA.
