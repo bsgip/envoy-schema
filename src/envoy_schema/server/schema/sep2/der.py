@@ -101,6 +101,17 @@ class OperationalModeStatusType(IntEnum):
     OPERATIONAL_MODEL = 2
     TEST_MODE = 3
 
+    # Additional DRED Values
+    DRED_DRM_0 = 100
+    DRED_DRM_1 = 101
+    DRED_DRM_2 = 102
+    DRED_DRM_3 = 103
+    DRED_DRM_4 = 104
+    DRED_DRM_5 = 105
+    DRED_DRM_6 = 106
+    DRED_DRM_7 = 107
+    DRED_DRM_8 = 108
+
 
 class StorageModeStatusType(IntEnum):
     """DER StorageModeStatus value"""
