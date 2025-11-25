@@ -307,7 +307,7 @@ class DemandResponseProgramResponse(IdentifiedObject, tag="DemandResponseProgram
 
 
 class DemandResponseProgramListResponse(Sep2List, tag="DemandResponseProgramList"):
-    DemandResponseProgram: list[DemandResponseProgramResponse] = element(default_factory=list)
+    DemandResponseProgram: Optional[list[DemandResponseProgramResponse]] = element(default=None)
 
 
 class EndDeviceControlResponse(RandomizableEvent, tag="EndDeviceControl"):
