@@ -19,7 +19,7 @@ from envoy_schema.server.schema.sep2.der_control_types import (
     WattHour,
 )
 from envoy_schema.server.schema.sep2.event import RandomizableEvent
-from envoy_schema.server.schema.sep2.identification import IdentifiedObject, Link
+from envoy_schema.server.schema.sep2.identification import IdentifiedObject, Link, Resource
 from envoy_schema.server.schema.sep2.identification import List
 from envoy_schema.server.schema.sep2.identification import List as Sep2List
 from envoy_schema.server.schema.sep2.identification import (
@@ -424,9 +424,8 @@ class DERAvailability(SubscribableResource):
     statWAvail: Optional[ActivePower] = element(default=None)  # Estimated reserve active power, in watts.
 
 
-class DERCapability(SubscribableResource):
-    """Distributed energy resource type and nameplate ratings. Intentionally differs from sep which is defined with a
-    Resource base class rather than SubscribableResource."""
+class DERCapability(Resource):
+    """Distributed energy resource type and nameplate ratings."""
 
     modesSupported: primitive_types.HexBinary32 = element()  # HexBinary encoded DERControlType flags
     rtgAbnormalCategory: Optional[AbnormalCategoryType] = element(default=None)  #
