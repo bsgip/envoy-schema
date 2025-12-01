@@ -14,6 +14,7 @@ from assertical.fake.generator import (
     register_value_generator,
 )
 from lxml import etree
+from pydantic_xml import BaseXmlModel
 from pydantic_xml.model import XmlModelMeta
 
 from envoy_schema.server.schema.csip_aus.connection_point import ConnectionPointRequest
@@ -90,14 +91,14 @@ def custom_assertical_registrations(csip_aus_schema):
 
 
 def generate_and_validate_xml(
-    xml_class: type,
+    xml_class: type[BaseXmlModel],
     csip_aus_schema: etree.XMLSchema,
     optional_is_none: bool,
 ) -> tuple[bool, str]:
     """Generate class instances using assertical, convert to xml and then validate against csip_aus_schema which
     contains sep, csipaus-core and csipaus-ext xsd files."""
     # Generate XML string
-    entity: xml_class = generate_class_instance(
+    entity = generate_class_instance(
         t=xml_class,
         optional_is_none=optional_is_none,
         generate_relationships=True,
@@ -121,7 +122,7 @@ def generate_and_validate_xml(
     "xml_class, optional_is_none", product(import_all_classes_from_module("envoy_schema.server.schema"), [True, False])
 )
 def test_all_xml_models_csip_aus(
-    xml_class: type,
+    xml_class: type[BaseXmlModel],
     csip_aus_schema: etree.XMLSchema,
     custom_assertical_registrations,
     optional_is_none: bool,
