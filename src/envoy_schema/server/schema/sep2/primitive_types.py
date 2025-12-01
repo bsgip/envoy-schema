@@ -1,5 +1,4 @@
 from typing import Union
-
 from urllib.parse import urlparse
 
 from pydantic import AfterValidator, PlainSerializer
@@ -105,7 +104,7 @@ def validate_HttpUri(v: str):
     if len(parsed.netloc) < 3:
         raise ValueError("HttpUri requires a remote host")
 
-    if not parsed.path.startswith("/"):
+    if parsed.path and not parsed.path.startswith("/"):
         raise ValueError("HttpUri should be an absolute path")
 
     return v

@@ -10,13 +10,15 @@ from envoy_schema.server.schema.sep2.primitive_types import validate_HttpUri, va
         ("https://foo.bar/", True),
         ("http://example/", True),
         ("https://foo.com:1234/", True),
+        ("http://nopath", True),  # no path
+        ("http://foo.bar", True),  # no path
+        ("http://foo.bar:1234", True),  # no path
         ("https://foo.bar:1234/example/path/4321", True),
         ("https://foo.bar:1234/example/path/4321?q=1&q2=2", True),
         ("file://foo.bar:1234/example/path/4321?q=1&q2=2", False),  # bad scheme
         ("file://root/secret/", False),  # bad scheme
-        ("http://nopath", False),  # no path
-        ("http://foo.bar", False),  # no path
         ("/example/local", False),  # local uri
+        ("/", False),  # local uri
         ("example.com/path/123/", False),  # no scheme
     ],
 )
