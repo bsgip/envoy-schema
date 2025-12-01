@@ -32,6 +32,8 @@ class AbstractDevice(SubscribableResource):
 
 
 class EndDeviceRequest(AbstractDevice, tag="EndDevice"):
+    changedTime: TimeType = element()
+    enabled: Optional[bool] = element(default=True)
     postRate: Optional[int] = element(default=None)
 
 
