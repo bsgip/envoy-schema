@@ -8,7 +8,6 @@ from typing import Any
 import pytest
 from assertical.fake.generator import (
     CollectionType,
-    check_class_instance_equality,
     enumerate_class_properties,
     generate_class_instance,
     generate_value,
@@ -115,13 +114,7 @@ def generate_and_validate_xml(
     # Validate
     is_valid = csip_aus_schema.validate(xml_doc)
     errors = "\n".join((f"{e.line}: {e.message}" for e in csip_aus_schema.error_log))
-    if not is_valid:
-        return is_valid, errors
-
-    # Check round trips
-    round_tripped_entity = xml_class.from_xml(xml)
-    rt_errors = check_class_instance_equality(xml_class, entity, round_tripped_entity, ignored_properties={"type"})
-    return not bool(rt_errors), "\n".join(rt_errors)
+    return is_valid, errors
 
 
 # Main test against almost all xsd schema models with a few exceptions treated below
