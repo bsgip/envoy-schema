@@ -1,47 +1,7 @@
 from datetime import datetime
-from decimal import Decimal
 from typing import Optional
 
 from pydantic import BaseModel
-
-
-class UpdateDefaultValue(BaseModel):
-    """Used to allow the setting of None or a specific value"""
-
-    value: Optional[Decimal]  # The decimal value to update (or None to update the value to None)
-
-
-class ControlDefaultRequest(BaseModel):
-    """Used for updating the "failover" SiteControl defaults that are used if no specific control is active"""
-
-    import_limit_watts: Optional[
-        UpdateDefaultValue
-    ]  # If set - update The default "import limit watts" used in absence of an active control
-    export_limit_watts: Optional[
-        UpdateDefaultValue
-    ]  # If set - update The default "export limit watts" used in absence of an active control
-    generation_limit_watts: Optional[
-        UpdateDefaultValue
-    ]  # If set - update The default "generation limit watts" used in absence of an active control
-    load_limit_watts: Optional[
-        UpdateDefaultValue
-    ]  # If set - update The default "export limit watts" used in absence of an active control
-    ramp_rate_percent_per_second: Optional[
-        UpdateDefaultValue
-    ]  # If set - update The default ramp rate expressed in a percent of max W per second
-
-
-class ControlDefaultResponse(BaseModel):
-    """Snapshot of the current "failover" SiteControl defaults that are used if no specific control is active"""
-
-    server_default_import_limit_watts: Optional[Decimal]  # None means NO default
-    server_default_export_limit_watts: Optional[Decimal]
-    server_default_generation_limit_watts: Optional[Decimal]
-    server_default_load_limit_watts: Optional[Decimal]
-    ramp_rate_percent_per_second: Optional[Decimal]
-
-    created_time: datetime
-    changed_time: datetime
 
 
 class RuntimeServerConfigRequest(BaseModel):

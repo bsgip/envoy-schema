@@ -22,7 +22,6 @@ TariffGeneratedRateCreateUri = "/tariff_generated_rate"
 DoeUri = "/doe"
 SiteListUri = "/site"
 SiteUri = "/site/{site_id}"  # Supports updating/deleting single sites
-SiteControlDefaultConfigUri = "/site/{site_id}/control_default"  # For managing ControlDefaultConfig per site
 SiteGroupUri = "/site_group/{group_name}"
 SiteGroupListUri = "/site_group"
 CSIPAusSiteReadingUri = "/site_readings/{site_id}/csip_aus_unit/{unit_enum}/period/{period_start}/{period_end}"
@@ -35,6 +34,7 @@ CalculationLogsForPeriod = "/calculation_log/period/{period_start}/{period_end}"
 
 SiteControlGroupListUri = "/site_control_group"  # Fetching / Adding site control groups
 SiteControlGroupUri = "/site_control_group/{group_id}"  # Fetching / Changing site control groups
+SiteControlGroupDefaultUri = "/site_control_group/{group_id}/default"  # Changing defaults for a site control group
 SiteControlUri = "/site_control_group/{group_id}/controls"  # Fetching / Adding site controls (under a group)
 SiteControlRangeUri = "/site_control_group/{group_id}/controls/{period_start}/{period_end}"  # Fetching/deleting controls that start in range # noqa: E501
 
