@@ -51,6 +51,7 @@ class MirrorMeterReadingListRequest(Resource, tag="MirrorMeterReadingList"):
 
 
 class MirrorUsagePointListResponse(Sep2List, tag="MirrorUsagePointList"):
+    pollRate: Optional[int] = attr(default=types.DEFAULT_POLLRATE_SECONDS)  # recommended client pollrate in seconds
     mirrorUsagePoints: list[MirrorUsagePoint] = element(tag="MirrorUsagePoint", default_factory=list)
 
 
