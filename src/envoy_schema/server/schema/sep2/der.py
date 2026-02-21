@@ -494,8 +494,8 @@ class DERCapability(Resource):
     # This is an encoded version of DOESupportedMode
     doeModesSupported: primitive_types.HexBinary8 = element(ns="csipaus")
 
-    # Storage Extension (encoded here as it makes decoding a whole lot simpler)
-    # This is an encoded version of VPPSupportedMode
+    # CSIP Aus Extensions (encoded here as it makes decoding a whole lot simpler)
+    # This is an encoded version of VPPControlType
     vppModesSupported: Optional[primitive_types.HexBinary8] = element(ns="csipaus", default=None)
 
 
@@ -584,10 +584,12 @@ class DERSettings(SubscribableResource):
     # CSIP Aus Extensions (encoded here as it makes decoding a whole lot simpler)
     # This is an encoded version of DOESupportedMode
     doeModesEnabled: Optional[primitive_types.HexBinary8] = element(ns="csipaus", default=None)
-    vppModesEnabled: Optional[primitive_types.HexBinary8] = element(
-        ns="csipaus", default=None
-    )  # Encoded VPPControlType
-    setMinWh: Optional[primitive_types.HexBinary8] = element(ns="csipaus", default=None)  # Encoded VPPControlType
+
+    # CSIP Aus Extensions (encoded here as it makes decoding a whole lot simpler)
+    # This is an encoded version of VPPControlType
+    vppModesEnabled: Optional[primitive_types.HexBinary8] = element(ns="csipaus", default=None)
+
+    setMinWh: Optional[WattHour] = element(ns="csipaus", default=None)
 
 
 class DERListResponse(List, tag="DERList"):

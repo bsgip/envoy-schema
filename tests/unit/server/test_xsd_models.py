@@ -134,7 +134,6 @@ def test_all_xml_models_csip_aus(
     for skip_classes in [
         BaseXmlModelWithNS,  # Not necessary to xsd validate.
         ConnectionPointRequest,  # Not necessary to xsd validate, but supports both csipaus311 and 311a.
-        RateComponentListResponse,  # See separate test below, is also made subscribable.
         NotificationResourceCombined,  # Separate test below, this pydantic workaround affects two classes below.
         NotificationListResponse,  # See separate test below.
         Notification,  # See separate test below.
@@ -171,31 +170,6 @@ def test_error_response_xsd(
     # The only error should be that the message element is not expected.
     elif optional_is_none is False:
         assert errors == "1: Element '{urn:ieee:std:2030.5:ns}message': This element is not expected."
-
-
-@pytest.mark.parametrize("optional_is_none", [True, False])
-def test_RateComponentListResponse_xsd(
-    csip_aus_v13_schema: etree.XMLSchema, optional_is_none: bool, custom_assertical_registrations
-):
-    """Test RateComponentListResponse separately as it is intentionally a subscribable resource rather than
-    simply a resource"""
-
-    is_valid, errors = generate_and_validate_xml(
-        xml_class=RateComponentListResponse,
-        csip_aus_v13_schema=csip_aus_v13_schema,
-        optional_is_none=optional_is_none,
-    )
-
-    # if optional_is_none is True there should be no difference from the schema (subscribable is optional)
-    if optional_is_none is True:
-        assert is_valid, errors
-
-    # The only issue should be an error about the subscribable definition
-    if optional_is_none is False:
-        assert errors == (
-            "1: Element '{urn:ieee:std:2030.5:ns}RateComponentList', attribute 'subscribable': "
-            "The attribute 'subscribable' is not allowed."
-        )
 
 
 @pytest.mark.parametrize("optional_is_none", [True, False])
@@ -239,7 +213,7 @@ def test_NotificationListResponse_xsd(
     xml = entity.to_xml(skip_empty=False, exclude_none=True, exclude_unset=True).decode()
     xml = re.sub('xsi:type="[^"]*"', "", xml)
     assert (
-        '<NotificationList xmlns="urn:ieee:std:2030.5:ns" xmlns:csipaus="https://csipaus.org/ns/v1.3-beta/storage" '
+        '<NotificationList xmlns="urn:ieee:std:2030.5:ns" xmlns:csipaus="https://csipaus.org/ns/v1.3" '
         'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"'
     ) in xml
     assert "all=" in xml

@@ -11,11 +11,11 @@ from envoy_schema.server.schema.sep2.der import (
     DERControlType,
     DERType,
     DOESupportedMode,
-    VPPSupportedMode,
     InverterStatusType,
     LocalControlModeStatusType,
     NormalCategoryType,
     OperationalModeStatusType,
+    VPPControlType,
 )
 from envoy_schema.server.schema.sep2.types import DeviceCategory
 
@@ -33,7 +33,7 @@ class DERConfiguration(BaseModel):
     max_w: Decimal  # Max continuous active power in watts
 
     # Optional values
-    vpp_modes_supported: Optional[VPPSupportedMode]
+    vpp_modes_supported: Optional[VPPControlType]
     abnormal_category: Optional[AbnormalCategoryType]
     normal_category: Optional[NormalCategoryType]
     max_a: Optional[Decimal]  # Max continuous AC current capability in Amperes

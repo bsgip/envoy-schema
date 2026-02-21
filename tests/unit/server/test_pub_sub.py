@@ -97,7 +97,7 @@ def test_notification_xml_doe():
     assert notif.resource.DERControl[0].DERControlBase_.opModExpLimW.value == 200
     assert notif.resource.DERControl[0].DERControlBase_.opModGenLimW.value == 300
     assert notif.resource.DERControl[0].DERControlBase_.opModLoadLimW.value == 400
-    assert notif.resource.DERControl[0].DERControlBase_.opModTargetW.value == 500
+    assert notif.resource.DERControl[0].DERControlBase_.opModStorageTargetW.value == 500
 
 
 def test_notification_encode_resource_DERControlListResponse():
@@ -133,6 +133,7 @@ def test_notification_encode_resource_DERControlListResponse():
                     "opModExpLimW": {"value": 200, "multiplier": 1},
                     "opModGenLimW": {"value": 300, "multiplier": 1},
                     "opModLoadLimW": {"value": 400, "multiplier": 1},
+                    "opModStorageTargetW": {"value": 500, "multiplier": 1},
                 },
             }
         ],
@@ -390,6 +391,13 @@ def test_notification_encode_resource_TimeTariffIntervalListResponse():
                 },
                 "touTier": TOUType.NOT_APPLICABLE,
                 "ConsumptionTariffIntervalListLink": {"all_": 1, "href": "/my/price/at/time/554433"},
+                "ConsumptionTariffIntervalListSummary": {
+                    "ConsumptionTariffInterval": [{"consumptionBlock": 0, "price": 111, "startValue": 0}],
+                    "all_": 1,
+                    "results": 1,
+                    "href": "/my/summary/for/price",
+                },
+                "RateComponentLink": {"href": "/parent/rate/component"},
             }
         ],
     }
