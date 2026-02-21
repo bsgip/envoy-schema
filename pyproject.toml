@@ -9,6 +9,10 @@ filterwarnings = ["error::DeprecationWarning"]
 [tool.mypy]
 exclude = ["tests", "build"]
 
+[[tool.mypy.overrides]]
+module = ["lxml"]
+ignore_errors = true
+
 [tool.bandit]
 exclude_dirs = ["tests"]
 
@@ -41,7 +45,7 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
 ]
 dependencies = [
-    "pydantic>=2.5.0,!=2.6.0, !=2.17.1",
+    "pydantic>=2.5.0,!=2.6.0, !=2.12.0",
     "pydantic_xml[lxml]>=2.12.0",
 ]
 

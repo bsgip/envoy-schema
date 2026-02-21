@@ -222,6 +222,7 @@ class NotificationResourceCombined(Resource):
     rtgVNom: Optional[VoltageRMS] = element(default=None)
     type_: Optional[DERType] = element(tag="type", default=None)
     doeModesSupported: Optional[HexBinary8] = element(ns="csipaus", default=None)
+    vppModesSupported: Optional[HexBinary8] = element(ns="csipaus", default=None)
 
     # DERSettings
     # setESDelay: Optional[int] = element(default=None)  # Duplicated from DERControl
@@ -253,6 +254,8 @@ class NotificationResourceCombined(Resource):
     setVRefOfs: Optional[VoltageRMS] = element(default=None)
     updatedTime: Optional[TimeType] = element(default=None)
     doeModesEnabled: Optional[HexBinary8] = element(ns="csipaus", default=None)
+    vppModesEnabled: Optional[HexBinary8] = element(ns="csipaus", default=None)
+    setMinWh: Optional[WattHour] = element(ns="csipaus", default=None)
 
 
 class Notification(SubscriptionBase):

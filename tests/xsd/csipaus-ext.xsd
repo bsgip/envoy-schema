@@ -1,8 +1,8 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
     elementFormDefault="qualified"
-    xmlns="https://csipaus.org/ns" 
+    xmlns="https://csipaus.org/ns/v1.3-beta/storage" 
     xmlns:bs="urn:ieee:std:2030.5:ns" 
-    targetNamespace="https://csipaus.org/ns"> 
+    targetNamespace="https://csipaus.org/ns/v1.3-beta/storage"> 
 
     <xs:import namespace="urn:ieee:std:2030.5:ns" schemaLocation="sep.xsd"/>
     
@@ -10,9 +10,14 @@
     <xs:element name="opModExpLimW" type="bs:ActivePower" />
     <xs:element name="opModGenLimW" type="bs:ActivePower" />
     <xs:element name="opModLoadLimW" type="bs:ActivePower" />
+    <xs:element name="opModStorageTargetW" type="bs:ActivePower" />
     
     <xs:element name="doeModesSupported" type="DOEControlType" />
     <xs:element name="doeModesEnabled" type="DOEControlType" />
+    <xs:element name="vppModesSupported" type="VPPControlType" />
+    <xs:element name="vppModesEnabled" type="VPPControlType" />
+    
+    <xs:element name="setMinWh" type="bs:WattHour" />
 	
     <xs:element name="ConnectionPointLink" type="bs:Link" />
     <xs:element name="ConnectionPoint" type="ConnectionPointType" />
@@ -24,6 +29,17 @@
 1 - opModImpLimW (Maximum Exported Active Power)
 2 - opModGenLimW (Maximum Discharge Rate)
 3 - opModLoadLimW (Maximum Charge Rate)
+All other values reserved.</xs:documentation>
+      </xs:annotation>
+      <xs:simpleContent>
+        <xs:extension base="bs:HexBinary8" />
+      </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:complexType name="VPPControlType">
+      <xs:annotation>
+        <xs:documentation>Bitmap indicating the VPP controls supported by and enabled on the device. Bit positions SHALL be defined as follows:
+0 - opModStorageTargetW (Storage Target Active Power)
 All other values reserved.</xs:documentation>
       </xs:annotation>
       <xs:simpleContent>

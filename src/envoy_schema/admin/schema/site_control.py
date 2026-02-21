@@ -34,6 +34,9 @@ class SiteControlRequest(BaseModel):
         None  # Corresponds to rampTms (None will not encode anything). 100 = 100 seconds
     )
 
+    # Storage extension
+    storage_target_watts: Optional[Decimal] = None
+
 
 class SiteControlResponse(SiteControlRequest):
     """Site Control basic model when being queried externally"""
@@ -106,6 +109,10 @@ class SiteControlGroupDefaultRequest(BaseModel):
         UpdateDefaultValue
     ]  # If set - update The default ramp rate expressed in a percent of max W per second
 
+    # Storage extension
+    # If set - update the default "storage target watts" used in absence of an active control
+    storage_target_watts: Optional[UpdateDefaultValue]
+
 
 class SiteControlGroupDefaultResponse(BaseModel):
     """Snapshot of the current SiteControlGroupDefault values that are used if no specific control is active"""
@@ -115,6 +122,9 @@ class SiteControlGroupDefaultResponse(BaseModel):
     server_default_generation_limit_watts: Optional[Decimal]
     server_default_load_limit_watts: Optional[Decimal]
     ramp_rate_percent_per_second: Optional[Decimal]
+
+    # Storage extension
+    server_default_storage_target_watts: Optional[Decimal]
 
     created_time: datetime
     changed_time: datetime

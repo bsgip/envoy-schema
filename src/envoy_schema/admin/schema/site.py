@@ -11,6 +11,7 @@ from envoy_schema.server.schema.sep2.der import (
     DERControlType,
     DERType,
     DOESupportedMode,
+    VPPSupportedMode,
     InverterStatusType,
     LocalControlModeStatusType,
     NormalCategoryType,
@@ -32,6 +33,7 @@ class DERConfiguration(BaseModel):
     max_w: Decimal  # Max continuous active power in watts
 
     # Optional values
+    vpp_modes_supported: Optional[VPPSupportedMode]
     abnormal_category: Optional[AbnormalCategoryType]
     normal_category: Optional[NormalCategoryType]
     max_a: Optional[Decimal]  # Max continuous AC current capability in Amperes
@@ -42,6 +44,7 @@ class DERConfiguration(BaseModel):
     max_discharge_rate_w: Optional[Decimal]
     max_v: Optional[Decimal]
     min_v: Optional[Decimal]
+    min_wh: Optional[Decimal]
     max_va: Optional[Decimal]
     max_var: Optional[Decimal]  # Max reactive power delivered by the DER in VAR
     max_var_neg: Optional[Decimal]  # Max reactive power receivable by the DER in VAR. Defaults to -'ve max_var

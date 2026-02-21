@@ -2,8 +2,8 @@
     elementFormDefault="qualified"
     xmlns="urn:ieee:std:2030.5:ns" 
     targetNamespace="urn:ieee:std:2030.5:ns"
-    xmlns:csipaus="https://csipaus.org/ns"> 
-    <xs:import schemaLocation="csipaus-ext.xsd" namespace="https://csipaus.org/ns"/>
+    xmlns:csipaus="https://csipaus.org/ns/v1.3-beta/storage"> 
+    <xs:import schemaLocation="csipaus-ext.xsd" namespace="https://csipaus.org/ns/v1.3-beta/storage"/>
     <xs:redefine schemaLocation="sep.xsd">
       <xs:complexType name="DERControlBase">
         <xs:complexContent>
@@ -29,6 +29,11 @@
                   <xs:documentation>This is a constraint on the maximum allowable charge rate, in Watts, specifically for a single physical device (or aggregation of devices, excluding uncontrolled devices) such as an EV charge station.</xs:documentation>
                 </xs:annotation>
               </xs:element>
+              <xs:element ref="csipaus:opModStorageTargetW" minOccurs="0" maxOccurs="1" >
+                <xs:annotation>
+                  <xs:documentation>This is a target aggregate output, in Watts, for one or more storage components within an EndDevice.</xs:documentation>
+                </xs:annotation>
+              </xs:element>
             </xs:sequence>
           </xs:extension>
         </xs:complexContent>
@@ -39,7 +44,17 @@
             <xs:sequence>
               <xs:element ref="csipaus:doeModesEnabled" minOccurs="0" maxOccurs="1" >
                 <xs:annotation>
-                  <xs:documentation>Bitmap indicating the DOE controls implemented by the device. See DOEControlType for values.</xs:documentation>
+                  <xs:documentation>Bitmap indicating the DOE controls enabled by the device. See DOEControlType for values.</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element ref="csipaus:vppModesEnabled" minOccurs="0" maxOccurs="1" >
+                <xs:annotation>
+                  <xs:documentation>Bitmap indicating the VPP controls enabled by the device. See VPPControlType for values.</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element ref="csipaus:setMinWh" minOccurs="0" maxOccurs="1" >
+                <xs:annotation>
+                  <xs:documentation> Minimum operational value for stored energy in watt hours. This is the value at which the battery will stop discharging to maintain state of charge above OEM or installer specified reserved minimum.</xs:documentation>
                 </xs:annotation>
               </xs:element>
             </xs:sequence>
@@ -52,7 +67,12 @@
             <xs:sequence>
               <xs:element ref="csipaus:doeModesSupported" minOccurs="1" maxOccurs="1" >
                 <xs:annotation>
-                  <xs:documentation>Bitmap indicating the DOE controls enabled on the device. See DOEControlType for values.</xs:documentation>
+                  <xs:documentation>Bitmap indicating the DOE controls supported by the device. See DOEControlType for values.</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element ref="csipaus:vppModesSupported" minOccurs="0" maxOccurs="1" >
+                <xs:annotation>
+                  <xs:documentation>Bitmap indicating the VPP controls supported by the device. See VPPControlType for values.</xs:documentation>
                 </xs:annotation>
               </xs:element>
             </xs:sequence>

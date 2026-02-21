@@ -97,6 +97,7 @@ def test_notification_xml_doe():
     assert notif.resource.DERControl[0].DERControlBase_.opModExpLimW.value == 200
     assert notif.resource.DERControl[0].DERControlBase_.opModGenLimW.value == 300
     assert notif.resource.DERControl[0].DERControlBase_.opModLoadLimW.value == 400
+    assert notif.resource.DERControl[0].DERControlBase_.opModStorageTargetW.value == 500
 
 
 def test_notification_encode_resource_DERControlListResponse():

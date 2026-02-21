@@ -1,9 +1,9 @@
 name: Testing and Linting
 on:
   push:
-    branches: [main]
+    branches: [main, csipaus.org/ns/v1.3-beta/storage]
   pull_request:
-    branches: [main]
+    branches: [main, csipaus.org/ns/v1.3-beta/storage]
   workflow_dispatch:
 
 jobs:
@@ -100,5 +100,3 @@ jobs:
         with:
           paths: .test_report.xml
         if: always()
-
-  
