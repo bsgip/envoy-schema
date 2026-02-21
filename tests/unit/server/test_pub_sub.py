@@ -97,7 +97,7 @@ def test_notification_xml_doe():
     assert notif.resource.DERControl[0].DERControlBase_.opModExpLimW.value == 200
     assert notif.resource.DERControl[0].DERControlBase_.opModGenLimW.value == 300
     assert notif.resource.DERControl[0].DERControlBase_.opModLoadLimW.value == 400
-    assert notif.resource.DERControl[0].DERControlBase_.opModStorageTargetW.value == 500
+    assert notif.resource.DERControl[0].DERControlBase_.opModTargetW.value == 500
 
 
 def test_notification_encode_resource_DERControlListResponse():
@@ -155,6 +155,7 @@ def test_notification_encode_resource_DERControlListResponse():
     assert notif.resource.DERControl[0].DERControlBase_.opModExpLimW.value == 200
     assert notif.resource.DERControl[0].DERControlBase_.opModGenLimW.value == 300
     assert notif.resource.DERControl[0].DERControlBase_.opModLoadLimW.value == 400
+    assert notif.resource.DERControl[0].DERControlBase_.opModStorageTargetW.value == 500
 
 
 def test_notification_encode_resource_DERStatus():
@@ -337,6 +338,7 @@ def test_notification_encode_resource_DefaultDERControl():
             "opModExpLimW": {"value": 200, "multiplier": 1},
             "opModGenLimW": {"value": 300, "multiplier": 1},
             "opModLoadLimW": {"value": 400, "multiplier": 1},
+            "opModStorageTargetW": {"value": 500, "multiplier": 1},
         },
     }
 
@@ -355,6 +357,7 @@ def test_notification_encode_resource_DefaultDERControl():
     assert notif.resource.DERControlBase_.opModExpLimW.value == 200
     assert notif.resource.DERControlBase_.opModGenLimW.value == 300
     assert notif.resource.DERControlBase_.opModLoadLimW.value == 400
+    assert notif.resource.DERControlBase_.opModStorageTargetW.value == 500
 
 
 def test_notification_encode_resource_TimeTariffIntervalListResponse():
