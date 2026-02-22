@@ -33,6 +33,9 @@ class UomType(IntEnum):
     CURRENT_AMPERES = 5
     TEMPERATURE_KELVIN = 6
     TEMPERATURE_CELSIUS = 23
+
+    TIME_SECONDS = 27  # CSIP-Aus v1.3 - IEC 61968-9 - Relevant to Pricing Annex F
+
     VOLTAGE = 29
     JOULES = 31
     FREQUENCY_HZ = 33
@@ -58,6 +61,10 @@ class UomType(IntEnum):
     BRITISH_THERMAL_UNIT_PER_HOUR = 133
     VOLUME_LITER = 134
     VOLUME_LITER_PER_HOUR = 137
+
+    TIME_MINUTES = 159  # CSIP-Aus v1.3 - IEC 61968-9 - Relevant to Pricing Annex F - Defined as 60 seconds
+    TIME_HOURS = 160  # CSIP-Aus v1.3 - IEC 61968-9 - Relevant to Pricing Annex F - Defined as 3,600 seconds
+    TIME_DAYS = 195  # CSIP-Aus v1.3 - IEC 61968-9 - Relevant to Pricing Annex F - Defined as 86,400 seconds
 
 
 class CommodityType(IntEnum):
