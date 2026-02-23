@@ -81,7 +81,8 @@ class TimeTariffIntervalResponse(RandomizableEvent, tag="TimeTariffInterval"):
     RateComponentLink: Link = element()
 
 
-class TariffProfileListResponse(SepList, tag="TariffProfileList"):
+class TariffProfileListResponse(SubscribableList, tag="TariffProfileList"):
+    pollRate: Optional[int] = attr(default=DEFAULT_POLLRATE_SECONDS)
     TariffProfile: Optional[list[TariffProfileResponse]] = element(default=None)
 
 
