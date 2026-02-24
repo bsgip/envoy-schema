@@ -288,7 +288,7 @@ class Notification(SubscriptionBase):
         NotificationResourceCombined  # Instead we use this as our workaround for now
     ] = element(tag="Resource", default=None)
     status: NotificationStatus = element()
-    subscriptionURI: LocalAbsoluteUri = element()  # Subscription from which this notification was triggered.
+    subscriptionURI: HttpUri = element()  # Subscription from which this notification was triggered.
 
 
 class Condition(BaseXmlModelWithNS):

@@ -78,7 +78,7 @@ def test_notification_xml_reading():
     assert parsed_notif.resource.Readings[0].timePeriod.start == 12987364
     assert parsed_notif.resource.Readings[0].timePeriod.duration == 0
     assert parsed_notif.status == NotificationStatus.DEFAULT
-    assert parsed_notif.subscriptionURI == "/edev/8/sub/5"
+    assert parsed_notif.subscriptionURI == "https://example.com/edev/8/sub/5"
 
 
 def test_notification_xml_doe():
