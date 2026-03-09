@@ -141,3 +141,4 @@ class SiteUpdateRequest(BaseModel):
     post_rate_seconds: Optional[int] = (
         None  # If set - update the site's post rate. Setting a zero or negative value will "delete" the post rate
     )
+    group_ids: Optional[list[int]] = None  # If set - replace all group assignments with these site_group_ids
