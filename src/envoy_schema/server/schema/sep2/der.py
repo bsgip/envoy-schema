@@ -29,7 +29,7 @@ from envoy_schema.server.schema.sep2.identification import (
     SubscribableList,
     SubscribableResource,
 )
-from envoy_schema.server.schema.sep2.pricing import PrimacyType
+from envoy_schema.server.schema.sep2.types import PrimacyType
 
 
 class DERType(IntEnum):
