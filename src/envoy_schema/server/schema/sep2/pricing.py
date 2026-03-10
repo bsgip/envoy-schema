@@ -11,7 +11,6 @@ from envoy_schema.server.schema.sep2.types import (
     DEFAULT_POLLRATE_SECONDS,
     ConsumptionBlockType,
     CurrencyCode,
-    PrimacyType,
     ServiceKind,
     TOUType,
     UnitValueType,
@@ -24,7 +23,9 @@ class TariffProfileResponse(IdentifiedObject, tag="TariffProfile"):
 
     currency: Optional[CurrencyCode] = element(default=None)
     pricePowerOfTenMultiplier: Optional[int] = element(default=None)
-    primacyType: PrimacyType = element(default=None, tag="primacy")
+    primacyType: int = element(
+        default=None, tag="primacy"
+    )  # Should map to sep2.types.PrimacyType - left as integer to allow deployments with broader values
     rateCode: Optional[str] = element(default=None)
     RateComponentListLink: Optional[ListLink] = element(default=None)
     serviceCategoryKind: ServiceKind = element()
