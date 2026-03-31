@@ -23,7 +23,6 @@ TariffComponentCreateUri = "/tariff_component"
 TariffComponentUpdateUri = "/tariff_component/{tariff_component_id}"
 TariffGeneratedRateCreateUri = "/tariff_generated_rate"
 TariffGeneratedRateUpdateUri = "/tariff_generated_rate/{tariff_generated_rate_id}"
-
 SiteListUri = "/site"
 SiteUri = "/site/{site_id}"  # Supports updating/deleting single sites
 SiteGroupUri = "/site_group/{group_name}"

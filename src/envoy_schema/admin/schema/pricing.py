@@ -81,3 +81,15 @@ class TariffGeneratedRateResponse(TariffGeneratedRateRequest):
     tariff_id: int
     created_time: datetime
     changed_time: datetime
+
+
+class TariffGeneratedRatePageResponse(BaseModel):
+    """Paginated response for listing tariff generated rates within a time period."""
+
+    total_count: int
+    limit: int
+    start: int
+    period_start: datetime
+    period_end: datetime
+    site_id: Optional[int]
+    rates: list[TariffGeneratedRateResponse]
