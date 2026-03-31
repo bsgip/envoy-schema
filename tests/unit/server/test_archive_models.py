@@ -6,16 +6,14 @@ from assertical.fake.generator import generate_class_instance
 
 from envoy_schema.admin.schema.archive import (
     ArchiveBase,
-    ArchiveDynamicOperatingEnvelopeResponse,
     ArchivePageResponse,
+    ArchiveSiteControlResponse,
     ArchiveSiteResponse,
     ArchiveTariffGeneratedRateResponse,
 )
 
 
-@pytest.mark.parametrize(
-    "t", [ArchiveDynamicOperatingEnvelopeResponse, ArchiveTariffGeneratedRateResponse, ArchiveSiteResponse]
-)
+@pytest.mark.parametrize("t", [ArchiveSiteControlResponse, ArchiveTariffGeneratedRateResponse, ArchiveSiteResponse])
 def test_archive_types_generate(t: type):
     """Simple check to ensure multi inheritance doesn't introduce any weird behaviour"""
     obj: ArchiveBase = generate_class_instance(t, generate_relationships=True)
@@ -26,9 +24,7 @@ def test_archive_types_generate(t: type):
     assert obj.deleted_time is not None
 
 
-@pytest.mark.parametrize(
-    "t", [ArchiveDynamicOperatingEnvelopeResponse, ArchiveTariffGeneratedRateResponse, ArchiveSiteResponse]
-)
+@pytest.mark.parametrize("t", [ArchiveSiteControlResponse, ArchiveTariffGeneratedRateResponse, ArchiveSiteResponse])
 def test_archive_page(t: type):
     """Sanity check that the generics don't introduce any weird behaviour"""
     does = [generate_class_instance(t)]
