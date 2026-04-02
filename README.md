@@ -15,6 +15,18 @@ The models served under `envoy_schema.server` are derived from the following sta
 * [Common Smart Inverter Profile (Australia)](https://csipaus.org/)
 
 
+## Versioning
+
+The `main` branch is the active development branch. Releases will be tagged off the associated release branch.
+
+| CSIP-Aus Version | envoy-schema versions | release branches |
+| ---------------- | -------------------- | --------------------- |
+| `v1.1a` | `v0.*`, `v1.*` | `csipaus.org/ns/v1.2` |
+| `v1.2` | `v0.*`, `v1.*` | `csipaus.org/ns/v1.2` |
+| `v1.3` | `v2.*` | `csipaus.org/ns/v1.3` |
+
+
+
 ## Envoy Admin Models
 
 The models served under `envoy_schema.admin` are typically only used for services directly integrating with the envoy utility server (via the admin server). This is for machine-machine services that are not typically exposed externally.
