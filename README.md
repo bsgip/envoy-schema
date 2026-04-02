@@ -1,3 +1,23 @@
+# envoy-schema - forked for Synergy storage extension
+
+This is a forked project with a long lived branch which implements the CSIP-Aus storage extension (https://csipaus.org/ns/v1.3-beta/storage) proposed by Synergy
+
+The original project, which focuses implementation on the current accepted CSIP-Aus standards, is developed by [BSGIP here](https://github.com/bsgip/envoy-schema)
+
+## Assumed workflow
+
+This repository's [main branch](https://github.com/synergy-au/envoy-schema/tree/main) is intended to always follow the original [BSGIP main](https://github.com/bsgip/envoy-schema) 
+e.g. using GitHub's built in "Sync Fork" feature
+
+Whenever a "sync" occurs, efforts should be made to merge these into the longlived [csipaus.org/ns/v1.3-beta/storage branch](https://github.com/synergy-au/envoy-schema/tree/csipaus.org/ns/v1.3-beta/storage)
+
+All changes that can apply to both repositories/branches is preferred to be resolved by raising a pull request against the original [BSGIP main](https://github.com/bsgip/envoy-schema)
+and then merging this into main. Of course this could be too slow for implementation purposes and should be reviewed on a case by case basis.
+
+All remaining sections should reflect the original documentation as part of the [original repository](https://github.com/bsgip/envoy-schema). 
+<br><br>
+
+
 # envoy-schema
 Public schema for the models/schema associated all envoy API endpoints.
 

@@ -9,7 +9,14 @@ from envoy_schema.server.schema.sep2.pub_sub import (
     SubscriptionEncoding,
     SubscriptionListResponse,
 )
-from envoy_schema.server.schema.sep2.types import TOUType
+from envoy_schema.server.schema.sep2.types import (
+    CurrencyCode,
+    PrimacyType,
+    ServiceKind,
+    TOUType,
+    UnitValueType,
+    UomType,
+)
 
 
 def test_missing_list_defaults_empty():
@@ -97,6 +104,7 @@ def test_notification_xml_doe():
     assert notif.resource.DERControl[0].DERControlBase_.opModExpLimW.value == 200
     assert notif.resource.DERControl[0].DERControlBase_.opModGenLimW.value == 300
     assert notif.resource.DERControl[0].DERControlBase_.opModLoadLimW.value == 400
+    assert notif.resource.DERControl[0].DERControlBase_.opModStorageTargetW.value == 500
 
 
 def test_notification_encode_resource_DERControlListResponse():
@@ -132,6 +140,7 @@ def test_notification_encode_resource_DERControlListResponse():
                     "opModExpLimW": {"value": 200, "multiplier": 1},
                     "opModGenLimW": {"value": 300, "multiplier": 1},
                     "opModLoadLimW": {"value": 400, "multiplier": 1},
+                    "opModStorageTargetW": {"value": 500, "multiplier": 1},
                 },
             }
         ],
@@ -154,6 +163,7 @@ def test_notification_encode_resource_DERControlListResponse():
     assert notif.resource.DERControl[0].DERControlBase_.opModExpLimW.value == 200
     assert notif.resource.DERControl[0].DERControlBase_.opModGenLimW.value == 300
     assert notif.resource.DERControl[0].DERControlBase_.opModLoadLimW.value == 400
+    assert notif.resource.DERControl[0].DERControlBase_.opModStorageTargetW.value == 500
 
 
 def test_notification_encode_resource_DERStatus():
@@ -336,6 +346,7 @@ def test_notification_encode_resource_DefaultDERControl():
             "opModExpLimW": {"value": 200, "multiplier": 1},
             "opModGenLimW": {"value": 300, "multiplier": 1},
             "opModLoadLimW": {"value": 400, "multiplier": 1},
+            "opModStorageTargetW": {"value": 500, "multiplier": 1},
         },
     }
 
@@ -354,6 +365,7 @@ def test_notification_encode_resource_DefaultDERControl():
     assert notif.resource.DERControlBase_.opModExpLimW.value == 200
     assert notif.resource.DERControlBase_.opModGenLimW.value == 300
     assert notif.resource.DERControlBase_.opModLoadLimW.value == 400
+    assert notif.resource.DERControlBase_.opModStorageTargetW.value == 500
 
 
 def test_notification_encode_resource_TimeTariffIntervalListResponse():
@@ -386,6 +398,13 @@ def test_notification_encode_resource_TimeTariffIntervalListResponse():
                 },
                 "touTier": TOUType.NOT_APPLICABLE,
                 "ConsumptionTariffIntervalListLink": {"all_": 1, "href": "/my/price/at/time/554433"},
+                "ConsumptionTariffIntervalListSummary": {
+                    "ConsumptionTariffInterval": [{"consumptionBlock": 0, "price": 111, "startValue": 0}],
+                    "all_": 1,
+                    "results": 1,
+                    "href": "/my/summary/for/price",
+                },
+                "RateComponentLink": {"href": "/parent/rate/component"},
             }
         ],
     }
@@ -448,3 +467,103 @@ def test_notification_encode_resource_EndDeviceListResponse():
     assert notif.resource.EndDevice[0].sFDI == 111
     assert notif.resource.EndDevice[0].ConnectionPointLink.href == "/href/cp"
     assert notif.resource.EndDevice[0].DERListLink.href == "/href/der"
+
+
+def test_notification_encode_resource_TariffProfileListResponse():
+    """tests whether the Resource element can encode various descendent Resources in a notification"""
+
+    with open("tests/data/notification.xml", "r") as fp:
+        original_xml = fp.read()
+
+    # Replace the resource (in dict form) with a descendent type (we have to do it in dict form as updating a
+    # constructed pydantic xml model directly causes headaches)
+    # We will roundtrip that via XML to ensure all of our values are preserved
+    notif_dict = Notification.from_xml(original_xml).model_dump()
+    notif_dict["resource"] = {
+        "all_": 1,
+        "results": 1,
+        "type": "TariffProfileList",
+        "href": "/my/list",
+        "TariffProfile": [
+            {
+                "mRID": "abc123",
+                "currency": CurrencyCode.AUSTRALIAN_DOLLAR,
+                "pricePowerOfTenMultiplier": -3,
+                "primacyType": PrimacyType.IN_HOME_ENERGY_MANAGEMENT_SYSTEM,
+                "rateCode": "xyz 123",
+                "RateComponentListLink": {"all_": 1, "href": "/my/rc/1"},
+                "serviceCategoryKind": ServiceKind.ELECTRICITY,
+                "CombinedTimeTariffIntervalListLink": {"all_": 1, "href": "/my/ctti/1"},
+            }
+        ],
+    }
+
+    # Quick sanity check on the raw XML
+    updated_xml = (
+        Notification.model_validate(notif_dict).to_xml(skip_empty=False, exclude_none=True, exclude_unset=True).decode()
+    )
+    assert 'xsi:type="TariffProfileList"' in updated_xml
+    assert 'href="/my/list"' in updated_xml
+    assert 'href="/my/ctti/1"' in updated_xml
+    assert 'href="/my/rc/1"' in updated_xml
+
+    # Now return to the original type and see if everything is there
+    notif: Notification = Notification.from_xml(updated_xml)
+    assert notif.resource is not None
+    assert notif.resource.TariffProfile is not None
+    assert len(notif.resource.TariffProfile) == 1
+    assert notif.resource.TariffProfile[0].CombinedTimeTariffIntervalListLink.href == "/my/ctti/1"
+
+
+def test_notification_encode_resource_RateComponentListResponse():
+    """tests whether the Resource element can encode various descendent Resources in a notification"""
+
+    with open("tests/data/notification.xml", "r") as fp:
+        original_xml = fp.read()
+
+    # Replace the resource (in dict form) with a descendent type (we have to do it in dict form as updating a
+    # constructed pydantic xml model directly causes headaches)
+    # We will roundtrip that via XML to ensure all of our values are preserved
+    notif_dict = Notification.from_xml(original_xml).model_dump()
+    notif_dict["resource"] = {
+        "all_": 1,
+        "results": 1,
+        "type": "RateComponentList",
+        "href": "/my/list",
+        "RateComponent": [
+            {
+                "mRID": "abc123",
+                "ActiveTimeTariffIntervalListLink": {"all_": 1, "href": "/my/activetti/1"},
+                "flowRateEndLimit": {
+                    "multiplier": 1,
+                    "unit": UomType.BRITISH_THERMAL_UNIT_PER_HOUR,
+                    "value": 3,
+                },
+                "flowRateStartLimit": {
+                    "multiplier": 4,
+                    "unit": UomType.APPARENT_POWER_VA,
+                    "value": 6,
+                },
+                "ReadingTypeLink": {"href": "/my/rt/1"},
+                "TimeTariffIntervalListLink": {"all_": 1, "href": "/my/tti/1"},
+                "roleFlags": "ff",
+            }
+        ],
+    }
+
+    # Quick sanity check on the raw XML
+    updated_xml = (
+        Notification.model_validate(notif_dict).to_xml(skip_empty=False, exclude_none=True, exclude_unset=True).decode()
+    )
+    assert 'xsi:type="RateComponentList"' in updated_xml
+    assert 'href="/my/list"' in updated_xml
+    assert 'href="/my/activetti/1"' in updated_xml
+    assert 'href="/my/tti/1"' in updated_xml
+    assert 'href="/my/rt/1"' in updated_xml
+
+    # Now return to the original type and see if everything is there
+    notif: Notification = Notification.from_xml(updated_xml)
+    assert notif.resource is not None
+    assert notif.resource.RateComponent is not None
+    assert len(notif.resource.RateComponent) == 1
+    assert notif.resource.RateComponent[0].TimeTariffIntervalListLink.href == "/my/tti/1"

@@ -35,7 +35,11 @@ from envoy_schema.server.schema.sep2.function_set_assignments import FunctionSet
 from envoy_schema.server.schema.sep2.identification import List as Sep2List
 from envoy_schema.server.schema.sep2.identification import Resource
 from envoy_schema.server.schema.sep2.metering import Reading
-from envoy_schema.server.schema.sep2.pricing import TimeTariffIntervalResponse
+from envoy_schema.server.schema.sep2.pricing import (
+    RateComponentResponse,
+    TariffProfileResponse,
+    TimeTariffIntervalResponse,
+)
 from envoy_schema.server.schema.sep2.primitive_types import (
     HexBinary8,
     HexBinary32,
@@ -57,6 +61,8 @@ XSI_TYPE_DEFAULT_DER_CONTROL = "DefaultDERControl"
 XSI_TYPE_END_DEVICE_LIST = "EndDeviceList"
 XSI_TYPE_READING_LIST = "ReadingList"
 XSI_TYPE_RESOURCE = "Resource"
+XSI_TYPE_RATE_COMPONENT_LIST = "RateComponentList"
+XSI_TYPE_TARIFF_PROFILE_LIST = "TariffProfileList"
 XSI_TYPE_DEFAULT = XSI_TYPE_RESOURCE
 
 
@@ -110,7 +116,8 @@ class NotificationResourceCombined(Resource):
     Pydantic XML also only support discriminating between sub models with the exact same attributes
 
     This class essentially combines (manually) the following classes:
-        TimeTariffIntervalListResponse, DERControlListResponse, DefaultDERControl, EndDeviceListResponse, Reading
+        TimeTariffIntervalListResponse, DERControlListResponse, DefaultDERControl, EndDeviceListResponse, Reading,
+        TariffProfileListResponse, RateComponentListResponse
 
     The plan is for the server to only fill out the fields relevant for the notification being served (based on
     the xsi:type attribute). Clients using this to parse Notifications will have to manually map the fields to
@@ -147,6 +154,12 @@ class NotificationResourceCombined(Resource):
 
     # FunctionSetAssignmentsListResponse
     FunctionSetAssignments: Optional[list[FunctionSetAssignmentsResponse]] = element(default=None)
+
+    # TariffProfileListResponse
+    TariffProfile: Optional[list[TariffProfileResponse]] = element(default=None)
+
+    # RateComponentListResponse
+    RateComponent: Optional[list[RateComponentResponse]] = element(default=None)
 
     # SubscribableIdentifiedObject
     mRID: Optional[HexBinary128] = element(default=None)
@@ -222,6 +235,7 @@ class NotificationResourceCombined(Resource):
     rtgVNom: Optional[VoltageRMS] = element(default=None)
     type_: Optional[DERType] = element(tag="type", default=None)
     doeModesSupported: Optional[HexBinary8] = element(ns="csipaus", default=None)
+    vppModesSupported: Optional[HexBinary8] = element(ns="csipaus", default=None)
 
     # DERSettings
     # setESDelay: Optional[int] = element(default=None)  # Duplicated from DERControl
@@ -253,6 +267,8 @@ class NotificationResourceCombined(Resource):
     setVRefOfs: Optional[VoltageRMS] = element(default=None)
     updatedTime: Optional[TimeType] = element(default=None)
     doeModesEnabled: Optional[HexBinary8] = element(ns="csipaus", default=None)
+    vppModesEnabled: Optional[HexBinary8] = element(ns="csipaus", default=None)
+    setMinWh: Optional[WattHour] = element(ns="csipaus", default=None)
 
 
 class Notification(SubscriptionBase):

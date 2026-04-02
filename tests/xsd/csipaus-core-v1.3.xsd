@@ -1,0 +1,165 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    elementFormDefault="qualified"
+    xmlns="urn:ieee:std:2030.5:ns"
+    targetNamespace="urn:ieee:std:2030.5:ns"
+    xmlns:csipaus="https://csipaus.org/ns/v1.3">
+    <xs:import schemaLocation="csipaus-ext-v1.3.xsd" namespace="https://csipaus.org/ns/v1.3" />
+
+    <xs:redefine schemaLocation="sep.xsd">
+        <!-- Storage Extensions -->
+        <xs:complexType name="DERControlBase">
+            <xs:complexContent>
+                <xs:extension base="DERControlBase">
+                    <xs:sequence>
+                        <xs:element ref="csipaus:opModImpLimW" minOccurs="0" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation>This is the constraint on the imported active
+                                    power at the connection point.</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element ref="csipaus:opModExpLimW" minOccurs="0" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation>This is the constraint on the exported active
+                                    power at the connection point.</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element ref="csipaus:opModGenLimW" minOccurs="0" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation>This is a constraint on the maximum allowable
+                                    discharge rate, in Watts, specifically for a single physical
+                                    device (or aggregation of devices, excluding uncontrolled
+                                    devices) such as an EV charge station.</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element ref="csipaus:opModLoadLimW" minOccurs="0" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation>This is a constraint on the maximum allowable
+                                    charge rate, in Watts, specifically for a single physical device
+                                    (or aggregation of devices, excluding uncontrolled devices) such
+                                    as an EV charge station.</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element ref="csipaus:opModStorageTargetW" minOccurs="0" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation>This is a target aggregate output, in Watts, for
+                                    one or more storage components within an EndDevice.</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+        <xs:complexType name="DERSettings">
+            <xs:complexContent>
+                <xs:extension base="DERSettings">
+                    <xs:sequence>
+                        <xs:element ref="csipaus:doeModesEnabled" minOccurs="0" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation>Bitmap indicating the DOE controls enabled by the
+                                    device. See DOEControlType for values.</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element ref="csipaus:vppModesEnabled" minOccurs="0" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation>Bitmap indicating the VPP controls enabled by the
+                                    device. See VPPControlType for values.</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element ref="csipaus:setMinWh" minOccurs="0" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation> Minimum operational value for stored energy in
+                                    watt hours. This is the value at which the battery will stop
+                                    discharging to maintain state of charge above OEM or installer
+                                    specified reserved minimum.</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+        <xs:complexType name="DERCapability">
+            <xs:complexContent>
+                <xs:extension base="DERCapability">
+                    <xs:sequence>
+                        <xs:element ref="csipaus:doeModesSupported" minOccurs="1" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation>Bitmap indicating the DOE controls supported by
+                                    the device. See DOEControlType for values.</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element ref="csipaus:vppModesSupported" minOccurs="0" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation>Bitmap indicating the VPP controls supported by
+                                    the device. See VPPControlType for values.</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+        <xs:complexType name="EndDevice">
+            <xs:complexContent>
+                <xs:extension base="EndDevice">
+                    <xs:sequence>
+                        <xs:element ref="csipaus:ConnectionPointLink" minOccurs="0" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation>Contains identification information related to the
+                                    network location at which the EndDevice is installed.</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+
+        <!-- Pricing Extensions -->
+        <xs:complexType name="TariffProfile">
+            <xs:complexContent>
+                <xs:extension base="TariffProfile">
+                    <xs:sequence>
+                        <xs:element ref="csipaus:CombinedTimeTariffIntervalListLink" minOccurs="1"
+                            maxOccurs="1" />
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+
+        <xs:complexType name="TimeTariffInterval">
+            <xs:complexContent>
+                <xs:extension base="TimeTariffInterval">
+                    <xs:sequence>
+                        <xs:element ref="csipaus:ConsumptionTariffIntervalListSummary" minOccurs="1"
+                            maxOccurs="1" />
+                        <xs:element ref="RateComponentLink" minOccurs="1" maxOccurs="1" />
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+
+        <xs:complexType name="TimeTariffIntervalList">
+            <xs:complexContent>
+                <xs:extension base="TimeTariffIntervalList">
+                    <xs:attribute name="pollRate" use="optional" default="900" type="UInt32" />
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+
+
+        <xs:complexType name="RateComponentList">
+            <xs:complexContent>
+                <xs:extension base="RateComponentList">
+                    <xs:attribute name="subscribable" use="optional" default="0"
+                        type="SubscribableType">
+                        <xs:annotation>
+                            <xs:documentation>Indicates whether or not subscriptions are supported
+                                for this resource, and whether or not conditional (thresholds) are
+                                supported. If not specified, is "not subscribable" (0).</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:redefine>
+
+
+</xs:schema>

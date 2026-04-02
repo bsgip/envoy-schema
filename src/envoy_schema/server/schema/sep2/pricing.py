@@ -1,20 +1,20 @@
 from typing import Optional
 
-from pydantic_xml import element
+from pydantic_xml import attr, element
 
 from envoy_schema.server.schema.sep2.event import RandomizableEvent
 from envoy_schema.server.schema.sep2.identification import IdentifiedObject, Link
 from envoy_schema.server.schema.sep2.identification import List as SepList
 from envoy_schema.server.schema.sep2.identification import ListLink, Resource, SubscribableList
+from envoy_schema.server.schema.sep2.primitive_types import HexBinary16
 from envoy_schema.server.schema.sep2.types import (
+    DEFAULT_POLLRATE_SECONDS,
     ConsumptionBlockType,
     CurrencyCode,
-    PrimacyType,
     ServiceKind,
     TOUType,
     UnitValueType,
 )
-from envoy_schema.server.schema.sep2.primitive_types import HexBinary16
 
 
 class TariffProfileResponse(IdentifiedObject, tag="TariffProfile"):
@@ -23,10 +23,13 @@ class TariffProfileResponse(IdentifiedObject, tag="TariffProfile"):
 
     currency: Optional[CurrencyCode] = element(default=None)
     pricePowerOfTenMultiplier: Optional[int] = element(default=None)
-    primacyType: PrimacyType = element(default=None, tag="primacy")
+    primacyType: int = element(
+        default=None, tag="primacy"
+    )  # Should map to sep2.types.PrimacyType - left as integer to allow deployments with broader values
     rateCode: Optional[str] = element(default=None)
     RateComponentListLink: Optional[ListLink] = element(default=None)
     serviceCategoryKind: ServiceKind = element()
+    CombinedTimeTariffIntervalListLink: ListLink = element(ns="csipaus")  # csipaus extension
 
 
 class RateComponentResponse(IdentifiedObject, tag="RateComponent"):
@@ -40,14 +43,6 @@ class RateComponentResponse(IdentifiedObject, tag="RateComponent"):
     roleFlags: HexBinary16 = element()  # See RoleFlagsType
 
     TimeTariffIntervalListLink: ListLink = element()
-
-
-class TimeTariffIntervalResponse(RandomizableEvent, tag="TimeTariffInterval"):
-    """Describes the time-differentiated portion of the RateComponent, if applicable, and provides the ability to
-    specify multiple time intervals, each with its own consumption-based components and other attributes."""
-
-    ConsumptionTariffIntervalListLink: ListLink = element()
-    touTier: TOUType = element()
 
 
 class ConsumptionTariffIntervalResponse(Resource, tag="ConsumptionTariffInterval"):
@@ -66,20 +61,37 @@ class ConsumptionTariffIntervalResponse(Resource, tag="ConsumptionTariffInterval
     # step or block. Thresholds start at zero for each billing period. # noqa e114
 
 
-class TariffProfileListResponse(SepList, tag="TariffProfileList"):
+class ConsumptionTariffIntervalListResponse(SepList, tag="ConsumptionTariffIntervalList"):
+    ConsumptionTariffInterval: Optional[list[ConsumptionTariffIntervalResponse]] = element(default=None)
+
+
+class ConsumptionTariffIntervalListSummaryResponse(SepList, tag="ConsumptionTariffIntervalListSummary", ns="csipaus"):
+    """A list extension to allow clients to retrieve ConsumptionTariffInterval information without making a request
+    against the ConsumptionTariffIntervalList resource"""
+
+    ConsumptionTariffInterval: Optional[list[ConsumptionTariffIntervalResponse]] = element(default=None, ns="")
+
+
+class TimeTariffIntervalResponse(RandomizableEvent, tag="TimeTariffInterval"):
+    """Describes the time-differentiated portion of the RateComponent, if applicable, and provides the ability to
+    specify multiple time intervals, each with its own consumption-based components and other attributes."""
+
+    ConsumptionTariffIntervalListLink: ListLink = element()
+    touTier: TOUType = element()
+    ConsumptionTariffIntervalListSummary: ConsumptionTariffIntervalListSummaryResponse = element(ns="csipaus")
+    RateComponentLink: Link = element()
+
+
+class TariffProfileListResponse(SubscribableList, tag="TariffProfileList"):
+    pollRate: Optional[int] = attr(default=DEFAULT_POLLRATE_SECONDS)
     TariffProfile: Optional[list[TariffProfileResponse]] = element(default=None)
 
 
 class RateComponentListResponse(SubscribableList, tag="RateComponentList"):
-    """Worth noting that the standard describes RateComponentList as a standard list but it's an envoy
-    specific extension to support subscriptions via SubscribableList"""
 
     RateComponent: Optional[list[RateComponentResponse]] = element(default=None)
 
 
-class TimeTariffIntervalListResponse(SepList, tag="TimeTariffIntervalList"):
+class TimeTariffIntervalListResponse(SubscribableList, tag="TimeTariffIntervalList"):
+    pollRate: Optional[int] = attr(default=DEFAULT_POLLRATE_SECONDS)
     TimeTariffInterval: Optional[list[TimeTariffIntervalResponse]] = element(default=None)
-
-
-class ConsumptionTariffIntervalListResponse(SepList, tag="ConsumptionTariffIntervalList"):
-    ConsumptionTariffInterval: Optional[list[ConsumptionTariffIntervalResponse]] = element(default=None)

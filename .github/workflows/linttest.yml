@@ -1,9 +1,9 @@
 name: Testing and Linting
 on:
   push:
-    branches: [main]
+    branches: [main, v1.3-beta]
   pull_request:
-    branches: [main]
+    branches: [main, v1.3-beta]
   workflow_dispatch:
 
 jobs:
@@ -100,5 +100,3 @@ jobs:
         with:
           paths: .test_report.xml
         if: always()
-
-  

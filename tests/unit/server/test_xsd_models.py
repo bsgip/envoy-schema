@@ -80,7 +80,7 @@ def import_all_classes_from_module(package_name: str) -> list[type]:
 
 
 @pytest.fixture
-def custom_assertical_registrations(csip_aus_schema):
+def custom_assertical_registrations(csip_aus_v13_schema):
     """Assertical does not get passed the correct pydantic_xml types: e.g. Int8, Uint8, hexbinary will generate as
     integers only and cause type issues for xml validation. This overwrites these with valid generated values.
     This will be unwound due to dep on the use_assertical_extensions fixture (see conftest)."""
@@ -92,10 +92,10 @@ def custom_assertical_registrations(csip_aus_schema):
 
 def generate_and_validate_xml(
     xml_class: type[BaseXmlModel],
-    csip_aus_schema: etree.XMLSchema,
+    csip_aus_v13_schema: etree.XMLSchema,
     optional_is_none: bool,
 ) -> tuple[bool, str]:
-    """Generate class instances using assertical, convert to xml and then validate against csip_aus_schema which
+    """Generate class instances using assertical, convert to xml and then validate against csip_aus_v13_schema which
     contains sep, csipaus-core and csipaus-ext xsd files."""
     # Generate XML string
     entity = generate_class_instance(
@@ -112,8 +112,8 @@ def generate_and_validate_xml(
     xml_doc = etree.fromstring(xml)
 
     # Validate
-    is_valid = csip_aus_schema.validate(xml_doc)
-    errors = "\n".join((f"{e.line}: {e.message}" for e in csip_aus_schema.error_log))
+    is_valid = csip_aus_v13_schema.validate(xml_doc)
+    errors = "\n".join((f"{e.line}: {e.message}" for e in csip_aus_v13_schema.error_log))
     return is_valid, errors
 
 
@@ -123,18 +123,17 @@ def generate_and_validate_xml(
 )
 def test_all_xml_models_csip_aus(
     xml_class: type[BaseXmlModel],
-    csip_aus_schema: etree.XMLSchema,
+    csip_aus_v13_schema: etree.XMLSchema,
     custom_assertical_registrations,
     optional_is_none: bool,
 ):
-    """Generate class instances using assertical, convert to xml and then validate against csip_aus_schema which
+    """Generate class instances using assertical, convert to xml and then validate against csip_aus_v13_schema which
     contains sep, csipaus-core and csipaus-ext xsd files"""
 
     # Skip some classes which require individual handling for various reasons (separate tests provided where needed)
     for skip_classes in [
         BaseXmlModelWithNS,  # Not necessary to xsd validate.
         ConnectionPointRequest,  # Not necessary to xsd validate, but supports both csipaus311 and 311a.
-        RateComponentListResponse,  # See separate test below, is also made subscribable.
         NotificationResourceCombined,  # Separate test below, this pydantic workaround affects two classes below.
         NotificationListResponse,  # See separate test below.
         Notification,  # See separate test below.
@@ -147,7 +146,7 @@ def test_all_xml_models_csip_aus(
 
     is_valid, errors = generate_and_validate_xml(
         xml_class=xml_class,
-        csip_aus_schema=csip_aus_schema,
+        csip_aus_v13_schema=csip_aus_v13_schema,
         optional_is_none=optional_is_none,
     )
 
@@ -155,11 +154,13 @@ def test_all_xml_models_csip_aus(
 
 
 @pytest.mark.parametrize("optional_is_none", [True, False])
-def test_error_response_xsd(csip_aus_schema: etree.XMLSchema, optional_is_none: bool, custom_assertical_registrations):
+def test_error_response_xsd(
+    csip_aus_v13_schema: etree.XMLSchema, optional_is_none: bool, custom_assertical_registrations
+):
     """Test ErrorResponse separately as an additional optional element (message) causes xsd validation issues"""
     is_valid, errors = generate_and_validate_xml(
         xml_class=ErrorResponse,
-        csip_aus_schema=csip_aus_schema,
+        csip_aus_v13_schema=csip_aus_v13_schema,
         optional_is_none=optional_is_none,
     )
 
@@ -172,33 +173,8 @@ def test_error_response_xsd(csip_aus_schema: etree.XMLSchema, optional_is_none: 
 
 
 @pytest.mark.parametrize("optional_is_none", [True, False])
-def test_RateComponentListResponse_xsd(
-    csip_aus_schema: etree.XMLSchema, optional_is_none: bool, custom_assertical_registrations
-):
-    """Test RateComponentListResponse separately as it is intentionally a subscribable resource rather than
-    simply a resource"""
-
-    is_valid, errors = generate_and_validate_xml(
-        xml_class=RateComponentListResponse,
-        csip_aus_schema=csip_aus_schema,
-        optional_is_none=optional_is_none,
-    )
-
-    # if optional_is_none is True there should be no difference from the schema (subscribable is optional)
-    if optional_is_none is True:
-        assert is_valid, errors
-
-    # The only issue should be an error about the subscribable definition
-    if optional_is_none is False:
-        assert errors == (
-            "1: Element '{urn:ieee:std:2030.5:ns}RateComponentList', attribute 'subscribable': "
-            "The attribute 'subscribable' is not allowed."
-        )
-
-
-@pytest.mark.parametrize("optional_is_none", [True, False])
 def test_Notification_xsd(
-    csip_aus_schema: etree.XMLSchema,
+    csip_aus_v13_schema: etree.XMLSchema,
     optional_is_none: bool,
 ):
     """Notification contains NotificationResourceCombined which only exists because pydantic-xml has limited
@@ -217,8 +193,8 @@ def test_Notification_xsd(
     xml = re.sub('xsi:type="[^"]*"', "", xml)
     xml_doc = etree.fromstring(xml)
 
-    is_valid = csip_aus_schema.validate(xml_doc)
-    errors = "\n".join((f"{e.line}: {e.message}" for e in csip_aus_schema.error_log))
+    is_valid = csip_aus_v13_schema.validate(xml_doc)
+    errors = "\n".join((f"{e.line}: {e.message}" for e in csip_aus_v13_schema.error_log))
     assert is_valid, f"{xml}\nErrors:\n{errors}"
 
 
@@ -237,7 +213,7 @@ def test_NotificationListResponse_xsd(
     xml = entity.to_xml(skip_empty=False, exclude_none=True, exclude_unset=True).decode()
     xml = re.sub('xsi:type="[^"]*"', "", xml)
     assert (
-        '<NotificationList xmlns="urn:ieee:std:2030.5:ns" xmlns:csipaus="https://csipaus.org/ns" '
+        '<NotificationList xmlns="urn:ieee:std:2030.5:ns" xmlns:csipaus="https://csipaus.org/ns/v1.3" '
         'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"'
     ) in xml
     assert "all=" in xml
@@ -275,7 +251,7 @@ def test_NotificationResourceCombined(
     sub_type: type,
     xsi_type: str,
     optional_is_none: bool,
-    csip_aus_schema: etree.XMLSchema,
+    csip_aus_v13_schema: etree.XMLSchema,
     custom_assertical_registrations,
 ):
 
@@ -311,8 +287,8 @@ def test_NotificationResourceCombined(
     xml = xml.replace("<Resource href=", f'<Resource xsi:type="{xsi_type}" href=')
 
     xml_doc = etree.fromstring(xml)
-    is_valid = csip_aus_schema.validate(xml_doc)
-    errors = "\n".join((f"{e.line}: {e.message}" for e in csip_aus_schema.error_log))
+    is_valid = csip_aus_v13_schema.validate(xml_doc)
+    errors = "\n".join((f"{e.line}: {e.message}" for e in csip_aus_v13_schema.error_log))
     assert is_valid, f"{xml}\nErrors:\n{errors}"
 
 
