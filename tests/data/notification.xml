@@ -10,5 +10,5 @@
         </Reading>
     </Resource>
     <status>0</status>
-    <subscriptionURI>/edev/8/sub/5</subscriptionURI>
+    <subscriptionURI>https://example.com/edev/8/sub/5</subscriptionURI>
 </Notification>
