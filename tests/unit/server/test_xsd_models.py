@@ -34,7 +34,7 @@ from envoy_schema.server.schema.sep2.error import ErrorResponse
 from envoy_schema.server.schema.sep2.function_set_assignments import FunctionSetAssignmentsListResponse
 from envoy_schema.server.schema.sep2.metering import ReadingListResponse
 from envoy_schema.server.schema.sep2.metering_mirror import MirrorMeterReadingListRequest
-from envoy_schema.server.schema.sep2.pricing import TimeTariffIntervalListResponse
+from envoy_schema.server.schema.sep2.pricing import RateComponentListResponse, TimeTariffIntervalListResponse
 from envoy_schema.server.schema.sep2.pub_sub import (
     XSI_TYPE_DEFAULT_DER_CONTROL,
     XSI_TYPE_DER_AVAILABILITY,

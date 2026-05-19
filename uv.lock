@@ -169,7 +169,7 @@ wheels = [
 
 [[package]]
 name = "envoy-schema"
-version = "2.0.0"
+version = "1.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "pydantic" },
@@ -211,7 +211,7 @@ requires-dist = [
     { name = "assertical", marker = "extra == 'test'" },
     { name = "bandit", marker = "extra == 'dev'" },
     { name = "envoy-schema", extras = ["dev", "test"], marker = "extra == 'all'" },
-    { name = "pydantic", specifier = ">=2.5.0,!=2.6.0,!=2.12.0" },
+    { name = "pydantic", specifier = ">=2.5.0,!=2.6.0,!=2.17.1" },
     { name = "pydantic-xml", extras = ["lxml"], specifier = ">=2.12.0" },
     { name = "pytest", marker = "extra == 'test'" },
     { name = "ruff", marker = "extra == 'dev'" },

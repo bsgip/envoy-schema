@@ -26,7 +26,7 @@ def csip_aus_schema() -> etree.XMLSchema:
     parser = etree.XMLParser(load_dtd=True)
     parser.resolvers.add(LocalXsdResolver())
     # Load schema
-    with open("tests/xsd/csipaus-core.xsd", "r") as fp:
+    with open("tests/xsd/csipaus-core.xsd") as fp:
         xsd_content = fp.read()
     schema_root = etree.XML(xsd_content, parser)
     return etree.XMLSchema(schema_root)
