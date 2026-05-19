@@ -3,9 +3,9 @@ from typing import Generic, Optional, TypeVar
 
 from pydantic import BaseModel
 
-from envoy_schema.admin.schema.doe import DynamicOperatingEnvelopeResponse
 from envoy_schema.admin.schema.pricing import TariffGeneratedRateResponse
 from envoy_schema.admin.schema.site import SiteResponse
+from envoy_schema.admin.schema.site_control import SiteControlResponse
 
 
 class ArchiveBase(BaseModel):
@@ -16,8 +16,8 @@ class ArchiveBase(BaseModel):
     deleted_time: Optional[datetime]  # When was this archive record marked as deleted (if None - not deleted)
 
 
-class ArchiveDynamicOperatingEnvelopeResponse(ArchiveBase, DynamicOperatingEnvelopeResponse):
-    """Archived version of DynamicOperatingEnvelopeResponse"""
+class ArchiveSiteControlResponse(ArchiveBase, SiteControlResponse):
+    """Archived version of SiteControlResponse"""
 
     pass
 
@@ -35,7 +35,7 @@ class ArchiveSiteResponse(ArchiveBase, SiteResponse):
 
 
 ArchiveType = TypeVar(
-    "ArchiveType", ArchiveDynamicOperatingEnvelopeResponse, ArchiveTariffGeneratedRateResponse, ArchiveSiteResponse
+    "ArchiveType", ArchiveSiteControlResponse, ArchiveTariffGeneratedRateResponse, ArchiveSiteResponse
 )
 
 

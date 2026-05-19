@@ -5,9 +5,8 @@ from pydantic_xml import attr, element
 
 from envoy_schema.server.schema.sep2 import primitive_types
 from envoy_schema.server.schema.sep2.base import BaseXmlModelWithNS
-from envoy_schema.server.schema.sep2.identification import IdentifiedObject
+from envoy_schema.server.schema.sep2.identification import IdentifiedObject, ListLink, Resource
 from envoy_schema.server.schema.sep2.identification import List as Sep2List
-from envoy_schema.server.schema.sep2.identification import ListLink, Resource
 from envoy_schema.server.schema.sep2.time import TimeType
 from envoy_schema.server.schema.sep2.types import DEFAULT_POLLRATE_SECONDS, PerCent
 

@@ -3,9 +3,8 @@ from typing import List, Optional
 from pydantic_xml import attr, element
 
 from envoy_schema.server.schema.sep2 import primitive_types, types
-from envoy_schema.server.schema.sep2.identification import IdentifiedObject
+from envoy_schema.server.schema.sep2.identification import IdentifiedObject, Resource
 from envoy_schema.server.schema.sep2.identification import List as Sep2List
-from envoy_schema.server.schema.sep2.identification import Resource
 from envoy_schema.server.schema.sep2.metering import Reading, ReadingSetBase, ReadingType, UsagePointBase
 
 

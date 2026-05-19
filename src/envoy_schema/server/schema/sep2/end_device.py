@@ -16,7 +16,6 @@ from envoy_schema.server.schema.sep2.types import DEFAULT_POLLRATE_SECONDS, PINT
 
 
 class AbstractDevice(SubscribableResource):
-
     ConfigurationLink: Optional[Link] = element(default=None)
     DERListLink: Optional[ListLink] = element(default=None)
     deviceCategory: Optional[primitive_types.HexBinary32] = element(default=None)
