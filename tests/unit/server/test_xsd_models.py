@@ -260,7 +260,6 @@ def test_NotificationResourceCombined(
     # in an effort to simplify the generation (and guard against future property changes)
     kvps: dict[str, Any] = {}
     for p in enumerate_class_properties(sub_type):
-
         if p.is_primitive_type:
             kvps[p.name] = generate_value(p.type_to_generate)
         else:
@@ -310,6 +309,6 @@ def test_hexbinary_doe_types():
 
         # Additional check for NotificationResourceCombined
         notification_value = NotificationResourceCombined.__annotations__.get(value)
-        assert "HexBinary" in str(
-            notification_value
-        ), f"Expected HexBinary type in {value} of NotificationResourceCombined"
+        assert "HexBinary" in str(notification_value), (
+            f"Expected HexBinary type in {value} of NotificationResourceCombined"
+        )

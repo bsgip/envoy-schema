@@ -88,7 +88,6 @@ class TariffProfileListResponse(SubscribableList, tag="TariffProfileList"):
 
 
 class RateComponentListResponse(SubscribableList, tag="RateComponentList"):
-
     RateComponent: Optional[list[RateComponentResponse]] = element(default=None)
 
 
