@@ -10,11 +10,12 @@ from envoy_schema.admin.schema.archive import (
     ArchiveSiteControlResponse,
     ArchiveSiteResponse,
     ArchiveTariffGeneratedRateResponse,
+    ArchiveType,
 )
 
 
 @pytest.mark.parametrize("t", [ArchiveSiteControlResponse, ArchiveTariffGeneratedRateResponse, ArchiveSiteResponse])
-def test_archive_types_generate(t: type):
+def test_archive_types_generate(t: type[ArchiveType]):
     """Simple check to ensure multi inheritance doesn't introduce any weird behaviour"""
     obj: ArchiveBase = generate_class_instance(t, generate_relationships=True)
     assert isinstance(obj, t), "Type should be the type we specified"
@@ -25,7 +26,9 @@ def test_archive_types_generate(t: type):
 
 
 @pytest.mark.parametrize("t", [ArchiveSiteControlResponse, ArchiveTariffGeneratedRateResponse, ArchiveSiteResponse])
-def test_archive_page(t: type):
+def test_archive_page(
+    t: type[ArchiveType],
+):
     """Sanity check that the generics don't introduce any weird behaviour"""
     does = [generate_class_instance(t)]
     doe_page = ArchivePageResponse(

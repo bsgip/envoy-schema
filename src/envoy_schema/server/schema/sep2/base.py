@@ -1,3 +1,5 @@
+from typing import Any
+
 from pydantic_xml import BaseXmlModel
 from pydantic_xml.element import SearchMode
 
@@ -13,9 +15,9 @@ class BaseXmlModelWithNS(BaseXmlModel):
 
     def __init_subclass__(
         cls,
-        *args,
-        **kwargs,
-    ):
+        *args: Any,  # noqa: ANN401
+        **kwargs: Any,  # noqa: ANN401
+    ) -> None:
         super().__init_subclass__(*args, **kwargs)
         cls.__xml_nsmap__ = nsmap
         cls.__xml_search_mode__ = SearchMode.UNORDERED

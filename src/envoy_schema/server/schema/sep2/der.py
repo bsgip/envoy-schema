@@ -19,16 +19,17 @@ from envoy_schema.server.schema.sep2.der_control_types import (
     WattHour,
 )
 from envoy_schema.server.schema.sep2.event import RandomizableEvent
-from envoy_schema.server.schema.sep2.identification import IdentifiedObject, Link
-from envoy_schema.server.schema.sep2.identification import List
-from envoy_schema.server.schema.sep2.identification import List as Sep2List
 from envoy_schema.server.schema.sep2.identification import (
+    IdentifiedObject,
+    Link,
+    List,
     ListLink,
     Resource,
     SubscribableIdentifiedObject,
     SubscribableList,
     SubscribableResource,
 )
+from envoy_schema.server.schema.sep2.identification import List as Sep2List
 from envoy_schema.server.schema.sep2.types import PrimacyType
 
 
