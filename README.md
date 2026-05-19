@@ -35,22 +35,33 @@ The models served under `envoy_schema.admin` are typically only used for service
 
 Install directly from pypi
 
-`pip install envoy_schema`
 
+```
+# Using uv
+uv add envoy-schema
+
+# Using pip
+pip install envoy-schema
+```
 
 # Development
 
 To install `envoy-schema` for development purposes, after cloning this repository:
 
 ```
-pip install -e .[dev, test]
+# Using uv
+uv sync --python 3.13 --all-extras
+uv run pytest
+
+# Using pip
+pip install -e .[all]
 pytest
 ```
 
 We use the following linting/formatting tools:
 * [bandit](https://pypi.org/project/black/)
-* [flake8](https://pypi.org/project/flake8/)
-* [mypy](https://pypi.org/project/mypy/)
+* [ruff](https://pypi.org/project/ruff/)
+* [ty](https://pypi.org/project/ty/)
 
 Contributions via a pull request are welcome but will be validated using the above tools.
 
