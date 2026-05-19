@@ -1,9 +1,9 @@
 name: Testing and Linting
 on:
   push:
-    branches: [main, v1.3-beta]
+    branches: [main, csipaus.org/ns/v1.2, csipaus.org/ns/v1.3]
   pull_request:
-    branches: [main, v1.3-beta]
+    branches: [main, csipaus.org/ns/v1.2, csipaus.org/ns/v1.3]
   workflow_dispatch:
 
 jobs:
