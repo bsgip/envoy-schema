@@ -215,7 +215,7 @@ class DeviceCategory(IntFlag):
 
 
 # The combination of ALL DeviceCategory bit flags
-DEVICE_CATEGORY_ALL_SET: DeviceCategory = reduce(lambda a, b: a | b, DeviceCategory)  # type: ignore # py311 issue
+DEVICE_CATEGORY_ALL_SET: DeviceCategory = reduce(lambda a, b: a | b, DeviceCategory)
 
 # Time is a signed 64 bit value representing the number of seconds since 0 hours, 0 minutes, 0 seconds, on the 1st of
 # January, 1970, in UTC, not counting leap seconds

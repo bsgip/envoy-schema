@@ -91,7 +91,7 @@ class SubscriptionBase(Resource):
     subscribedResource: LocalAbsoluteUri = element()  # The resource for which the subscription applies.
 
 
-def get_notification_resource_discriminator(v: Any) -> str:
+def get_notification_resource_discriminator(v: Any) -> str:  # noqa: ANN401
     if not v:
         return XSI_TYPE_DEFAULT
 

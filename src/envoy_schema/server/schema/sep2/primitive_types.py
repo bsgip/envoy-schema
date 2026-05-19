@@ -1,80 +1,79 @@
-from typing import Union
+from typing import Annotated, Optional, Union
 from urllib.parse import urlparse
 
 from pydantic import AfterValidator, PlainSerializer
-from typing_extensions import Annotated
 
 
-def validate_String6(v: str):
+def validate_String6(v: str) -> str:
     if len(v) > 6:
         raise ValueError("String6 max length of 6.")
     return v
 
 
-def validate_String32(v: str):
+def validate_String32(v: str) -> str:
     if len(v) > 32:
         raise ValueError("String32 max length of 32.")
     return v
 
 
-def validate_String192(v: str):
+def validate_String192(v: str) -> str:
     if len(v) > 192:
         raise ValueError("String192 max length of 192.")
     return v
 
 
-def validate_HexBinary8(v: str):
+def validate_HexBinary8(v: str) -> str:
     if len(v) > 2:
         raise ValueError("HexBinary8 max length of 2.")
     return v
 
 
-def validate_HexBinary16(v: str):
+def validate_HexBinary16(v: str) -> str:
     if len(v) > 4:
         raise ValueError("HexBinary16 max length of 4.")
     return v
 
 
-def validate_HexBinary32(v: str):
+def validate_HexBinary32(v: str) -> str:
     if len(v) > 8:
         raise ValueError("HexBinary32 max length of 8.")
     return v
 
 
-def validate_HexBinary48(v: str):
+def validate_HexBinary48(v: str) -> str:
     if len(v) > 12:
         raise ValueError("HexBinary48 max length of 12.")
     return v
 
 
-def validate_HexBinary64(v: str):
+def validate_HexBinary64(v: str) -> str:
     if len(v) > 16:
         raise ValueError("HexBinary64 max length of 16.")
     return v
 
 
-def validate_HexBinary128(v: str):
+def validate_HexBinary128(v: str) -> str:
     if len(v) > 32:
         raise ValueError("HexBinary128 max length of 32.")
     return v
 
 
-def validate_HexBinary160(v: str):
+def validate_HexBinary160(v: str) -> str:
     if len(v) > 40:
         raise ValueError("HexBinary160 max length of 40.")
     return v
 
 
-def validate_HexBinary(v: str):
+def validate_HexBinary(v: str) -> str:
     """Validates that a string is a base16 parseable integer"""
     try:
         int(v, 16)
-    except ValueError:
-        raise ValueError("Invalid digits provided for hexadecimal parsing.")
+    except ValueError as exc:
+        raise ValueError("Invalid digits provided for hexadecimal parsing.") from exc
     return v
 
 
-def validate_LocalAbsoluteUri(v: str):
+def validate_LocalAbsoluteUri(v: str) -> str:
     """Only does a cursory check that a URI looks like a local absolute URI eg: /edev/123/cp"""
     v = v.strip()
     if len(v) > 4096:
@@ -90,7 +89,7 @@ def validate_LocalAbsoluteUri(v: str):
     return v
 
 
-def validate_HttpUri(v: str):
+def validate_HttpUri(v: str) -> str:
     """Only does a cursory check that a URI looks like a remote server HTTP(S) query eg: https://example.com:123/hook"""
 
     v = v.strip()
@@ -110,7 +109,7 @@ def validate_HttpUri(v: str):
     return v
 
 
-def serialize_octet(v: Union[str, int, None]):
+def serialize_octet(v: Union[str, int, None]) -> Optional[str]:
     """Ensures only octet strings are produced from serialization, pairs of hex characters"""
 
     if v is None:

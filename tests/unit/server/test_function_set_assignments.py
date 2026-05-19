@@ -1,6 +1,7 @@
 import pytest
 from assertical.fake.generator import generate_class_instance
 
+from envoy_schema.server.schema.sep2 import to_xml
 from envoy_schema.server.schema.sep2.function_set_assignments import FunctionSetAssignmentsListResponse
 
 
@@ -16,5 +17,5 @@ def test_FunctionSetAssignmentsListResponse_pollRate(optional_is_none: bool):
         FunctionSetAssignmentsListResponse, optional_is_none=optional_is_none
     )
     entity.pollRate = 123654
-    xml = entity.to_xml(skip_empty=False, exclude_none=True, exclude_unset=True).decode()
+    xml = to_xml(entity)
     assert f'pollRate="{entity.pollRate}"' in xml

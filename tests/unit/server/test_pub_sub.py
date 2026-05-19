@@ -1,5 +1,6 @@
 import pytest
 
+from envoy_schema.server.schema.sep2 import to_validated_xml
 from envoy_schema.server.schema.sep2.pub_sub import (
     ConditionAttributeIdentifier,
     Notification,
@@ -20,7 +21,7 @@ def test_missing_list_defaults_empty():
 
 def test_subscription():
     """Simple validation to ensure we can read basic XML"""
-    with open("tests/data/subscription.xml", "r") as fp:
+    with open("tests/data/subscription.xml") as fp:
         raw_xml = fp.read()
 
     parsed_sub: Subscription = Subscription.from_xml(raw_xml)
@@ -37,7 +38,7 @@ def test_subscription_no_relative_uri():
     """Checks that validation disallows relative notification uris"""
 
     # load as per normal but change the URI
-    with open("tests/data/subscription.xml", "r") as fp:
+    with open("tests/data/subscription.xml") as fp:
         raw_xml = fp.read()
     raw_xml = raw_xml.replace("http://example.com:8001/note", "/invalid/relative/uri")
     with pytest.raises(ValueError):
@@ -46,7 +47,7 @@ def test_subscription_no_relative_uri():
 
 def test_subscription_conditions():
     """Simple validation to ensure we can read basic XML"""
-    with open("tests/data/subscription_condition.xml", "r") as fp:
+    with open("tests/data/subscription_condition.xml") as fp:
         raw_xml = fp.read()
 
     parsed_sub: Subscription = Subscription.from_xml(raw_xml)
@@ -64,7 +65,7 @@ def test_subscription_conditions():
 
 def test_notification_xml_reading():
     """Simple validation to ensure we can read basic XML"""
-    with open("tests/data/notification.xml", "r") as fp:
+    with open("tests/data/notification.xml") as fp:
         raw_xml = fp.read()
 
     parsed_notif: Notification = Notification.from_xml(raw_xml)
@@ -73,8 +74,9 @@ def test_notification_xml_reading():
     assert parsed_notif.resource is not None
     assert parsed_notif.resource.all_ == 1
     assert parsed_notif.resource.results == 1
-    assert len(parsed_notif.resource.Readings) == 1
+    assert parsed_notif.resource.Readings and len(parsed_notif.resource.Readings) == 1
     assert parsed_notif.resource.Readings[0].value == 1001
+    assert parsed_notif.resource.Readings[0].timePeriod
     assert parsed_notif.resource.Readings[0].timePeriod.start == 12987364
     assert parsed_notif.resource.Readings[0].timePeriod.duration == 0
     assert parsed_notif.status == NotificationStatus.DEFAULT
@@ -84,7 +86,7 @@ def test_notification_xml_reading():
 def test_notification_xml_doe():
     """Simple validation to ensure we can read basic XML"""
 
-    with open("tests/data/notification_doe.xml", "r") as fp:
+    with open("tests/data/notification_doe.xml") as fp:
         original_xml = fp.read()
 
     notif = Notification.from_xml(original_xml)
@@ -93,16 +95,17 @@ def test_notification_xml_doe():
     assert len(notif.resource.DERControl) == 1
     assert notif.resource.DERControl[0].interval.start == 456
     assert notif.resource.DERControl[0].interval.duration == 789
-    assert notif.resource.DERControl[0].DERControlBase_.opModImpLimW.value == 100
-    assert notif.resource.DERControl[0].DERControlBase_.opModExpLimW.value == 200
-    assert notif.resource.DERControl[0].DERControlBase_.opModGenLimW.value == 300
-    assert notif.resource.DERControl[0].DERControlBase_.opModLoadLimW.value == 400
+    derc_base = notif.resource.DERControl[0].DERControlBase_
+    assert derc_base.opModImpLimW and derc_base.opModImpLimW.value == 100
+    assert derc_base.opModExpLimW and derc_base.opModExpLimW.value == 200
+    assert derc_base.opModGenLimW and derc_base.opModGenLimW.value == 300
+    assert derc_base.opModLoadLimW and derc_base.opModLoadLimW.value == 400
 
 
 def test_notification_encode_resource_DERControlListResponse():
     """tests whether the Resource element can encode various descendent Resources in a notification"""
 
-    with open("tests/data/notification.xml", "r") as fp:
+    with open("tests/data/notification.xml") as fp:
         original_xml = fp.read()
 
     # Replace the resource (in dict form) with a descendent type (we have to do it in dict form as updating a
@@ -138,9 +141,7 @@ def test_notification_encode_resource_DERControlListResponse():
     }
 
     # Quick sanity check on the raw XML
-    updated_xml = (
-        Notification.model_validate(notif_dict).to_xml(skip_empty=False, exclude_none=True, exclude_unset=True).decode()
-    )
+    updated_xml = to_validated_xml(Notification, notif_dict)
     assert 'xsi:type="DERControlList"' in updated_xml
     assert 'href="/my/list"' in updated_xml
     assert "<value>100</value>" in updated_xml
@@ -150,16 +151,17 @@ def test_notification_encode_resource_DERControlListResponse():
     assert notif.resource is not None
     assert notif.resource.DERControl is not None
     assert len(notif.resource.DERControl) == 1
-    assert notif.resource.DERControl[0].DERControlBase_.opModImpLimW.value == 100
-    assert notif.resource.DERControl[0].DERControlBase_.opModExpLimW.value == 200
-    assert notif.resource.DERControl[0].DERControlBase_.opModGenLimW.value == 300
-    assert notif.resource.DERControl[0].DERControlBase_.opModLoadLimW.value == 400
+    derc_base = notif.resource.DERControl[0].DERControlBase_
+    assert derc_base.opModImpLimW and derc_base.opModImpLimW.value == 100
+    assert derc_base.opModExpLimW and derc_base.opModExpLimW.value == 200
+    assert derc_base.opModGenLimW and derc_base.opModGenLimW.value == 300
+    assert derc_base.opModLoadLimW and derc_base.opModLoadLimW.value == 400
 
 
 def test_notification_encode_resource_DERStatus():
     """tests whether the Resource element can encode various descendent Resources in a notification"""
 
-    with open("tests/data/notification.xml", "r") as fp:
+    with open("tests/data/notification.xml") as fp:
         original_xml = fp.read()
 
     # Replace the resource (in dict form) with a descendent type (we have to do it in dict form as updating a
@@ -182,26 +184,25 @@ def test_notification_encode_resource_DERStatus():
     }
 
     # Quick sanity check on the raw XML
-    updated_xml = (
-        Notification.model_validate(notif_dict).to_xml(skip_empty=False, exclude_none=True, exclude_unset=True).decode()
-    )
+    updated_xml = to_validated_xml(Notification, notif_dict)
     assert 'xsi:type="DERStatus"' in updated_xml
     assert 'href="/my/der/status"' in updated_xml
     assert "<dateTime>1700009</dateTime>" in updated_xml
 
     # Now return to the original type and see if everything is there
     notif: Notification = Notification.from_xml(updated_xml)
+    assert notif.resource
     assert notif.resource.alarmStatus == "deadbeef"
-    assert notif.resource.genConnectStatus.value == "01"
-    assert notif.resource.inverterStatus.value == 2
-    assert notif.resource.localControlModeStatus.dateTime == 1700003
-    assert notif.resource.storConnectStatus.value == "09"
+    assert notif.resource.genConnectStatus and notif.resource.genConnectStatus.value == "01"
+    assert notif.resource.inverterStatus and notif.resource.inverterStatus.value == 2
+    assert notif.resource.localControlModeStatus and notif.resource.localControlModeStatus.dateTime == 1700003
+    assert notif.resource.storConnectStatus and notif.resource.storConnectStatus.value == "09"
 
 
 def test_notification_encode_resource_DERAvailability():
     """tests whether the Resource element can encode various descendent Resources in a notification"""
 
-    with open("tests/data/notification.xml", "r") as fp:
+    with open("tests/data/notification.xml") as fp:
         original_xml = fp.read()
 
     # Replace the resource (in dict form) with a descendent type (we have to do it in dict form as updating a
@@ -221,25 +222,24 @@ def test_notification_encode_resource_DERAvailability():
     }
 
     # Quick sanity check on the raw XML
-    updated_xml = (
-        Notification.model_validate(notif_dict).to_xml(skip_empty=False, exclude_none=True, exclude_unset=True).decode()
-    )
+    updated_xml = to_validated_xml(Notification, notif_dict)
     assert 'xsi:type="DERAvailability"' in updated_xml
     assert 'href="/my/der/avail"' in updated_xml
     assert "<readingTime>1700002</readingTime>" in updated_xml
 
     # Now return to the original type and see if everything is there
     notif: Notification = Notification.from_xml(updated_xml)
+    assert notif.resource
     assert notif.resource.availabilityDuration == 123
     assert notif.resource.maxChargeDuration == 456
     assert notif.resource.readingTime == 1700002
-    assert notif.resource.statVarAvail.value == 7
+    assert notif.resource.statVarAvail and notif.resource.statVarAvail.value == 7
 
 
 def test_notification_encode_resource_DERSettings():
     """tests whether the Resource element can encode various descendent Resources in a notification"""
 
-    with open("tests/data/notification.xml", "r") as fp:
+    with open("tests/data/notification.xml") as fp:
         original_xml = fp.read()
 
     # Replace the resource (in dict form) with a descendent type (we have to do it in dict form as updating a
@@ -262,17 +262,16 @@ def test_notification_encode_resource_DERSettings():
     }
 
     # Quick sanity check on the raw XML
-    updated_xml = (
-        Notification.model_validate(notif_dict).to_xml(skip_empty=False, exclude_none=True, exclude_unset=True).decode()
-    )
+    updated_xml = to_validated_xml(Notification, notif_dict)
     assert 'xsi:type="DERSettings"' in updated_xml
     assert 'href="/my/der/settings"' in updated_xml
     assert "<updatedTime>17000001</updatedTime>" in updated_xml
 
     # Now return to the original type and see if everything is there
     notif: Notification = Notification.from_xml(updated_xml)
+    assert notif.resource
     assert notif.resource.modesEnabled == "feed"
-    assert notif.resource.setMaxW.value == 44
+    assert notif.resource.setMaxW and notif.resource.setMaxW.value == 44
     assert notif.resource.updatedTime == 17000001
     assert notif.resource.doeModesEnabled == "be"
 
@@ -280,7 +279,7 @@ def test_notification_encode_resource_DERSettings():
 def test_notification_encode_resource_DERCapability():
     """tests whether the Resource element can encode various descendent Resources in a notification"""
 
-    with open("tests/data/notification.xml", "r") as fp:
+    with open("tests/data/notification.xml") as fp:
         original_xml = fp.read()
 
     # Replace the resource (in dict form) with a descendent type (we have to do it in dict form as updating a
@@ -298,25 +297,24 @@ def test_notification_encode_resource_DERCapability():
     }
 
     # Quick sanity check on the raw XML
-    updated_xml = (
-        Notification.model_validate(notif_dict).to_xml(skip_empty=False, exclude_none=True, exclude_unset=True).decode()
-    )
+    updated_xml = to_validated_xml(Notification, notif_dict)
     assert 'xsi:type="DERCapability"' in updated_xml
     assert 'href="/my/der/cap"' in updated_xml
     assert "<multiplier>2</multiplier>" in updated_xml
 
     # Now return to the original type and see if everything is there
     notif: Notification = Notification.from_xml(updated_xml)
+    assert notif.resource
     assert notif.resource.modesSupported == "dead"
-    assert notif.resource.rtgMaxV.value == 11
-    assert notif.resource.rtgMaxW.value == 22
+    assert notif.resource.rtgMaxV and notif.resource.rtgMaxV.value == 11
+    assert notif.resource.rtgMaxW and notif.resource.rtgMaxW.value == 22
     assert notif.resource.doeModesSupported == "01"
 
 
 def test_notification_encode_resource_DefaultDERControl():
     """tests whether the Resource element can encode various descendent Resources in a notification"""
 
-    with open("tests/data/notification.xml", "r") as fp:
+    with open("tests/data/notification.xml") as fp:
         original_xml = fp.read()
 
     # Replace the resource (in dict form) with a descendent type (we have to do it in dict form as updating a
@@ -340,9 +338,7 @@ def test_notification_encode_resource_DefaultDERControl():
     }
 
     # Quick sanity check on the raw XML
-    updated_xml = (
-        Notification.model_validate(notif_dict).to_xml(skip_empty=False, exclude_none=True, exclude_unset=True).decode()
-    )
+    updated_xml = to_validated_xml(Notification, notif_dict)
     assert 'xsi:type="DefaultDERControl"' in updated_xml
     assert "<value>100</value>" in updated_xml
 
@@ -350,16 +346,16 @@ def test_notification_encode_resource_DefaultDERControl():
     notif: Notification = Notification.from_xml(updated_xml)
     assert notif.resource is not None
     assert notif.resource.DERControlBase_ is not None
-    assert notif.resource.DERControlBase_.opModImpLimW.value == 100
-    assert notif.resource.DERControlBase_.opModExpLimW.value == 200
-    assert notif.resource.DERControlBase_.opModGenLimW.value == 300
-    assert notif.resource.DERControlBase_.opModLoadLimW.value == 400
+    assert notif.resource.DERControlBase_.opModImpLimW and notif.resource.DERControlBase_.opModImpLimW.value == 100
+    assert notif.resource.DERControlBase_.opModExpLimW and notif.resource.DERControlBase_.opModExpLimW.value == 200
+    assert notif.resource.DERControlBase_.opModGenLimW and notif.resource.DERControlBase_.opModGenLimW.value == 300
+    assert notif.resource.DERControlBase_.opModLoadLimW and notif.resource.DERControlBase_.opModLoadLimW.value == 400
 
 
 def test_notification_encode_resource_TimeTariffIntervalListResponse():
     """tests whether the Resource element can encode various descendent Resources in a notification"""
 
-    with open("tests/data/notification.xml", "r") as fp:
+    with open("tests/data/notification.xml") as fp:
         original_xml = fp.read()
 
     # Replace the resource (in dict form) with a descendent type (we have to do it in dict form as updating a
@@ -391,9 +387,7 @@ def test_notification_encode_resource_TimeTariffIntervalListResponse():
     }
 
     # Quick sanity check on the raw XML
-    updated_xml = (
-        Notification.model_validate(notif_dict).to_xml(skip_empty=False, exclude_none=True, exclude_unset=True).decode()
-    )
+    updated_xml = to_validated_xml(Notification, notif_dict)
     assert 'xsi:type="TimeTariffIntervalList"' in updated_xml
     assert 'href="/my/list"' in updated_xml
     assert 'href="/my/price/at/time/554433"' in updated_xml
@@ -409,7 +403,7 @@ def test_notification_encode_resource_TimeTariffIntervalListResponse():
 def test_notification_encode_resource_EndDeviceListResponse():
     """tests whether the Resource element can encode various descendent Resources in a notification"""
 
-    with open("tests/data/notification.xml", "r") as fp:
+    with open("tests/data/notification.xml") as fp:
         original_xml = fp.read()
 
     # Replace the resource (in dict form) with a descendent type (we have to do it in dict form as updating a
@@ -433,9 +427,7 @@ def test_notification_encode_resource_EndDeviceListResponse():
     }
 
     # Quick sanity check on the raw XML
-    updated_xml = (
-        Notification.model_validate(notif_dict).to_xml(skip_empty=False, exclude_none=True, exclude_unset=True).decode()
-    )
+    updated_xml = to_validated_xml(Notification, notif_dict)
     assert 'xsi:type="EndDeviceListResponse"' in updated_xml
     assert 'href="/href/cp"' in updated_xml
 
@@ -446,5 +438,8 @@ def test_notification_encode_resource_EndDeviceListResponse():
     assert len(notif.resource.EndDevice) == 1
     assert notif.resource.EndDevice[0].lFDI == "lfdi-111"
     assert notif.resource.EndDevice[0].sFDI == 111
+
+    assert notif.resource.EndDevice[0].ConnectionPointLink
+    assert notif.resource.EndDevice[0].DERListLink
     assert notif.resource.EndDevice[0].ConnectionPointLink.href == "/href/cp"
     assert notif.resource.EndDevice[0].DERListLink.href == "/href/der"

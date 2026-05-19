@@ -10,6 +10,7 @@ from envoy_schema.admin.schema.archive import (
     ArchivePageResponse,
     ArchiveSiteResponse,
     ArchiveTariffGeneratedRateResponse,
+    ArchiveType,
 )
 
 
