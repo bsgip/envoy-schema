@@ -84,11 +84,13 @@ class TariffGeneratedRateResponse(TariffGeneratedRateRequest):
 
 
 class TariffGeneratedRatePageResponse(BaseModel):
-    """Paginated response for listing tariff generated rates within a time period."""
+    """Paginated response for listing tariff generated rates within a time period, scoped to a single
+    TariffComponent. All rates on the page share the same tariff_component_id."""
 
     total_count: int
     limit: int
     start: int
+    tariff_component_id: int  # The TariffComponent that scopes this page (echoed from path)
     period_start: datetime
     period_end: datetime
     site_id: Optional[int]
