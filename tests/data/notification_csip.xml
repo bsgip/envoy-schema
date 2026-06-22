@@ -1,0 +1,17 @@
+<Notification xmlns="urn:ieee:std:2030.5:ns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <subscribedResource>/sep2/edev</subscribedResource>
+    <status>0</status>
+    <subscriptionURI>https://98.76.54.32/sep2/edev/1000/sub/1</subscriptionURI>
+    <Resource xsi:type="EndDeviceList" all="1" results="1" href="/sep2/edev">
+        <EndDevice href="/sep2/edev/3">
+            <DERListLink href="/sep2/edev/3/der" all="0"/>
+            <lFDI>bdd7bb2babe673a3fc603d433125291971a88ac0</lFDI>
+            <LogEventListLink href="/sep2/edev/3/log" all="0"/>
+            <sFDI>509605116746</sFDI>
+            <changedTime>1514837100</changedTime>
+            <enabled>1</enabled>
+            <FunctionSetAssignmentsListLink href="/sep2/edev/3/fsa" all="2"/>
+            <RegistrationLink href="/sep2/edev/3/rg"/>
+        </EndDevice>
+    </Resource>
+</Notification>

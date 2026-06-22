@@ -109,6 +109,20 @@ def validate_HttpUri(v: str) -> str:
     return v
 
 
+def validate_AbsoluteUri(v: str) -> str:
+    """Only does a cursory check that a URI looks like either:
+    a remote server HTTP(S) query eg: https://example.com:123/hook
+    OR
+    a local server absolute query eg: /edev/123/cp
+    """
+
+    v = v.strip()
+    if v.startswith("h"):
+        return validate_HttpUri(v)
+    else:
+        return validate_LocalAbsoluteUri(v)
+
+
 def serialize_octet(v: Union[str, int, None]) -> Optional[str]:
     """Ensures only octet strings are produced from serialization, pairs of hex characters"""
 
@@ -165,5 +179,7 @@ HexBinary160 = Annotated[
     PlainSerializer(serialize_octet, return_type=str),
 ]
 
+
 LocalAbsoluteUri = Annotated[str, AfterValidator(validate_LocalAbsoluteUri)]
 HttpUri = Annotated[str, AfterValidator(validate_HttpUri)]
+AbsoluteUri = Annotated[str, AfterValidator(validate_AbsoluteUri)]

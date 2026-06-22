@@ -41,6 +41,7 @@ from envoy_schema.server.schema.sep2.pricing import (
     TimeTariffIntervalResponse,
 )
 from envoy_schema.server.schema.sep2.primitive_types import (
+    AbsoluteUri,
     HexBinary8,
     HexBinary32,
     HexBinary128,
@@ -304,7 +305,7 @@ class Notification(SubscriptionBase):
         NotificationResourceCombined  # Instead we use this as our workaround for now
     ] = element(tag="Resource", default=None)
     status: NotificationStatus = element()
-    subscriptionURI: LocalAbsoluteUri = element()  # Subscription from which this notification was triggered.
+    subscriptionURI: AbsoluteUri = element()  # Subscription from which this notification was triggered.
 
 
 class Condition(BaseXmlModelWithNS):

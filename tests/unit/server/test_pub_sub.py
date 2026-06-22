@@ -109,6 +109,22 @@ def test_notification_xml_doe():
     assert derc_base.opModStorageTargetW and derc_base.opModStorageTargetW.value == 500
 
 
+def test_notification_csip():
+    """Simple validation to ensure we can read basic XML - using an example from CSIP"""
+
+    with open("tests/data/notification_csip.xml") as fp:
+        original_xml = fp.read()
+
+    notif = Notification.from_xml(original_xml)
+
+    assert notif.subscriptionURI == "https://98.76.54.32/sep2/edev/1000/sub/1"
+
+    assert notif.resource is not None
+    assert notif.resource.EndDevice is not None
+    assert len(notif.resource.EndDevice) == 1
+    assert notif.resource.EndDevice[0].lFDI == "bdd7bb2babe673a3fc603d433125291971a88ac0"
+
+
 def test_notification_encode_resource_DERControlListResponse():
     """tests whether the Resource element can encode various descendent Resources in a notification"""
 
