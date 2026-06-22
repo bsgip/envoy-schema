@@ -3,9 +3,9 @@ from typing import Optional
 from pydantic_xml import element
 
 from envoy_schema.server.schema.sep2.event import RandomizableEvent
-from envoy_schema.server.schema.sep2.identification import IdentifiedObject, Link
+from envoy_schema.server.schema.sep2.identification import IdentifiedObject, Link, ListLink, Resource, SubscribableList
 from envoy_schema.server.schema.sep2.identification import List as SepList
-from envoy_schema.server.schema.sep2.identification import ListLink, Resource, SubscribableList
+from envoy_schema.server.schema.sep2.primitive_types import HexBinary16
 from envoy_schema.server.schema.sep2.types import (
     ConsumptionBlockType,
     CurrencyCode,
@@ -14,7 +14,6 @@ from envoy_schema.server.schema.sep2.types import (
     TOUType,
     UnitValueType,
 )
-from envoy_schema.server.schema.sep2.primitive_types import HexBinary16
 
 
 class TariffProfileResponse(IdentifiedObject, tag="TariffProfile"):
