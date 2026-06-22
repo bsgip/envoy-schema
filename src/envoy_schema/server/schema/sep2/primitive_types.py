@@ -2,7 +2,6 @@ from typing import Annotated, Optional, Union
 from urllib.parse import urlparse
 
 from pydantic import AfterValidator, PlainSerializer
-from typing_extensions import Annotated
 
 
 def validate_String6(v: str) -> str:
@@ -124,7 +123,7 @@ def validate_AbsoluteUri(v: str) -> str:
         return validate_LocalAbsoluteUri(v)
 
 
-def serialize_octet(v: Union[str, int, None]):
+def serialize_octet(v: Union[str, int, None]) -> Optional[str]:
     """Ensures only octet strings are produced from serialization, pairs of hex characters"""
 
     if v is None:
@@ -179,6 +178,7 @@ HexBinary160 = Annotated[
     AfterValidator(validate_HexBinary160),
     PlainSerializer(serialize_octet, return_type=str),
 ]
+
 
 LocalAbsoluteUri = Annotated[str, AfterValidator(validate_LocalAbsoluteUri)]
 HttpUri = Annotated[str, AfterValidator(validate_HttpUri)]
