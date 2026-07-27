@@ -63,11 +63,11 @@ class TariffComponentResponse(TariffComponentRequest):
 
 
 class TariffGeneratedRateRequest(BaseModel):
-    """Time of use tariff pricing - represents a price for a specific site for a specific range of time as defined
+    """Time of use tariff pricing - represents a price for a specific site group for a specific range of time as defined
     by the parent TariffComponent."""
 
     tariff_component_id: int  # The TariffComponent ID that this price entry sits underneath
-    site_id: int
+    site_group_id: int  # The SiteGroup id whose members will have this price available to them
     calculation_log_id: Optional[int]  # The ID of the CalculationLog that created this rate (or NULL if no link)
     start_time: datetime
     duration_seconds: int
