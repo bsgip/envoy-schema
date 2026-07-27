@@ -9,13 +9,19 @@ ConnectionPointUri = "/edev/{site_id}/cp"
 # Sep2 URIs
 AccountBalanceUri = "/ppy/{id1}/ab"
 ActiveBillingPeriodListUri = "/bill/{id1}/ca/{id2}/actbp"
-ActiveCreditRegisterListUri = ""  # noqa: E501. There is NO ActiveCreditRegisterList resource in Sep2 despite an ActiveCreditRegisterListLink being defined.
+ActiveCreditRegisterListUri = (
+    ""  # There is NO ActiveCreditRegisterList resource in Sep2 despite an ActiveCreditRegisterListLink being defined.
+)
 ActiveDERControlListUri = "/edev/{site_id}/derp/{der_program_id}/actderc"
 ActiveEndDeviceControlListUri = "/dr/{id1}/actedc"
-ActiveFlowReservationListUri = ""  # noqa: E501. There is NO ActiveFlowReservationList resource in Sep2 despite an ActiveFlowReservationListLink being defined.
-ActiveProjectionReadingListUri = ""  # noqa: E501. There is NO ActiveProjectionReadingList in resource Sep2 despite an ActiveProjectionReadingListLink being defined.
+ActiveFlowReservationListUri = (
+    ""  # There is NO ActiveFlowReservationList resource in Sep2 despite an ActiveFlowReservationListLink being defined.
+)
+ActiveProjectionReadingListUri = ""  # There is NO ActiveProjectionReadingList in resource Sep2
 ActiveSupplyInterruptionOverrideListUri = "/ppy/{id1}/actsi"
-ActiveTargetReadingListUri = ""  # noqa: E501. There is NO ActiveTargetReadingList resource in Sep2 despite an ActiveTargetReadingListLink being defined.
+ActiveTargetReadingListUri = (
+    ""  # There is NO ActiveTargetReadingList resource in Sep2 despite an ActiveTargetReadingListLink being defined.
+)
 ActiveTextMessageListUri = "/msg/{id1}/acttxt"
 ActiveTimeTariffIntervalListUri = "/tp/{id1}/rc/{id2}/acttti"
 AssociatedDERProgramListUri = "/edev/{site_id}/der/{der_id}/derp"

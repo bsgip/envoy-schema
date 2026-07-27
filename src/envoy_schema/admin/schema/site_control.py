@@ -9,7 +9,7 @@ class SiteControlRequest(BaseModel):
     """Used for encoding a "SiteControl" which can represent things like a Dynamic Operating Envelope, Setpoint or
     other form of control"""
 
-    site_id: int  # Corresponds to EndDevice id - the site that this control is targeting
+    site_group_id: int  # Corresponds to SiteGroup id - the members of this SiteGroup are targeted by this control
     calculation_log_id: Optional[int]  # The ID of the CalculationLog that created this control (or NULL if no link)
     duration_seconds: int
     start_time: datetime
