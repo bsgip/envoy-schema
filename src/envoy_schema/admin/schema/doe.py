@@ -8,7 +8,7 @@ from pydantic import BaseModel
 class DynamicOperatingEnvelopeRequest(BaseModel):
     """Dynamic Operating Envelope basic model - This is for legacy support. New integrations should use SiteControl"""
 
-    site_id: int  # Corresponds to EndDevice id
+    site_group_id: int  # Corresponds to SiteGroup id
     calculation_log_id: Optional[int]  # The ID of the CalculationLog that created this DOE (or NULL if no link)
     duration_seconds: int
     import_limit_active_watts: Decimal
