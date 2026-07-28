@@ -70,6 +70,9 @@ class SiteControlGroupRequest(BaseModel):
     display_id: Optional[int] = (
         None  # If set - seed the auto generated MRID with this value. equal display_id means equal mrid
     )
+    required_site_group_id: Optional[int] = (
+        None  # If set - only sites in this SiteGroup will "see" this SiteControlGroup. Globally visible otherwise
+    )
 
 
 class SiteControlGroupResponse(SiteControlGroupRequest):
