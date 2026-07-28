@@ -14,6 +14,9 @@ class TariffRequest(BaseModel):
     dnsp_code: str
     currency_code: CurrencyCode
     fsa_id: int = 1  # The function set assignment ID that this Tariff will be grouped under
+    required_site_group_id: Optional[int] = (
+        None  # If set - only sites in this SiteGroup will "see" this Tariff. Globally visible otherwise
+    )
 
 
 class TariffResponse(BaseModel):
