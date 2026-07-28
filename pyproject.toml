@@ -71,6 +71,7 @@ Homepage = "https://github.com/bsgip/envoy-schema"
 all = ["envoy_schema[dev, test]"]
 dev = ["bandit", "ruff", "ty", "types-python-dateutil", "types-tzlocal", "types-lxml"]
 test = ["pytest", "assertical"]
+build = ["twine"]
 
 [tool.setuptools.package-data]
 "envoy_schema" = ["py.typed"]
