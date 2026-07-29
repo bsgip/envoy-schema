@@ -10,6 +10,7 @@ class SiteGroupResponse(BaseModel):
     name: str
     created_time: datetime
     changed_time: datetime
+    default_group: bool  # If set - all "new" site registrations (in/out of band) will be assigned to this group
     total_sites: int  # How many sites are linked to this group
 
 
