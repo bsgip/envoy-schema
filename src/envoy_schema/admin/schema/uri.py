@@ -22,8 +22,11 @@ TariffGeneratedRateCreateUri = "/tariff_generated_rate"
 DoeUri = "/doe"
 SiteListUri = "/site"
 SiteUri = "/site/{site_id}"  # Supports updating/deleting single sites
-SiteGroupUri = "/site_group/{group_name}"
 SiteGroupListUri = "/site_group"
+SiteGroupUri = "/site_group/{group_name}"
+SiteGroupAssignmentsListUri = "/site_group/{group_name}/assignments"
+SiteGroupAssignmentsUri = "/site_group/{group_name}/assignments/{site_group_assignment_id}"
+
 CSIPAusSiteReadingUri = "/site_readings/{site_id}/csip_aus_unit/{unit_enum}/period/{period_start}/{period_end}"
 AggregatorBillingUri = "/billing/aggregator/{aggregator_id}/tariff/{tariff_id}/period/{period_start}/{period_end}"
 SitePeriodBillingUri = "/billing/site/period"
