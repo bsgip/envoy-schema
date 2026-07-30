@@ -38,6 +38,16 @@ class TariffResponse(TariffRequest):
     changed_time: datetime
 
 
+class TariffPageResponse(BaseModel):
+    """Paginated response for listing tariffs."""
+
+    total_count: int
+    limit: int
+    start: int
+    group: Optional[str]  # the "group" filter set by the query
+    tariffs: list[TariffResponse]
+
+
 class TariffComponentRequest(BaseModel):
     """Basic attributes for the creation of a new tariff component that sits underneath a specific Tariff"""
 
@@ -87,14 +97,15 @@ class TariffGeneratedRateResponse(TariffGeneratedRateRequest):
 
 
 class TariffGeneratedRatePageResponse(BaseModel):
-    """Paginated response for listing tariff generated rates within a time period, scoped to a single
-    TariffComponent. All rates on the page share the same tariff_component_id."""
+    """Paginated response for listing tariff generated rates under a TariffComponent. All rates on the page share
+    the same TariffComponent"""
 
     total_count: int
     limit: int
     start: int
-    tariff_component_id: int  # The TariffComponent that scopes this page (echoed from path)
-    period_start: datetime
-    period_end: datetime
-    site_id: Optional[int]
+    tariff_component_id: int  # The "tariff_component_id" filter set on the path
+    start_time_since: Optional[datetime]  # The "start_time_since" filter set by the query
+    start_time_until: Optional[datetime]  # The "start_time_until" filter set by the query
+    group: Optional[str]  # the "group" filter set by the query (applied to SiteGroup owner)
+    site_id: Optional[int]  # the "site_id" filter set by the query (applied to Site and SiteGroup membership)
     rates: list[TariffGeneratedRateResponse]

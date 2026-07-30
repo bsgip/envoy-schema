@@ -58,6 +58,11 @@ class SiteControlPageResponse(BaseModel):
     limit: int  # The maximum number of controls that could've been returned (the limit set by the query)
     start: int  # The number of controls that have been skipped as part of this query (the start set by the query)
     after: Optional[datetime]  # The "after" filter set by the query
+    site_id: Optional[int]  # The "site_id" filter set by the query (Applied to a site's group membership)
+    group: Optional[str]  # the "group" filter set by the query (applied to SiteGroup owner)
+    start_time_since: Optional[datetime]  # The "start_time_since" filter set by the query
+    start_time_until: Optional[datetime]  # The "start_time_until" filter set by the query
+
     controls: list[SiteControlResponse]  # The control models in this paged response
 
 
@@ -90,6 +95,7 @@ class SiteControlGroupPageResponse(BaseModel):
     limit: int  # The maximum number of groups that could've been returned (the limit set by the query)
     start: int  # The number of groups that have been skipped as part of this query (the start set by the query)
     after: Optional[datetime]  # The "after" filter set by the query
+    group: Optional[str]  # the "group" filter set by the query
     site_control_groups: list[SiteControlGroupResponse]  # The control group models in this paged response
 
 
