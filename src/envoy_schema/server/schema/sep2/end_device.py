@@ -1,4 +1,3 @@
-
 from pydantic_xml import attr, element
 
 from envoy_schema.server.schema.csip_aus.connection_point import ConnectionPointLink as ConnectionPointLinkType

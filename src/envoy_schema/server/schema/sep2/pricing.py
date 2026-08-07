@@ -1,4 +1,3 @@
-
 from pydantic_xml import attr, element
 
 from envoy_schema.server.schema.sep2.event import RandomizableEvent
@@ -51,9 +50,7 @@ class ConsumptionTariffIntervalResponse(Resource, tag="ConsumptionTariffInterval
     within one of the previous blocks."""
 
     consumptionBlock: ConsumptionBlockType = element()
-    price: int | None = element(
-        default=None
-    )  # The charge for this rate component, per unit of measure defined by the
+    price: int | None = element(default=None)  # The charge for this rate component, per unit of measure defined by the
     # associated ReadingType, in currency specified in TariffProfile.  # noqa e114
     startValue: int = element()  # The lowest level of consumption that defines the starting point of this consumption
     # step or block. Thresholds start at zero for each billing period. # noqa e114

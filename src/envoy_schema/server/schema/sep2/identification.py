@@ -1,4 +1,3 @@
-
 from pydantic_xml import attr, element
 
 from envoy_schema.server.schema.sep2 import base, primitive_types, types

@@ -271,9 +271,7 @@ class DefaultDERControl(SubscribableIdentifiedObject):
         default=None
     )  # Enter service voltage low. Specified as an effective percent voltage,
     setESRampTms: int | None = element(default=None)  # Enter service ramp time, in hundredths of a second
-    setESRandomDelay: int | None = element(
-        default=None
-    )  # Enter service randomized delay, in hundredths of a second.
+    setESRandomDelay: int | None = element(default=None)  # Enter service randomized delay, in hundredths of a second.
     setGradW: int | None = element(default=None)  # Set default rate of change (ramp rate) of active power output
     setSoftGradW: int | None = element(
         default=None
@@ -347,9 +345,7 @@ class DER(SubscribableResource):
         default=None
     )  # If set, this is the DERProgram containing the currently active DERControl
 
-    DERAvailabilityLink: Link | None = element(
-        default=None
-    )  # SHALL contain a Link to an instance of DERAvailability.
+    DERAvailabilityLink: Link | None = element(default=None)  # SHALL contain a Link to an instance of DERAvailability.
     DERCapabilityLink: Link | None = element(default=None)  # SHALL contain a Link to an instance of DERCapability.
     DERSettingsLink: Link | None = element(default=None)  # SHALL contain a Link to an instance of DERSettings.
 
@@ -403,9 +399,7 @@ class DERStatus(SubscribableResource):
         default=None, tag="genConnectStatus"
     )  # Connection status for generator
     inverterStatus: InverterStatusTypeValue | None = element(default=None, tag="inverterStatus")
-    localControlModeStatus: LocalControlModeStatusTypeValue | None = element(
-        default=None, tag="localControlModeStatus"
-    )
+    localControlModeStatus: LocalControlModeStatusTypeValue | None = element(default=None, tag="localControlModeStatus")
     manufacturerStatus: ManufacturerStatusValue | None = element(default=None, tag="manufacturerStatus")
     operationalModeStatus: OperationalModeStatusTypeValue | None = element(default=None, tag="operationalModeStatus")
     readingTime: types.TimeType = element()
@@ -513,9 +507,7 @@ class DERSettings(SubscribableResource):
         default=None
     )  # Enter service voltage low. Specified as an effective percent voltage in hundredths of a percent.
     setESRampTms: int | None = element(default=None)  # Enter service ramp time, in hundredths of a second.
-    setESRandomDelay: int | None = element(
-        default=None
-    )  # Enter service randomized delay, in hundredths of a second.
+    setESRandomDelay: int | None = element(default=None)  # Enter service randomized delay, in hundredths of a second.
     setGradW: int = (
         element()
     )  # Set default rate of change (ramp rate) of active power output due to command or internal action,

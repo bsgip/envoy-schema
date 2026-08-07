@@ -45,9 +45,7 @@ def test_assignment_request_invalid_both_lfdi_and_id(
         (None, 45664564, None),
     ],
 )
-def test_assignment_request_valid(
-    lfdi: str | None, certificate_id: int | None, expiry: dt.datetime | None
-) -> None:
+def test_assignment_request_valid(lfdi: str | None, certificate_id: int | None, expiry: dt.datetime | None) -> None:
     """Tests the CertificateAssignmentRequest model works as expected excluding the custom validator"""
     cert_ass_req = CertificateAssignmentRequest(
         lfdi=lfdi,

@@ -1,4 +1,3 @@
-
 from pydantic_xml import element
 
 from envoy_schema.server.schema.sep2.identification import Link, Resource
