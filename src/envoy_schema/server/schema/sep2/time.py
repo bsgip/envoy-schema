@@ -1,4 +1,3 @@
-from typing import Optional
 
 from pydantic_xml import attr, element
 
@@ -14,6 +13,6 @@ class TimeResponse(Resource, tag="Time"):
     dstEndTime: TimeType = element()
     dstOffset: TimeOffsetType = element()
     dstStartTime: TimeType = element()
-    localTime: Optional[TimeType] = element(default=None)
+    localTime: TimeType | None = element(default=None)
     quality: TimeQualityType = element()
     tzOffset: TimeOffsetType = element()

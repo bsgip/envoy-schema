@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Generic, Optional, TypeVar
+from typing import Generic, TypeVar
 
 from pydantic import BaseModel
 
@@ -13,7 +13,7 @@ class ArchiveBase(BaseModel):
 
     archive_id: int  # Unique PK for identifying an individual archive record
     archive_time: datetime  # When was this archive record created
-    deleted_time: Optional[datetime]  # When was this archive record marked as deleted (if None - not deleted)
+    deleted_time: datetime | None  # When was this archive record marked as deleted (if None - not deleted)
 
 
 class ArchiveSiteControlResponse(ArchiveBase, SiteControlResponse):

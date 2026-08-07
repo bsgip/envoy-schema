@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import Optional
 
 from pydantic import BaseModel
 
@@ -57,7 +56,7 @@ class CalculationLogVariableValues(BaseModel):
 
     # Foreign key reference to a specific site ID that the variable value applies to or NONE if this time series
     # observation is NOT tied to a specific site.
-    site_ids: list[Optional[int]]  # Must correspond 1-1 with each other list in this type
+    site_ids: list[int | None]  # Must correspond 1-1 with each other list in this type
 
     # When does this time series observation occur? Defines the numbered "interval" relative to the parent
     # CalculationLog.calculation_range_start. A value of N uses the following formula for calculating datetime:
@@ -103,7 +102,7 @@ class CalculationLogLabelValues(BaseModel):
 
     # Foreign key reference to a specific site ID that the label applies to or NONE if this label is NOT tied to a
     # specific site.
-    site_ids: list[Optional[int]]  # Must correspond 1-1 with each other list in this type
+    site_ids: list[int | None]  # Must correspond 1-1 with each other list in this type
 
     # The actual label values associated with the linked label_id and site_id
     values: list[str]  # Must correspond 1-1 with each other list in this type
@@ -130,18 +129,18 @@ class CalculationLogRequest(BaseModel):
     calculation_range_duration_seconds: int  # Number of seconds that define the width of this entire calculation log
     interval_width_seconds: int  # Number of seconds for the fixed width intervals that comprise this calculation log
 
-    topology_id: Optional[str] = None  # The ID of the network topology being forecast (eg feeder ID)
-    external_id: Optional[str] = None  # An ID for the external submitting client to identify this calculation log
-    description: Optional[str] = None  # A human readable description of this calculation log
+    topology_id: str | None = None  # The ID of the network topology being forecast (eg feeder ID)
+    external_id: str | None = None  # An ID for the external submitting client to identify this calculation log
+    description: str | None = None  # A human readable description of this calculation log
 
-    power_forecast_creation_time: Optional[datetime] = None  # Datetime for when any power forecast was created
+    power_forecast_creation_time: datetime | None = None  # Datetime for when any power forecast was created
 
     # When was the last (most recent) historical lag. The time between this and the calculation_range_start represents
     # how stale the lag data was.
-    power_forecast_basis_time: Optional[datetime] = None
+    power_forecast_basis_time: datetime | None = None
 
-    weather_forecast_creation_time: Optional[datetime] = None  # Datetime for when any weather forecast was created
-    weather_forecast_location_id: Optional[str] = None  # ID associated the weather location that the forecast is for
+    weather_forecast_creation_time: datetime | None = None  # Datetime for when any weather forecast was created
+    weather_forecast_location_id: str | None = None  # ID associated the weather location that the forecast is for
 
     variable_metadata: list[
         CalculationLogVariableMetadata
@@ -149,13 +148,13 @@ class CalculationLogRequest(BaseModel):
 
     # The actual time series observations in this calculation log
     # The values will have a defined sort order (see docs on CalculationLogVariableValues)
-    variable_values: Optional[CalculationLogVariableValues]
+    variable_values: CalculationLogVariableValues | None
 
     label_metadata: list[CalculationLogLabelMetadata]  # Metadata associated with the labels defined in label_values
 
     # The actual labels in this calculation log
     # The labels will have a defined sort order (see docs on CalculationLogLabelValues)
-    label_values: Optional[CalculationLogLabelValues]
+    label_values: CalculationLogLabelValues | None
 
 
 class CalculationLogResponse(CalculationLogRequest):

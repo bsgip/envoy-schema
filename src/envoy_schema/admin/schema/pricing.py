@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import Optional
 
 from pydantic import BaseModel
 
@@ -25,7 +24,7 @@ class TariffRequest(BaseModel):
     price_power_of_ten_multiplier: int
     primacy: int
     fsa_id: int = 1  # The function set assignment ID that this Tariff will be grouped under
-    required_site_group_id: Optional[int] = (
+    required_site_group_id: int | None = (
         None  # If set - only sites in this SiteGroup will "see" this Tariff. Globally visible otherwise
     )
 
@@ -44,7 +43,7 @@ class TariffPageResponse(BaseModel):
     total_count: int
     limit: int
     start: int
-    group: Optional[str]  # the "group" filter set by the query
+    group: str | None  # the "group" filter set by the query
     tariffs: list[TariffResponse]
 
 
@@ -54,17 +53,17 @@ class TariffComponentRequest(BaseModel):
     tariff_id: int
 
     role_flags: RoleFlagsType
-    description: Optional[str] = None
+    description: str | None = None
 
     # ReadingType fields
-    accumulation_behaviour: Optional[AccumulationBehaviourType] = None
-    commodity: Optional[CommodityType] = None
-    data_qualifier: Optional[DataQualifierType] = None
-    flow_direction: Optional[FlowDirectionType] = None
-    kind: Optional[KindType] = None
-    phase: Optional[PhaseCode] = None
-    power_of_ten_multiplier: Optional[int] = None
-    uom: Optional[UomType] = None
+    accumulation_behaviour: AccumulationBehaviourType | None = None
+    commodity: CommodityType | None = None
+    data_qualifier: DataQualifierType | None = None
+    flow_direction: FlowDirectionType | None = None
+    kind: KindType | None = None
+    phase: PhaseCode | None = None
+    power_of_ten_multiplier: int | None = None
+    uom: UomType | None = None
 
 
 class TariffComponentResponse(TariffComponentRequest):
@@ -81,12 +80,12 @@ class TariffGeneratedRateRequest(BaseModel):
 
     tariff_component_id: int  # The TariffComponent ID that this price entry sits underneath
     site_group_id: int  # The SiteGroup id whose members will have this price available to them
-    calculation_log_id: Optional[int]  # The ID of the CalculationLog that created this rate (or NULL if no link)
+    calculation_log_id: int | None  # The ID of the CalculationLog that created this rate (or NULL if no link)
     start_time: datetime
     duration_seconds: int
     price_pow10_encoded: int  # Price encoded as per parent Tariff.price_power_of_ten_multiplier
-    block_1_start_pow10_encoded: Optional[int] = None  # This much consumption of TariffComponent triggers a new price
-    price_pow10_encoded_block_1: Optional[int] = None  # Price used after price_pow10_encoded_block_1 consumption
+    block_1_start_pow10_encoded: int | None = None  # This much consumption of TariffComponent triggers a new price
+    price_pow10_encoded_block_1: int | None = None  # Price used after price_pow10_encoded_block_1 consumption
 
 
 class TariffGeneratedRateResponse(TariffGeneratedRateRequest):
@@ -104,8 +103,8 @@ class TariffGeneratedRatePageResponse(BaseModel):
     limit: int
     start: int
     tariff_component_id: int  # The "tariff_component_id" filter set on the path
-    start_time_since: Optional[datetime]  # The "start_time_since" filter set by the query
-    start_time_until: Optional[datetime]  # The "start_time_until" filter set by the query
-    group: Optional[str]  # the "group" filter set by the query (applied to SiteGroup owner)
-    site_id: Optional[int]  # the "site_id" filter set by the query (applied to Site and SiteGroup membership)
+    start_time_since: datetime | None  # The "start_time_since" filter set by the query
+    start_time_until: datetime | None  # The "start_time_until" filter set by the query
+    group: str | None  # the "group" filter set by the query (applied to SiteGroup owner)
+    site_id: int | None  # the "site_id" filter set by the query (applied to Site and SiteGroup membership)
     rates: list[TariffGeneratedRateResponse]

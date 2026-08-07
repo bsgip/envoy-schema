@@ -1,4 +1,4 @@
-from typing import Annotated, Optional, Union
+from typing import Annotated
 from urllib.parse import urlparse
 
 from pydantic import AfterValidator, PlainSerializer
@@ -123,7 +123,7 @@ def validate_AbsoluteUri(v: str) -> str:
         return validate_LocalAbsoluteUri(v)
 
 
-def serialize_octet(v: Union[str, int, None]) -> Optional[str]:
+def serialize_octet(v: str | int | None) -> str | None:
     """Ensures only octet strings are produced from serialization, pairs of hex characters"""
 
     if v is None:

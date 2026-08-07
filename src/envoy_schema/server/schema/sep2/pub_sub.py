@@ -1,5 +1,5 @@
 from enum import IntEnum
-from typing import Any, Optional
+from typing import Any
 
 from pydantic_xml import attr, element
 
@@ -131,112 +131,110 @@ class NotificationResourceCombined(Resource):
         things in a confusing order - There isn't another way around this. See highlighted items marked with SORRY.
     """
 
-    subscribable: Optional[SubscribableType] = attr(default=None)
+    subscribable: SubscribableType | None = attr(default=None)
 
     # List
-    pollRate: Optional[int] = attr(default=None)
-    all_: Optional[int] = attr(name="all", default=None)
-    results: Optional[int] = attr(default=None)
+    pollRate: int | None = attr(default=None)
+    all_: int | None = attr(name="all", default=None)
+    results: int | None = attr(default=None)
 
     # TimeTariffIntervalListResponse
-    TimeTariffInterval: Optional[list[TimeTariffIntervalResponse]] = element(default=None)
+    TimeTariffInterval: list[TimeTariffIntervalResponse] | None = element(default=None)
 
     # DERControlListResponse
-    DERControl: Optional[list[DERControlResponse]] = element(default=None)
+    DERControl: list[DERControlResponse] | None = element(default=None)
 
     # EndDeviceListResponse
-    EndDevice: Optional[list[EndDeviceResponse]] = element(default=None)
+    EndDevice: list[EndDeviceResponse] | None = element(default=None)
 
     # ReadingListResponse
-    Readings: Optional[list[Reading]] = element(default=None, tag="Reading")
+    Readings: list[Reading] | None = element(default=None, tag="Reading")
 
     # DERProgramListResponse
-    DERProgram: Optional[list[DERProgramResponse]] = element(default=None)
+    DERProgram: list[DERProgramResponse] | None = element(default=None)
 
     # FunctionSetAssignmentsListResponse
-    FunctionSetAssignments: Optional[list[FunctionSetAssignmentsResponse]] = element(default=None)
+    FunctionSetAssignments: list[FunctionSetAssignmentsResponse] | None = element(default=None)
 
     # TariffProfileListResponse
-    TariffProfile: Optional[list[TariffProfileResponse]] = element(default=None)
+    TariffProfile: list[TariffProfileResponse] | None = element(default=None)
 
     # RateComponentListResponse
-    RateComponent: Optional[list[RateComponentResponse]] = element(default=None)
+    RateComponent: list[RateComponentResponse] | None = element(default=None)
 
     # SubscribableIdentifiedObject
-    mRID: Optional[HexBinary128] = element(default=None)
-    description: Optional[str] = element(default=None)
-    version: Optional[VersionType] = element(default=None)
+    mRID: HexBinary128 | None = element(default=None)
+    description: str | None = element(default=None)
+    version: VersionType | None = element(default=None)
 
     # SORRY (see docstring): DERSettings:  but because of the shared elements with DefaultDERControl, this must
     # appear above DefaultDERControl
-    modesEnabled: Optional[HexBinary32] = element(default=None)  # SORRY
+    modesEnabled: HexBinary32 | None = element(default=None)  # SORRY
 
     # DefaultDERControl
-    DERControlBase_: Optional[DERControlBase] = element(tag="DERControlBase", default=None)
-    setESDelay: Optional[int] = element(default=None)
-    setESHighFreq: Optional[int] = element(default=None)
-    setESHighVolt: Optional[int] = element(default=None)
-    setESLowFreq: Optional[int] = element(default=None)
-    setESLowVolt: Optional[int] = element(default=None)
-    setESRampTms: Optional[int] = element(default=None)
-    setESRandomDelay: Optional[int] = element(default=None)
-    setGradW: Optional[int] = element(default=None)
+    DERControlBase_: DERControlBase | None = element(tag="DERControlBase", default=None)
+    setESDelay: int | None = element(default=None)
+    setESHighFreq: int | None = element(default=None)
+    setESHighVolt: int | None = element(default=None)
+    setESLowFreq: int | None = element(default=None)
+    setESLowVolt: int | None = element(default=None)
+    setESRampTms: int | None = element(default=None)
+    setESRandomDelay: int | None = element(default=None)
+    setGradW: int | None = element(default=None)
     # setSoftGradW: Optional[int] = element(default=None) # Duplicated from DERSettings
 
     # SORRY (see docstring): DERAvailability but unfortunately DERAvailability/DERStatus: both share readingTime, these
     # need to be brought up there to ensure they work if either resource type is populated
-    availabilityDuration: Optional[int] = element(default=None)  # SORRY
-    maxChargeDuration: Optional[int] = element(default=None)  # SORRY
+    availabilityDuration: int | None = element(default=None)  # SORRY
+    maxChargeDuration: int | None = element(default=None)  # SORRY
 
     # DERStatus
-    alarmStatus: Optional[HexBinary32] = element(default=None)
-    genConnectStatus: Optional[ConnectStatusTypeValue] = element(default=None, tag="genConnectStatus")
-    inverterStatus: Optional[InverterStatusTypeValue] = element(default=None, tag="inverterStatus")
-    localControlModeStatus: Optional[LocalControlModeStatusTypeValue] = element(
-        default=None, tag="localControlModeStatus"
-    )
-    manufacturerStatus: Optional[ManufacturerStatusValue] = element(default=None, tag="manufacturerStatus")
-    operationalModeStatus: Optional[OperationalModeStatusTypeValue] = element(default=None, tag="operationalModeStatus")
-    readingTime: Optional[TimeType] = element(default=None)
-    stateOfChargeStatus: Optional[StateOfChargeStatusValue] = element(default=None, tag="stateOfChargeStatus")
-    storageModeStatus: Optional[StorageModeStatusTypeValue] = element(default=None, tag="storageModeStatus")
-    storConnectStatus: Optional[ConnectStatusTypeValue] = element(default=None, tag="storConnectStatus")
+    alarmStatus: HexBinary32 | None = element(default=None)
+    genConnectStatus: ConnectStatusTypeValue | None = element(default=None, tag="genConnectStatus")
+    inverterStatus: InverterStatusTypeValue | None = element(default=None, tag="inverterStatus")
+    localControlModeStatus: LocalControlModeStatusTypeValue | None = element(default=None, tag="localControlModeStatus")
+    manufacturerStatus: ManufacturerStatusValue | None = element(default=None, tag="manufacturerStatus")
+    operationalModeStatus: OperationalModeStatusTypeValue | None = element(default=None, tag="operationalModeStatus")
+    readingTime: TimeType | None = element(default=None)
+    stateOfChargeStatus: StateOfChargeStatusValue | None = element(default=None, tag="stateOfChargeStatus")
+    storageModeStatus: StorageModeStatusTypeValue | None = element(default=None, tag="storageModeStatus")
+    storConnectStatus: ConnectStatusTypeValue | None = element(default=None, tag="storConnectStatus")
 
     # DERAvailability
     # readingTime: TimeType = element()  # Duplicated from DERStatus
-    reserveChargePercent: Optional[PerCent] = element(default=None)
-    reservePercent: Optional[PerCent] = element(default=None)
-    statVarAvail: Optional[ReactivePower] = element(default=None)
-    statWAvail: Optional[ActivePower] = element(default=None)
+    reserveChargePercent: PerCent | None = element(default=None)
+    reservePercent: PerCent | None = element(default=None)
+    statVarAvail: ReactivePower | None = element(default=None)
+    statWAvail: ActivePower | None = element(default=None)
 
     # DERCapability
-    modesSupported: Optional[HexBinary32] = element(default=None)
-    rtgAbnormalCategory: Optional[AbnormalCategoryType] = element(default=None)
-    rtgMaxA: Optional[CurrentRMS] = element(default=None)
-    rtgMaxAh: Optional[AmpereHour] = element(default=None)
-    rtgMaxChargeRateVA: Optional[ApparentPower] = element(default=None)
-    rtgMaxChargeRateW: Optional[ActivePower] = element(default=None)
-    rtgMaxDischargeRateVA: Optional[ApparentPower] = element(default=None)
-    rtgMaxDischargeRateW: Optional[ActivePower] = element(default=None)
-    rtgMaxV: Optional[VoltageRMS] = element(default=None)
-    rtgMaxVA: Optional[ApparentPower] = element(default=None)
-    rtgMaxVar: Optional[ReactivePower] = element(default=None)
-    rtgMaxVarNeg: Optional[ReactivePower] = element(default=None)
-    rtgMaxW: Optional[ActivePower] = element(default=None)
-    rtgMaxWh: Optional[WattHour] = element(default=None)
-    rtgMinPFOverExcited: Optional[PowerFactor] = element(default=None)
-    rtgMinPFUnderExcited: Optional[PowerFactor] = element(default=None)
-    rtgMinV: Optional[VoltageRMS] = element(default=None)
-    rtgNormalCategory: Optional[NormalCategoryType] = element(default=None)
-    rtgOverExcitedPF: Optional[PowerFactor] = element(default=None)
-    rtgOverExcitedW: Optional[ActivePower] = element(default=None)
-    rtgReactiveSusceptance: Optional[ReactiveSusceptance] = element(default=None)
-    rtgUnderExcitedPF: Optional[PowerFactor] = element(default=None)
-    rtgUnderExcitedW: Optional[ActivePower] = element(default=None)
-    rtgVNom: Optional[VoltageRMS] = element(default=None)
-    type_: Optional[DERType] = element(tag="type", default=None)
-    doeModesSupported: Optional[HexBinary8] = element(ns="csipaus", default=None)
-    vppModesSupported: Optional[HexBinary8] = element(ns="csipaus", default=None)
+    modesSupported: HexBinary32 | None = element(default=None)
+    rtgAbnormalCategory: AbnormalCategoryType | None = element(default=None)
+    rtgMaxA: CurrentRMS | None = element(default=None)
+    rtgMaxAh: AmpereHour | None = element(default=None)
+    rtgMaxChargeRateVA: ApparentPower | None = element(default=None)
+    rtgMaxChargeRateW: ActivePower | None = element(default=None)
+    rtgMaxDischargeRateVA: ApparentPower | None = element(default=None)
+    rtgMaxDischargeRateW: ActivePower | None = element(default=None)
+    rtgMaxV: VoltageRMS | None = element(default=None)
+    rtgMaxVA: ApparentPower | None = element(default=None)
+    rtgMaxVar: ReactivePower | None = element(default=None)
+    rtgMaxVarNeg: ReactivePower | None = element(default=None)
+    rtgMaxW: ActivePower | None = element(default=None)
+    rtgMaxWh: WattHour | None = element(default=None)
+    rtgMinPFOverExcited: PowerFactor | None = element(default=None)
+    rtgMinPFUnderExcited: PowerFactor | None = element(default=None)
+    rtgMinV: VoltageRMS | None = element(default=None)
+    rtgNormalCategory: NormalCategoryType | None = element(default=None)
+    rtgOverExcitedPF: PowerFactor | None = element(default=None)
+    rtgOverExcitedW: ActivePower | None = element(default=None)
+    rtgReactiveSusceptance: ReactiveSusceptance | None = element(default=None)
+    rtgUnderExcitedPF: PowerFactor | None = element(default=None)
+    rtgUnderExcitedW: ActivePower | None = element(default=None)
+    rtgVNom: VoltageRMS | None = element(default=None)
+    type_: DERType | None = element(tag="type", default=None)
+    doeModesSupported: HexBinary8 | None = element(ns="csipaus", default=None)
+    vppModesSupported: HexBinary8 | None = element(ns="csipaus", default=None)
 
     # DERSettings
     # setESDelay: Optional[int] = element(default=None)  # Duplicated from DERControl
@@ -247,29 +245,29 @@ class NotificationResourceCombined(Resource):
     # setESRampTms: Optional[int] = element(default=None) # Duplicated from DERControl
     # setESRandomDelay: Optional[int] = element(default=None) # Duplicated from DERControl
     # setGradW: int = element() # Duplicated from DERControl
-    setMaxA: Optional[CurrentRMS] = element(default=None)
-    setMaxAh: Optional[AmpereHour] = element(default=None)
-    setMaxChargeRateVA: Optional[ApparentPower] = element(default=None)
-    setMaxChargeRateW: Optional[ActivePower] = element(default=None)
-    setMaxDischargeRateVA: Optional[ApparentPower] = element(default=None)
-    setMaxDischargeRateW: Optional[ActivePower] = element(default=None)
-    setMaxV: Optional[VoltageRMS] = element(default=None)
-    setMaxVA: Optional[ApparentPower] = element(default=None)
-    setMaxVar: Optional[ReactivePower] = element(default=None)
-    setMaxVarNeg: Optional[ReactivePower] = element(default=None)
-    setMaxW: Optional[ActivePower] = element(default=None)
-    setMaxWh: Optional[WattHour] = element(default=None)
-    setMinPFOverExcited: Optional[PowerFactor] = element(default=None)
-    setMinPFUnderExcited: Optional[PowerFactor] = element(default=None)
-    setMinV: Optional[VoltageRMS] = element(default=None)
-    setSoftGradW: Optional[int] = element(default=None)
-    setVNom: Optional[VoltageRMS] = element(default=None)
-    setVRef: Optional[VoltageRMS] = element(default=None)
-    setVRefOfs: Optional[VoltageRMS] = element(default=None)
-    updatedTime: Optional[TimeType] = element(default=None)
-    doeModesEnabled: Optional[HexBinary8] = element(ns="csipaus", default=None)
-    vppModesEnabled: Optional[HexBinary8] = element(ns="csipaus", default=None)
-    setMinWh: Optional[WattHour] = element(ns="csipaus", default=None)
+    setMaxA: CurrentRMS | None = element(default=None)
+    setMaxAh: AmpereHour | None = element(default=None)
+    setMaxChargeRateVA: ApparentPower | None = element(default=None)
+    setMaxChargeRateW: ActivePower | None = element(default=None)
+    setMaxDischargeRateVA: ApparentPower | None = element(default=None)
+    setMaxDischargeRateW: ActivePower | None = element(default=None)
+    setMaxV: VoltageRMS | None = element(default=None)
+    setMaxVA: ApparentPower | None = element(default=None)
+    setMaxVar: ReactivePower | None = element(default=None)
+    setMaxVarNeg: ReactivePower | None = element(default=None)
+    setMaxW: ActivePower | None = element(default=None)
+    setMaxWh: WattHour | None = element(default=None)
+    setMinPFOverExcited: PowerFactor | None = element(default=None)
+    setMinPFUnderExcited: PowerFactor | None = element(default=None)
+    setMinV: VoltageRMS | None = element(default=None)
+    setSoftGradW: int | None = element(default=None)
+    setVNom: VoltageRMS | None = element(default=None)
+    setVRef: VoltageRMS | None = element(default=None)
+    setVRefOfs: VoltageRMS | None = element(default=None)
+    updatedTime: TimeType | None = element(default=None)
+    doeModesEnabled: HexBinary8 | None = element(ns="csipaus", default=None)
+    vppModesEnabled: HexBinary8 | None = element(ns="csipaus", default=None)
+    setMinWh: WattHour | None = element(ns="csipaus", default=None)
 
 
 class Notification(SubscriptionBase):
@@ -277,7 +275,7 @@ class Notification(SubscriptionBase):
     The actual resources may be passed in the Notification by specifying a specific xsi:type for the Resource and
     passing the full representation."""
 
-    newResourceURI: Optional[LocalAbsoluteUri] = element(default=None)  # The new location of the resource if moved.
+    newResourceURI: LocalAbsoluteUri | None = element(default=None)  # The new location of the resource if moved.
 
     # A resource is an addressable unit of information, either a collection (List) or instance of an object
     # (identifiedObject, or simply, Resource)
@@ -288,22 +286,22 @@ class Notification(SubscriptionBase):
     #      - in the pydantic Discriminator function get_notification_resource_discriminator
     #
     # NOTE - For more info - see pydantic docs on Unions / Discriminated Unions - Feature introduced in 2.5
-    resource: Optional[
-        # This callable discriminator union isn't supported by pydantic XML
-        # see: https://github.com/dapper91/pydantic-xml/issues/157 - we might be able to swap to this in the future
-        # Annotated[
-        #     Union[
-        #         Annotated[TimeTariffIntervalListResponse, Tag(XSI_TYPE_TIME_TARIFF_INTERVAL_LIST)],
-        #         Annotated[DERControlListResponse, Tag(XSI_TYPE_DER_CONTROL_LIST)],
-        #         Annotated[DefaultDERControl, Tag(XSI_TYPE_DEFAULT_DER_CONTROL)],
-        #         Annotated[EndDeviceListResponse, Tag(XSI_TYPE_END_DEVICE_LIST)],
-        #         Annotated[ReadingListResponse, Tag(XSI_TYPE_READING)],
-        #         Annotated[Resource, Tag(XSI_TYPE_RESOURCE)],
-        #     ],
-        #     Discriminator(get_notification_resource_discriminator),
-        # ]
-        NotificationResourceCombined  # Instead we use this as our workaround for now
-    ] = element(tag="Resource", default=None)
+    resource: NotificationResourceCombined | None = element(tag="Resource", default=None)
+    # This callable discriminator union isn't supported by pydantic XML
+    # see: https://github.com/dapper91/pydantic-xml/issues/157 - we might be able to swap to this in the future
+    # Annotated[
+    #     Union[
+    #         Annotated[TimeTariffIntervalListResponse, Tag(XSI_TYPE_TIME_TARIFF_INTERVAL_LIST)],
+    #         Annotated[DERControlListResponse, Tag(XSI_TYPE_DER_CONTROL_LIST)],
+    #         Annotated[DefaultDERControl, Tag(XSI_TYPE_DEFAULT_DER_CONTROL)],
+    #         Annotated[EndDeviceListResponse, Tag(XSI_TYPE_END_DEVICE_LIST)],
+    #         Annotated[ReadingListResponse, Tag(XSI_TYPE_READING)],
+    #         Annotated[Resource, Tag(XSI_TYPE_RESOURCE)],
+    #     ],
+    #     Discriminator(get_notification_resource_discriminator),
+    # ]
+    # Instead we use this as our workaround for now
+
     status: NotificationStatus = element()
     subscriptionURI: AbsoluteUri = element()  # Subscription from which this notification was triggered.
 
@@ -319,7 +317,7 @@ class Condition(BaseXmlModelWithNS):
 class Subscription(SubscriptionBase):
     """Holds the information related to a client subscription to receive updates to a resource automatically."""
 
-    condition: Optional[Condition] = element(tag="Condition", default=None)
+    condition: Condition | None = element(tag="Condition", default=None)
     encoding: SubscriptionEncoding = element()  # The resource for which the subscription applies.
     level: str = element()  # Contains the preferred schema and extensibility level indication such as "+S1"
     limit: int = element()  # This element is used to indicate the maximum number of list items that should be included
@@ -328,9 +326,9 @@ class Subscription(SubscriptionBase):
 
 
 class SubscriptionListResponse(Sep2List, tag="SubscriptionList"):
-    subscriptions: Optional[list[Subscription]] = element(tag="Subscription", default=None)
-    pollRate: Optional[int] = attr(default=None)  # The default polling rate for this function set in seconds
+    subscriptions: list[Subscription] | None = element(tag="Subscription", default=None)
+    pollRate: int | None = attr(default=None)  # The default polling rate for this function set in seconds
 
 
 class NotificationListResponse(Sep2List, tag="NotificationList"):
-    notifications: Optional[list[Notification]] = element(tag="Notification", default=None)
+    notifications: list[Notification] | None = element(tag="Notification", default=None)

@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List
 
 from pydantic_xml import attr, element
 
@@ -9,7 +9,7 @@ from envoy_schema.server.schema.sep2.metering import Reading, ReadingSetBase, Re
 
 
 class MirrorReadingSet(ReadingSetBase):
-    readings: Optional[List[Reading]] = element(tag="Reading", default=None)
+    readings: List[Reading] | None = element(tag="Reading", default=None)
 
 
 class MeterReadingBase(IdentifiedObject):
@@ -17,26 +17,26 @@ class MeterReadingBase(IdentifiedObject):
 
 
 class MirrorMeterReading(MeterReadingBase):
-    lastUpdateTime: Optional[types.TimeType] = element(default=None)
-    mirrorReadingSets: Optional[List[MirrorReadingSet]] = element(tag="MirrorReadingSet", default=None)
-    nextUpdateTime: Optional[types.TimeType] = element(default=None)
-    reading: Optional[Reading] = element(tag="Reading", default=None)
-    readingType: Optional[ReadingType] = element(tag="ReadingType", default=None)
+    lastUpdateTime: types.TimeType | None = element(default=None)
+    mirrorReadingSets: List[MirrorReadingSet] | None = element(tag="MirrorReadingSet", default=None)
+    nextUpdateTime: types.TimeType | None = element(default=None)
+    reading: Reading | None = element(tag="Reading", default=None)
+    readingType: ReadingType | None = element(tag="ReadingType", default=None)
 
 
 class MirrorUsagePoint(UsagePointBase):
     deviceLFDI: primitive_types.HexBinary160 = element()
-    mirrorMeterReadings: Optional[List[MirrorMeterReading]] = element(tag="MirrorMeterReading", default=None)
-    postRate: Optional[int] = element(default=None)
+    mirrorMeterReadings: List[MirrorMeterReading] | None = element(tag="MirrorMeterReading", default=None)
+    postRate: int | None = element(default=None)
 
 
 class MirrorUsagePointList(Sep2List):
-    pollRate: Optional[int] = attr(default=types.DEFAULT_POLLRATE_SECONDS)  # recommended client pollrate in seconds
-    mirrorUsagePoints: Optional[List[MirrorUsagePoint]] = element(tag="MirrorUsagePoint", default=None)
+    pollRate: int | None = attr(default=types.DEFAULT_POLLRATE_SECONDS)  # recommended client pollrate in seconds
+    mirrorUsagePoints: List[MirrorUsagePoint] | None = element(tag="MirrorUsagePoint", default=None)
 
 
 class MirrorMeterReadingList(Sep2List):
-    mirrorMeterReadings: Optional[List[MirrorMeterReading]] = element(tag="MirrorMeterReading", default=None)
+    mirrorMeterReadings: List[MirrorMeterReading] | None = element(tag="MirrorMeterReading", default=None)
 
 
 class MirrorMeterReadingRequest(MirrorMeterReading, tag="MirrorMeterReading"):
@@ -46,11 +46,11 @@ class MirrorMeterReadingRequest(MirrorMeterReading, tag="MirrorMeterReading"):
 # Unlike MirrorMeterReadingList this is a list resource is doesn't subclass Sep2List. The reasons is that clients
 # don't need to specify the attributes 'all' or 'result' for the list resources they are posting
 class MirrorMeterReadingListRequest(Resource, tag="MirrorMeterReadingList"):
-    mirrorMeterReadings: Optional[List[MirrorMeterReading]] = element(tag="MirrorMeterReading", default=None)
+    mirrorMeterReadings: List[MirrorMeterReading] | None = element(tag="MirrorMeterReading", default=None)
 
 
 class MirrorUsagePointListResponse(Sep2List, tag="MirrorUsagePointList"):
-    pollRate: Optional[int] = attr(default=types.DEFAULT_POLLRATE_SECONDS)  # recommended client pollrate in seconds
+    pollRate: int | None = attr(default=types.DEFAULT_POLLRATE_SECONDS)  # recommended client pollrate in seconds
     mirrorUsagePoints: list[MirrorUsagePoint] = element(tag="MirrorUsagePoint", default_factory=list)
 
 

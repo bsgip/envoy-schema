@@ -1,5 +1,4 @@
 from enum import IntEnum, IntFlag, auto
-from typing import Optional
 
 from pydantic_xml import attr, element
 
@@ -205,55 +204,55 @@ class FreqDroopType(BaseXmlModelWithNS):
 class DERControlBase(BaseXmlModelWithNS):
     """Distributed Energy Resource (DER) control values."""
 
-    opModConnect: Optional[bool] = element(default=None)  # Set DER as connected (true) or disconnected (false).
-    opModEnergize: Optional[bool] = element(default=None)  # Set DER as energized (true) or de-energized (false).
-    opModFixedPFAbsorbW: Optional[PowerFactorWithExcitation] = element(
+    opModConnect: bool | None = element(default=None)  # Set DER as connected (true) or disconnected (false).
+    opModEnergize: bool | None = element(default=None)  # Set DER as energized (true) or de-energized (false).
+    opModFixedPFAbsorbW: PowerFactorWithExcitation | None = element(
         default=None
     )  # requested PF when AP is being absorbed
-    opModFixedPFInjectW: Optional[PowerFactorWithExcitation] = element(
+    opModFixedPFInjectW: PowerFactorWithExcitation | None = element(
         default=None
     )  # requested PF when AP is being injected
-    opModFixedVar: Optional[FixedVar] = element(default=None)  # specifies the delivered or received RP setpoint.
-    opModFixedW: Optional[types.SignedPerCent] = element(
+    opModFixedVar: FixedVar | None = element(default=None)  # specifies the delivered or received RP setpoint.
+    opModFixedW: types.SignedPerCent | None = element(
         default=None
     )  # specifies a requested charge/discharge mode setpoint
-    opModFreqDroop: Optional[FreqDroopType] = element(default=None)  # Specifies a frequency-watt operation
-    opModFreqWatt: Optional[Link] = element(default=None)  # Specify DERCurveLink for curveType == 0
-    opModHFRTMayTrip: Optional[Link] = element(default=None)  # Specify DERCurveLink for curveType == 1
-    opModHFRTMustTrip: Optional[Link] = element(default=None)  # Specify DERCurveLink for curveType == 2
-    opModHVRTMayTrip: Optional[Link] = element(default=None)  # Specify DERCurveLink for curveType == 3
-    opModHVRTMomentaryCessation: Optional[Link] = element(default=None)  # Specify DERCurveLink for curveType == 4
-    opModHVRTMustTrip: Optional[Link] = element(default=None)  # Specify DERCurveLink for curveType == 5
-    opModLFRTMayTrip: Optional[Link] = element(default=None)  # Specify DERCurveLink for curveType == 6
-    opModLFRTMustTrip: Optional[Link] = element(default=None)  # Specify DERCurveLink for curveType == 7
-    opModLVRTMayTrip: Optional[Link] = element(default=None)  # Specify DERCurveLink for curveType == 8
-    opModLVRTMomentaryCessation: Optional[Link] = element(default=None)  # Specify DERCurveLink for curveType == 9
-    opModLVRTMustTrip: Optional[Link] = element(default=None)  # Specify DERCurveLink for curveType == 10
-    opModMaxLimW: Optional[types.PerCent] = element(
+    opModFreqDroop: FreqDroopType | None = element(default=None)  # Specifies a frequency-watt operation
+    opModFreqWatt: Link | None = element(default=None)  # Specify DERCurveLink for curveType == 0
+    opModHFRTMayTrip: Link | None = element(default=None)  # Specify DERCurveLink for curveType == 1
+    opModHFRTMustTrip: Link | None = element(default=None)  # Specify DERCurveLink for curveType == 2
+    opModHVRTMayTrip: Link | None = element(default=None)  # Specify DERCurveLink for curveType == 3
+    opModHVRTMomentaryCessation: Link | None = element(default=None)  # Specify DERCurveLink for curveType == 4
+    opModHVRTMustTrip: Link | None = element(default=None)  # Specify DERCurveLink for curveType == 5
+    opModLFRTMayTrip: Link | None = element(default=None)  # Specify DERCurveLink for curveType == 6
+    opModLFRTMustTrip: Link | None = element(default=None)  # Specify DERCurveLink for curveType == 7
+    opModLVRTMayTrip: Link | None = element(default=None)  # Specify DERCurveLink for curveType == 8
+    opModLVRTMomentaryCessation: Link | None = element(default=None)  # Specify DERCurveLink for curveType == 9
+    opModLVRTMustTrip: Link | None = element(default=None)  # Specify DERCurveLink for curveType == 10
+    opModMaxLimW: types.PerCent | None = element(
         default=None
     )  # max active power generation level at electrical coupling point
-    opModTargetVar: Optional[ReactivePower] = element(default=None)  # Target reactive power, in var
-    opModTargetW: Optional[ActivePower] = element(default=None)  # Target active power, in Watts
-    opModVoltVar: Optional[Link] = element(default=None)  # Specify DERCurveLink for curveType == 11
-    opModVoltWatt: Optional[Link] = element(default=None)  # Specify DERCurveLink for curveType == 12
-    opModWattPF: Optional[Link] = element(default=None)  # Specify DERCurveLink for curveType == 13
-    opModWattVar: Optional[Link] = element(default=None)  # Specify DERCurveLink for curveType == 14
-    rampTms: Optional[int] = element(default=None)  # Requested ramp time, in hundredths of a second
+    opModTargetVar: ReactivePower | None = element(default=None)  # Target reactive power, in var
+    opModTargetW: ActivePower | None = element(default=None)  # Target active power, in Watts
+    opModVoltVar: Link | None = element(default=None)  # Specify DERCurveLink for curveType == 11
+    opModVoltWatt: Link | None = element(default=None)  # Specify DERCurveLink for curveType == 12
+    opModWattPF: Link | None = element(default=None)  # Specify DERCurveLink for curveType == 13
+    opModWattVar: Link | None = element(default=None)  # Specify DERCurveLink for curveType == 14
+    rampTms: int | None = element(default=None)  # Requested ramp time, in hundredths of a second
 
     # CSIP Aus Extensions (encoded here as it makes decoding a whole lot simpler)
-    opModImpLimW: Optional[ActivePower] = element(
+    opModImpLimW: ActivePower | None = element(
         ns="csipaus", default=None
     )  # constraint on the imported AP at the connection point
-    opModExpLimW: Optional[ActivePower] = element(
+    opModExpLimW: ActivePower | None = element(
         ns="csipaus", default=None
     )  # constraint on the exported AP at the connection point
-    opModGenLimW: Optional[ActivePower] = element(
+    opModGenLimW: ActivePower | None = element(
         ns="csipaus", default=None
     )  # max limit on discharge watts for a single DER
-    opModLoadLimW: Optional[ActivePower] = element(
+    opModLoadLimW: ActivePower | None = element(
         ns="csipaus", default=None
     )  # max limit on charge watts for a single DER
-    opModStorageTargetW: Optional[ActivePower] = element(
+    opModStorageTargetW: ActivePower | None = element(
         ns="csipaus", default=None
     )  # This is a target aggregate output, in Watts, for one or more storage components within an EndDevice
 
@@ -262,21 +261,21 @@ class DefaultDERControl(SubscribableIdentifiedObject):
     """Contains control mode information to be used if no active DERControl is found."""
 
     DERControlBase_: DERControlBase = element(tag="DERControlBase")
-    setESDelay: Optional[int] = element(default=None)  # Enter service delay, in hundredths of a second.
-    setESHighFreq: Optional[int] = element(default=None)  # Enter service frequency high. Specified in hundredths of Hz
-    setESHighVolt: Optional[int] = element(
+    setESDelay: int | None = element(default=None)  # Enter service delay, in hundredths of a second.
+    setESHighFreq: int | None = element(default=None)  # Enter service frequency high. Specified in hundredths of Hz
+    setESHighVolt: int | None = element(
         default=None
     )  # Enter service voltage high. Specified as an effective percent voltage,
-    setESLowFreq: Optional[int] = element(default=None)  # Enter service frequency low. Specified in hundredths of Hz
-    setESLowVolt: Optional[int] = element(
+    setESLowFreq: int | None = element(default=None)  # Enter service frequency low. Specified in hundredths of Hz
+    setESLowVolt: int | None = element(
         default=None
     )  # Enter service voltage low. Specified as an effective percent voltage,
-    setESRampTms: Optional[int] = element(default=None)  # Enter service ramp time, in hundredths of a second
-    setESRandomDelay: Optional[int] = element(
+    setESRampTms: int | None = element(default=None)  # Enter service ramp time, in hundredths of a second
+    setESRandomDelay: int | None = element(
         default=None
     )  # Enter service randomized delay, in hundredths of a second.
-    setGradW: Optional[int] = element(default=None)  # Set default rate of change (ramp rate) of active power output
-    setSoftGradW: Optional[int] = element(
+    setGradW: int | None = element(default=None)  # Set default rate of change (ramp rate) of active power output
+    setSoftGradW: int | None = element(
         default=None
     )  # Set soft-start rate of change (soft-start ramp rate) of AP output
 
@@ -285,28 +284,28 @@ class DERControlResponse(RandomizableEvent, tag="DERControl"):
     """Distributed Energy Resource (DER) time/event-based control."""
 
     DERControlBase_: DERControlBase = element(tag="DERControlBase")
-    deviceCategory: Optional[primitive_types.HexBinary32] = element(
+    deviceCategory: primitive_types.HexBinary32 | None = element(
         default=None,
     )  # the bitmap indicating device categories that SHOULD respond.
 
 
 class DERControlListResponse(SubscribableList, tag="DERControlList"):
-    DERControl: Optional[list[DERControlResponse]] = element(default=None)
+    DERControl: list[DERControlResponse] | None = element(default=None)
 
 
 class DERProgramResponse(SubscribableIdentifiedObject, tag="DERProgram"):
     """sep2 DERProgram"""
 
-    ActiveDERControlListLink: Optional[ListLink] = element(default=None)
-    DefaultDERControlLink: Optional[Link] = element(default=None)
-    DERControlListLink: Optional[ListLink] = element(default=None)
-    DERCurveListLink: Optional[ListLink] = element(default=None)
+    ActiveDERControlListLink: ListLink | None = element(default=None)
+    DefaultDERControlLink: Link | None = element(default=None)
+    DERControlListLink: ListLink | None = element(default=None)
+    DERCurveListLink: ListLink | None = element(default=None)
     primacy: int = element()  # Encodes a value from PrimacyType
 
 
 class DERProgramListResponse(SubscribableList, tag="DERProgramList"):
-    DERProgram: Optional[list[DERProgramResponse]] = element(default=None)
-    pollRate: Optional[int] = attr(
+    DERProgram: list[DERProgramResponse] | None = element(default=None)
+    pollRate: int | None = attr(
         default=None
     )  # The default polling rate for this resource and all resources below in seconds
 
@@ -314,15 +313,15 @@ class DERProgramListResponse(SubscribableList, tag="DERProgramList"):
 class DemandResponseProgramResponse(IdentifiedObject, tag="DemandResponseProgram"):
     """sep2 Demand response program"""
 
-    ActiveEndDeviceControlListLink: Optional[ListLink] = element(default=None)
-    availabilityUpdatePercentChangeThreshold: Optional[types.PerCent] = element(default=None)
-    availabilityUpdatePowerChangeThreshold: Optional[ActivePower] = element(default=None)
-    EndDeviceControlListLink: Optional[ListLink] = element(default=None)
+    ActiveEndDeviceControlListLink: ListLink | None = element(default=None)
+    availabilityUpdatePercentChangeThreshold: types.PerCent | None = element(default=None)
+    availabilityUpdatePowerChangeThreshold: ActivePower | None = element(default=None)
+    EndDeviceControlListLink: ListLink | None = element(default=None)
     primacy: PrimacyType = element()
 
 
 class DemandResponseProgramListResponse(Sep2List, tag="DemandResponseProgramList"):
-    DemandResponseProgram: Optional[list[DemandResponseProgramResponse]] = element(default=None)
+    DemandResponseProgram: list[DemandResponseProgramResponse] | None = element(default=None)
 
 
 class EndDeviceControlResponse(RandomizableEvent, tag="EndDeviceControl"):
@@ -331,30 +330,30 @@ class EndDeviceControlResponse(RandomizableEvent, tag="EndDeviceControl"):
     deviceCategory: primitive_types.HexBinary32 = element()  # HexBinary Encoded types.DeviceCategory enum
     drProgramMandatory: bool = element()
     loadShiftForward: bool = element()
-    overrideDuration: Optional[int] = element(default=None)
+    overrideDuration: int | None = element(default=None)
 
 
 class DER(SubscribableResource):
     """sep2 DER: Contains links to DER resources."""
 
-    AssociatedDERProgramListLink: Optional[ListLink] = element(
+    AssociatedDERProgramListLink: ListLink | None = element(
         default=None
     )  # Link to List of DERPrograms having the DERControls for this DER
-    AssociatedUsagePointLink: Optional[Link] = element(
+    AssociatedUsagePointLink: Link | None = element(
         default=None
     )  # If present, this is the submeter that monitors the DER output.
 
-    CurrentDERProgramLink: Optional[Link] = element(
+    CurrentDERProgramLink: Link | None = element(
         default=None
     )  # If set, this is the DERProgram containing the currently active DERControl
 
-    DERAvailabilityLink: Optional[Link] = element(
+    DERAvailabilityLink: Link | None = element(
         default=None
     )  # SHALL contain a Link to an instance of DERAvailability.
-    DERCapabilityLink: Optional[Link] = element(default=None)  # SHALL contain a Link to an instance of DERCapability.
-    DERSettingsLink: Optional[Link] = element(default=None)  # SHALL contain a Link to an instance of DERSettings.
+    DERCapabilityLink: Link | None = element(default=None)  # SHALL contain a Link to an instance of DERCapability.
+    DERSettingsLink: Link | None = element(default=None)  # SHALL contain a Link to an instance of DERSettings.
 
-    DERStatusLink: Optional[Link] = element(default=None)  # SHALL contain a Link to an instance of DERStatus.
+    DERStatusLink: Link | None = element(default=None)  # SHALL contain a Link to an instance of DERStatus.
 
 
 class ConnectStatusTypeValue(BaseXmlModelWithNS, tag="ConnectStatusType"):
@@ -399,20 +398,20 @@ class DERStatus(SubscribableResource):
     # e.g. genConnectStatus, otherwise they will be renamed. Removing the tags in the subclasses would remove them
     # from xsd validation
 
-    alarmStatus: Optional[primitive_types.HexBinary32] = element(default=None)  # AlarmStatusType encoded HexBinary str
-    genConnectStatus: Optional[ConnectStatusTypeValue] = element(
+    alarmStatus: primitive_types.HexBinary32 | None = element(default=None)  # AlarmStatusType encoded HexBinary str
+    genConnectStatus: ConnectStatusTypeValue | None = element(
         default=None, tag="genConnectStatus"
     )  # Connection status for generator
-    inverterStatus: Optional[InverterStatusTypeValue] = element(default=None, tag="inverterStatus")
-    localControlModeStatus: Optional[LocalControlModeStatusTypeValue] = element(
+    inverterStatus: InverterStatusTypeValue | None = element(default=None, tag="inverterStatus")
+    localControlModeStatus: LocalControlModeStatusTypeValue | None = element(
         default=None, tag="localControlModeStatus"
     )
-    manufacturerStatus: Optional[ManufacturerStatusValue] = element(default=None, tag="manufacturerStatus")
-    operationalModeStatus: Optional[OperationalModeStatusTypeValue] = element(default=None, tag="operationalModeStatus")
+    manufacturerStatus: ManufacturerStatusValue | None = element(default=None, tag="manufacturerStatus")
+    operationalModeStatus: OperationalModeStatusTypeValue | None = element(default=None, tag="operationalModeStatus")
     readingTime: types.TimeType = element()
-    stateOfChargeStatus: Optional[StateOfChargeStatusValue] = element(default=None, tag="stateOfChargeStatus")
-    storageModeStatus: Optional[StorageModeStatusTypeValue] = element(default=None, tag="storageModeStatus")
-    storConnectStatus: Optional[ConnectStatusTypeValue] = element(
+    stateOfChargeStatus: StateOfChargeStatusValue | None = element(default=None, tag="stateOfChargeStatus")
+    storageModeStatus: StorageModeStatusTypeValue | None = element(default=None, tag="storageModeStatus")
+    storConnectStatus: ConnectStatusTypeValue | None = element(
         default=None, tag="storConnectStatus"
     )  # Connection status for storage
 
@@ -420,75 +419,75 @@ class DERStatus(SubscribableResource):
 class DERAvailability(SubscribableResource):
     """Indicates current reserve generation status"""
 
-    availabilityDuration: Optional[int] = element(
+    availabilityDuration: int | None = element(
         default=None
     )  # Indicates number of seconds the DER will be able to deliver active power at the reservePercent level.
-    maxChargeDuration: Optional[int] = element(
+    maxChargeDuration: int | None = element(
         default=None
     )  # Indicates number of seconds the DER will be able to receive active power at the reserveChargePercent level.
     readingTime: types.TimeType = element()  # The timestamp when the DER availability was last updated.
-    reserveChargePercent: Optional[types.PerCent] = element(
+    reserveChargePercent: types.PerCent | None = element(
         default=None
     )  # Percent of continuous received active power (%setMaxChargeRateW) that is estimated to be available in reserve.
-    reservePercent: Optional[types.PerCent] = element(
+    reservePercent: types.PerCent | None = element(
         default=None
     )  # Percent of continuous delivered active power (%setMaxW) that is estimated to be available in reserve.
-    statVarAvail: Optional[ReactivePower] = element(
+    statVarAvail: ReactivePower | None = element(
         default=None
     )  # Estimated reserve reactive power, in var.  Represents the lesser of received or delivered reactive power.
-    statWAvail: Optional[ActivePower] = element(default=None)  # Estimated reserve active power, in watts.
+    statWAvail: ActivePower | None = element(default=None)  # Estimated reserve active power, in watts.
 
 
 class DERCapability(Resource):
     """Distributed energy resource type and nameplate ratings."""
 
     modesSupported: primitive_types.HexBinary32 = element()  # HexBinary encoded DERControlType flags
-    rtgAbnormalCategory: Optional[AbnormalCategoryType] = element(default=None)  #
-    rtgMaxA: Optional[CurrentRMS] = element(default=None)  # Maximum continuous AC current capability of the DER
-    rtgMaxAh: Optional[AmpereHour] = element(default=None)  # Usable energy storage capacity of the DER, in AmpHours.
-    rtgMaxChargeRateVA: Optional[ApparentPower] = element(
+    rtgAbnormalCategory: AbnormalCategoryType | None = element(default=None)  #
+    rtgMaxA: CurrentRMS | None = element(default=None)  # Maximum continuous AC current capability of the DER
+    rtgMaxAh: AmpereHour | None = element(default=None)  # Usable energy storage capacity of the DER, in AmpHours.
+    rtgMaxChargeRateVA: ApparentPower | None = element(
         default=None
     )  # Maximum apparent power charge rating in Volt-Amperes. May differ from the maximum apparent power rating.
-    rtgMaxChargeRateW: Optional[ActivePower] = element(
+    rtgMaxChargeRateW: ActivePower | None = element(
         default=None
     )  # Maximum rate of energy transfer received by the storage DER, in Watts.
-    rtgMaxDischargeRateVA: Optional[ApparentPower] = element(
+    rtgMaxDischargeRateVA: ApparentPower | None = element(
         default=None
     )  # Maximum apparent power discharge rating in Volt-Amperes. May differ from the maximum apparent power rating.
-    rtgMaxDischargeRateW: Optional[ActivePower] = element(
+    rtgMaxDischargeRateW: ActivePower | None = element(
         default=None
     )  # Maximum rate of energy transfer delivered by the storage DER, in Watts. Required for DERType == 83
-    rtgMaxV: Optional[VoltageRMS] = element(default=None)  # AC voltage maximum rating.
-    rtgMaxVA: Optional[ApparentPower] = element(default=None)  # Maximum cont' apparent power output capability, in VA.
-    rtgMaxVar: Optional[ReactivePower] = element(default=None)  # Max cont' reactive power delivered by the DER (var)
-    rtgMaxVarNeg: Optional[ReactivePower] = element(
+    rtgMaxV: VoltageRMS | None = element(default=None)  # AC voltage maximum rating.
+    rtgMaxVA: ApparentPower | None = element(default=None)  # Maximum cont' apparent power output capability, in VA.
+    rtgMaxVar: ReactivePower | None = element(default=None)  # Max cont' reactive power delivered by the DER (var)
+    rtgMaxVarNeg: ReactivePower | None = element(
         default=None
     )  # Maximum continuous reactive power received by the DER, in var. If absent, defaults to negative rtgMaxVar.
     rtgMaxW: ActivePower = (
         element()
     )  # Max cont' AP output capability of the DER, in watts. Combined gen plus storage output if DERType == 83.
-    rtgMaxWh: Optional[WattHour] = element(default=None)  # Maximum energy storage capacity of the DER, in WattHours.
-    rtgMinPFOverExcited: Optional[PowerFactor] = element(
+    rtgMaxWh: WattHour | None = element(default=None)  # Maximum energy storage capacity of the DER, in WattHours.
+    rtgMinPFOverExcited: PowerFactor | None = element(
         default=None
     )  # Minimum Power Factor displacement capability of the DER when injecting reactive power (over-excited)
     # SHALL be a positive value between 0.0 (typically > 0.7) and 1.0. If absent, defaults to unity.
-    rtgMinPFUnderExcited: Optional[PowerFactor] = element(
+    rtgMinPFUnderExcited: PowerFactor | None = element(
         default=None
     )  # Minimum Power Factor displacement capability of the DER when absorbing reactive power (under-excited);
     # SHALL be a positive value between 0.0 (typically > 0.7) and 0.9999.  If absent, defaults to rtgMinPFOverExcited.
-    rtgMinV: Optional[VoltageRMS] = element(default=None)  # AC voltage minimum rating.
-    rtgNormalCategory: Optional[NormalCategoryType] = element(default=None)
-    rtgOverExcitedPF: Optional[PowerFactor] = element(default=None)  # Specified over-excited power factor.
-    rtgOverExcitedW: Optional[ActivePower] = element(
+    rtgMinV: VoltageRMS | None = element(default=None)  # AC voltage minimum rating.
+    rtgNormalCategory: NormalCategoryType | None = element(default=None)
+    rtgOverExcitedPF: PowerFactor | None = element(default=None)  # Specified over-excited power factor.
+    rtgOverExcitedW: ActivePower | None = element(
         default=None
     )  # AP rating in Watts at specified over-excited PF (rtgOverExcitedPF). If set rtgOverExcitedPF SHALL be present.
-    rtgReactiveSusceptance: Optional[ReactiveSusceptance] = element(
+    rtgReactiveSusceptance: ReactiveSusceptance | None = element(
         default=None
     )  # Reactive susceptance that remains connected to the Area EPS in the cease to energize and trip state.
-    rtgUnderExcitedPF: Optional[PowerFactor] = element(default=None)  # Specified under-excited power factor.
-    rtgUnderExcitedW: Optional[ActivePower] = element(default=None)  # Specified under-excited power factor.
+    rtgUnderExcitedPF: PowerFactor | None = element(default=None)  # Specified under-excited power factor.
+    rtgUnderExcitedW: ActivePower | None = element(default=None)  # Specified under-excited power factor.
 
-    rtgVNom: Optional[VoltageRMS] = element(default=None)  # AC voltage nominal rating.
+    rtgVNom: VoltageRMS | None = element(default=None)  # AC voltage nominal rating.
     type_: DERType = element(tag="type")  # Type of DER; see DERType object
 
     # CSIP Aus Extensions (encoded here as it makes decoding a whole lot simpler)
@@ -497,24 +496,24 @@ class DERCapability(Resource):
 
     # CSIP Aus Extensions (encoded here as it makes decoding a whole lot simpler)
     # This is an encoded version of VPPControlType
-    vppModesSupported: Optional[primitive_types.HexBinary8] = element(ns="csipaus", default=None)
+    vppModesSupported: primitive_types.HexBinary8 | None = element(ns="csipaus", default=None)
 
 
 class DERSettings(SubscribableResource):
     """Distributed energy resource settings"""
 
-    modesEnabled: Optional[primitive_types.HexBinary32] = element(default=None)  # Hex encoded DERControlType flags
-    setESDelay: Optional[int] = element(default=None)  # Enter service delay, in hundredths of a second.
-    setESHighFreq: Optional[int] = element(default=None)  # Enter service frequency high. Specified in hundredths of Hz.
-    setESHighVolt: Optional[int] = element(
+    modesEnabled: primitive_types.HexBinary32 | None = element(default=None)  # Hex encoded DERControlType flags
+    setESDelay: int | None = element(default=None)  # Enter service delay, in hundredths of a second.
+    setESHighFreq: int | None = element(default=None)  # Enter service frequency high. Specified in hundredths of Hz.
+    setESHighVolt: int | None = element(
         default=None
     )  # Enter service voltage high. Specified as an effective percent voltage in hundredths of a percent.
-    setESLowFreq: Optional[int] = element(default=None)  # Enter service frequency low. Specified in hundredths of Hz.
-    setESLowVolt: Optional[int] = element(
+    setESLowFreq: int | None = element(default=None)  # Enter service frequency low. Specified in hundredths of Hz.
+    setESLowVolt: int | None = element(
         default=None
     )  # Enter service voltage low. Specified as an effective percent voltage in hundredths of a percent.
-    setESRampTms: Optional[int] = element(default=None)  # Enter service ramp time, in hundredths of a second.
-    setESRandomDelay: Optional[int] = element(
+    setESRampTms: int | None = element(default=None)  # Enter service ramp time, in hundredths of a second.
+    setESRandomDelay: int | None = element(
         default=None
     )  # Enter service randomized delay, in hundredths of a second.
     setGradW: int = (
@@ -523,77 +522,77 @@ class DERSettings(SubscribableResource):
     # defined in %setWMax / second.  Resolution is in hundredths of a percent/second.
     # A value of 0 means there is no limit. Interpreted as a percentage change in output capability limit
     # per second when used as a default ramp rate.
-    setMaxA: Optional[CurrentRMS] = element(default=None)  # AC current maximum. Maximum AC current in RMS Amperes.
-    setMaxAh: Optional[AmpereHour] = element(
+    setMaxA: CurrentRMS | None = element(default=None)  # AC current maximum. Maximum AC current in RMS Amperes.
+    setMaxAh: AmpereHour | None = element(
         default=None
     )  # Max usable energy storage capacity of the DER, in AmpHours. This may be different from physical capability.
-    setMaxChargeRateVA: Optional[ApparentPower] = element(
+    setMaxChargeRateVA: ApparentPower | None = element(
         default=None
     )  # Apparent power charge maximum. Maximum apparent power the DER can absorb from the grid in Volt-Amperes.
     # May differ from the apparent power maximum (setMaxVA).
-    setMaxChargeRateW: Optional[ActivePower] = element(
+    setMaxChargeRateW: ActivePower | None = element(
         default=None
     )  # Maximum rate of energy transfer received by the storage device, in Watts. Defaults to rtgMaxChargeRateW.
-    setMaxDischargeRateVA: Optional[ApparentPower] = element(
+    setMaxDischargeRateVA: ApparentPower | None = element(
         default=None
     )  # Apparent power discharge maximum. Maximum apparent power the DER can deliver to the grid in Volt-Amperes.
     # May differ from the apparent power maximum (setMaxVA).
-    setMaxDischargeRateW: Optional[ActivePower] = element(
+    setMaxDischargeRateW: ActivePower | None = element(
         default=None
     )  # Maximum rate of energy transfer delivered by the storage device, in Watts. Defaults to rtgMaxDischargeRateW.
-    setMaxV: Optional[VoltageRMS] = element(default=None)  # AC voltage maximum setting.
-    setMaxVA: Optional[ApparentPower] = element(
+    setMaxV: VoltageRMS | None = element(default=None)  # AC voltage maximum setting.
+    setMaxVA: ApparentPower | None = element(
         default=None
     )  # Set limit for maximum apparent power capability of the DER (in VA).
-    setMaxVar: Optional[ReactivePower] = element(
+    setMaxVar: ReactivePower | None = element(
         default=None
     )  # Set limit for maximum apparent power capability of the DER (in VA). Defaults to rtgMaxVA.
-    setMaxVarNeg: Optional[ReactivePower] = element(
+    setMaxVarNeg: ReactivePower | None = element(
         default=None
     )  # Set limit for maximum reactive power received by the DER (in var).
     # If present, SHALL be a negative value >= rtgMaxVarNeg (default). If absent, defaults to negative setMaxVar.
     setMaxW: ActivePower = (
         element()
     )  # Set limit for maximum active power capability of the DER (in W). Defaults to rtgMaxW.
-    setMaxWh: Optional[WattHour] = element(
+    setMaxWh: WattHour | None = element(
         default=None
     )  # Maximum energy storage capacity of the DER, in WattHours. Note: this may be different from physical capability.
-    setMinPFOverExcited: Optional[PowerFactor] = element(
+    setMinPFOverExcited: PowerFactor | None = element(
         default=None
     )  # Set minimum Power Factor displacement limit of the DER when injecting reactive power (over-excited);
     # SHALL be a positive value between 0.0 (typically > 0.7) and 1.0.  SHALL be >= rtgMinPFOverExcited (default).
-    setMinPFUnderExcited: Optional[PowerFactor] = element(
+    setMinPFUnderExcited: PowerFactor | None = element(
         default=None
     )  # Set minimum Power Factor displacement limit of the DER when absorbing reactive power (under-excited);
     # SHALL be a positive value between 0.0 (typically > 0.7) and 0.9999.
     # If present, SHALL be >= rtgMinPFUnderExcited (default).  If absent, defaults to setMinPFOverExcited.
-    setMinV: Optional[VoltageRMS] = element(default=None)  # AC voltage min setting.
-    setSoftGradW: Optional[int] = element(
+    setMinV: VoltageRMS | None = element(default=None)  # AC voltage min setting.
+    setSoftGradW: int | None = element(
         default=None
     )  # Set soft-start rate of change (soft-start ramp rate) of active power output due to command or internal action
     # defined in %setWMax / second.  Resolution is in hundredths of a percent/second.
     # 0 means there is no limit. Interpreted as a % change in output capability limit/second when used as a ramp rate.
-    setVNom: Optional[VoltageRMS] = element(default=None)  # AC voltage nominal setting.
-    setVRef: Optional[VoltageRMS] = element(
+    setVNom: VoltageRMS | None = element(default=None)  # AC voltage nominal setting.
+    setVRef: VoltageRMS | None = element(
         default=None
     )  # The nominal AC voltage (RMS) at the utility's point of common coupling.
-    setVRefOfs: Optional[VoltageRMS] = element(
+    setVRefOfs: VoltageRMS | None = element(
         default=None
     )  # The nominal AC voltage (RMS) offset between the DER's electrical CP and the utility's point of common coupling.
     updatedTime: types.TimeType = element()  # Specifies the time at which the DER information was last updated.
 
     # CSIP Aus Extensions (encoded here as it makes decoding a whole lot simpler)
     # This is an encoded version of DOESupportedMode
-    doeModesEnabled: Optional[primitive_types.HexBinary8] = element(ns="csipaus", default=None)
+    doeModesEnabled: primitive_types.HexBinary8 | None = element(ns="csipaus", default=None)
 
     # CSIP Aus Extensions (encoded here as it makes decoding a whole lot simpler)
     # This is an encoded version of VPPControlType
-    vppModesEnabled: Optional[primitive_types.HexBinary8] = element(ns="csipaus", default=None)
+    vppModesEnabled: primitive_types.HexBinary8 | None = element(ns="csipaus", default=None)
 
-    setMinWh: Optional[WattHour] = element(ns="csipaus", default=None)
+    setMinWh: WattHour | None = element(ns="csipaus", default=None)
 
 
 class DERListResponse(List, tag="DERList"):
-    DER_: Optional[list[DER]] = element(default=None, tag="DER")
+    DER_: list[DER] | None = element(default=None, tag="DER")
 
-    pollRate: Optional[int] = attr(default=types.DEFAULT_POLLRATE_SECONDS)
+    pollRate: int | None = attr(default=types.DEFAULT_POLLRATE_SECONDS)
