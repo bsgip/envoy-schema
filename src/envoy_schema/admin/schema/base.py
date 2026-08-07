@@ -1,3 +1,5 @@
+from enum import StrEnum
+
 from pydantic import BaseModel
 
 
@@ -12,3 +14,21 @@ class BatchCreateResponse(BaseModel):
     that ids[X] corresponds to the entity at request[X]"""
 
     ids: list[int]  # Corresponds 1-1 with the incoming request entities
+
+
+class OnCollide(StrEnum):
+    """For certain batch operations that have a unique constraint - these options can be applied to define what should
+    happen in the event of a collision"""
+
+    error = "error"  # DEFAULT - Abort the entire operation - nothing will be written to the DB
+    ignore = "ignore"  # Skip (don't insert) any colliding entities - all other entities will still be inserted
+    cancel = "cancel"  # Cancel (archive/delete) any colliding entities before inserting the new entities
+
+
+class BatchCreateCollidableResponse(BaseModel):
+    """Similar to BatchCreateResponse but for when OnCollide methods are in use"""
+
+    on_collide: OnCollide  # The option for on_collide that was used when generating this response
+    ids: list[
+        int | None
+    ]  # Corresponds 1-1 with the incoming request entities - None means ignore was used and that entry was NOT inserted

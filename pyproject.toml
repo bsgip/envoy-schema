@@ -40,7 +40,7 @@ authors = [{ name = "Battery Storage and Grid Integration Program" }]
 readme = "README.md"
 license = { file = "LICENSE" }
 keywords = ["envoy", "csip-aus", "2030.5", "csip", "pydantic"]
-requires-python = ">=3.9"
+requires-python = ">=3.11"
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
@@ -52,8 +52,6 @@ classifiers = [
 
     # Specify the Python versions you support here.
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
