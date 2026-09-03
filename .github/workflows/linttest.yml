@@ -23,6 +23,8 @@ jobs:
         uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
         with:
           python-version: ${{ matrix.pyver }}
+      - name: Check lockfile is up to date
+        run: uv lock --check
       - name: Install Dependencies
         run: uv sync --extra dev --extra test
       - name: Lint (ruff)
