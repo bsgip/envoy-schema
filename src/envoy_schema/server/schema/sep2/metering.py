@@ -82,3 +82,11 @@ class ReadingSet(ReadingSetBase):
 
 class ReadingListResponse(SubscribableList, tag="ReadingList"):
     Readings: list["Reading"] | None = element(default=None, tag="Reading")
+
+
+class UsagePointListResponse(SubscribableList, tag="UsagePointList"):
+    UsagePoint_: list[UsagePoint] | None = element(default=None, tag="UsagePoint")
+
+
+class MeterReadingListResponse(SubscribableList, tag="MeterReadingList"):
+    MeterReading_: list[MeterReading] | None = element(default=None, tag="MeterReading")
