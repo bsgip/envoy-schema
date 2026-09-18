@@ -12,6 +12,7 @@ class RuntimeServerConfigRequest(BaseModel):
     derpl_pollrate_seconds: int | None = None  # If set - update the DERProgram pollRate
     derl_pollrate_seconds: int | None = None  # If set - update the DERList pollRate
     mup_postrate_seconds: int | None = None  # If set - update the MirrorUsagePoint postRate
+    mupl_pollrate_seconds: int | None = None  # If set - update the MirrorUsagePointList pollRate
     tp_pollrate_seconds: int | None = None  # If set - update the TariffProfile pollRate
     tti_pollrate_seconds: int | None = None  # If set - update the TimeTariffInterval pollRate
 
@@ -32,6 +33,7 @@ class RuntimeServerConfigResponse(BaseModel):
     derpl_pollrate_seconds: int
     derl_pollrate_seconds: int
     mup_postrate_seconds: int
+    mupl_pollrate_seconds: int
     tp_pollrate_seconds: int
     tti_pollrate_seconds: int
 
