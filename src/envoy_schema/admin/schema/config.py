@@ -34,8 +34,6 @@ class RuntimeServerConfigResponse(BaseModel):
     derl_pollrate_seconds: int
     mup_postrate_seconds: int
     mupl_pollrate_seconds: int
-    tp_pollrate_seconds: int
-    tti_pollrate_seconds: int
 
     site_control_pow10_encoding: int
     tariff_pow10_encoding: int
