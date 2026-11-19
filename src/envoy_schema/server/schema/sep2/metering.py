@@ -7,7 +7,7 @@ from envoy_schema.server.schema.sep2.identification import IdentifiedObject, Lin
 class ReadingBase(Resource):
     consumptionBlock: types.ConsumptionBlockType | None = element(default=0)
     qualityFlags: primitive_types.HexBinary16 | None = element(
-        default=primitive_types.HexBinary16("00")  # ty:ignore[call-non-callable]
+        default=primitive_types.HexBinary16("00")  # ty:ignore[not-callable]
     )  # string (hex encoded) form that maps to QualityFlagsType
     timePeriod: types.DateTimeIntervalType | None = element(
         default=None, tag="timePeriod"

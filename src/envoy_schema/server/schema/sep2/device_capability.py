@@ -7,7 +7,7 @@ from envoy_schema.server.schema.sep2.types import DEFAULT_POLLRATE_SECONDS
 
 
 class DeviceCapabilityResponse(FunctionSetAssignmentsBase, tag="DeviceCapability"):
-    href: str = attr(default=uri.DeviceCapabilityUri)
+    href: str = attr(default=uri.DeviceCapabilityUri)  # ty:ignore[incompatible-mutable-override]
     pollRate: int | None = attr(default=DEFAULT_POLLRATE_SECONDS)  # recommended client pollrate in seconds
 
     # (0..1) Link
