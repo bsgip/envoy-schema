@@ -120,7 +120,8 @@ def generate_and_validate_xml(
 
 # Main test against almost all xsd schema models with a few exceptions treated below
 @pytest.mark.parametrize(
-    "xml_class, optional_is_none", product(import_all_classes_from_module("envoy_schema.server.schema"), [True, False])
+    "xml_class, optional_is_none",
+    list(product(import_all_classes_from_module("envoy_schema.server.schema"), [True, False])),
 )
 def test_all_xml_models_csip_aus(
     xml_class: type[BaseXmlModel],
