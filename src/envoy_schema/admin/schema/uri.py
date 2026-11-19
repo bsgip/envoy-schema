@@ -8,14 +8,20 @@ AggregatorCertificateListUri = (
 AggregatorCertificateUri = (
     "/aggregator/{aggregator_id}/certificate/{certificate_id}"  # Unassigning certificate from aggregator
 )
-AggregatorDomainListUri = "/aggregator/{aggregator_id}/aggregator_domain"  # Adding domain to an aggregator
-AggregatorDomainUri = "/aggregator_domain/{aggregator_domain_id}"  # Update / Delete domain
+AggregatorDomainListUri = "/aggregator/{aggregator_id}/aggregator_domain"  # Adding / Listing domains of an aggregator
+AggregatorDomainUri = "/aggregator_domain/{aggregator_domain_id}"  # Fetch / Update / Delete a single domain
 CertificateListUri = "/certificate"  # Adding / Listing certificates
 CertificateUri = "/certificate/{certificate_id}"  # Update / Delete certificate
 CertificateAggregatorListUri = "/certificate/{certificate_id}/aggregator"  # Listing aggregators per certificate
 ArchiveForPeriodSites = "/archive/{period_start}/{period_end}/sites"
 ArchiveForPeriodSiteControls = "/archive/{period_start}/{period_end}/site_controls"
 ArchiveForPeriodTariffGeneratedRate = "/archive/{period_start}/{period_end}/tariff_generated_rates"
+
+CleanupExpiredSiteControlsUri = "/cleanup/expired/site_controls"  # POST ExpiredCleanupRequest -> CleanupResponse
+CleanupExpiredTariffGeneratedRatesUri = (
+    "/cleanup/expired/tariff_generated_rates"  # POST ExpiredCleanupRequest -> CleanupResponse
+)
+CleanupArchiveUri = "/cleanup/archive"  # POST ArchiveCleanupRequest -> ArchiveCleanupResponse
 
 TariffListUri = "/tariff"
 TariffUpdateUri = "/tariff/{tariff_id}"

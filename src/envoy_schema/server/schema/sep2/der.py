@@ -99,7 +99,7 @@ class OperationalModeStatusType(IntEnum):
 
     NOT_APPLICABLE = 0
     OFF = 1
-    OPERATIONAL_MODEL = 2
+    OPERATIONAL_MODE = 2
     TEST_MODE = 3
 
     # Additional DRED Values

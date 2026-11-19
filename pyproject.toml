@@ -2,6 +2,7 @@
 pythonpath = ["src/"]
 testpaths = "tests"
 filterwarnings = ["error::DeprecationWarning"]
+asyncio_default_fixture_loop_scope = "function"
 
 
 [tool.ruff]
@@ -55,6 +56,7 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
 ]
 dependencies = [
     "pydantic>=2.5.0,!=2.6.0, !=2.12.0",
