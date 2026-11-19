@@ -1,5 +1,4 @@
 from enum import IntEnum
-from typing import Optional
 
 from pydantic_xml import attr, element
 
@@ -46,29 +45,29 @@ class ApplianceLoadReductionType(IntEnum):
 class ResponseSet(IdentifiedObject):
     """A container for a ResponseList"""
 
-    ResponseListLink: Optional[ListLink] = element(default=None)
+    ResponseListLink: ListLink | None = element(default=None)
 
 
 class Response(Resource):
     """The Response object is the generic response data repository which is extended for specific function sets."""
 
-    createdDateTime: Optional[TimeType] = element(default=None)
+    createdDateTime: TimeType | None = element(default=None)
     endDeviceLFDI: primitive_types.HexBinary160 = element()
-    status: Optional[ResponseType] = element(default=None)
+    status: ResponseType | None = element(default=None)
     subject: primitive_types.HexBinary128 = element()
 
 
 class ResponseListResponse(Sep2List, tag="ResponseList"):
     """List element for holding Response objects"""
 
-    Response_: Optional[list[Response]] = element(default=None, tag="Response")
+    Response_: list[Response] | None = element(default=None, tag="Response")
 
 
 class ResponseSetList(Sep2List):
     """A List element to hold ResponseSet objects."""
 
-    pollRate: Optional[int] = attr(default=DEFAULT_POLLRATE_SECONDS)  # recommended client pollrate in seconds
-    ResponseSet_: Optional[list[ResponseSet]] = element(default=None, tag="ResponseSet")
+    pollRate: int | None = attr(default=DEFAULT_POLLRATE_SECONDS)  # recommended client pollrate in seconds
+    ResponseSet_: list[ResponseSet] | None = element(default=None, tag="ResponseSet")
 
 
 class DERControlResponse(Response):
@@ -147,15 +146,15 @@ class Offset(BaseXmlModelWithNS):
 
     # The value change requested for the cooling offset, in degree C / 10. The value should be added to the normal set
     # point for cooling, or if loadShiftForward is true, then the value should be subtracted from the normal set point.
-    coolingOffset: Optional[int] = element(default=None)
+    coolingOffset: int | None = element(default=None)
 
     # The value change requested for the heating offset, in degree C / 10. The value should be subtracted for heating,
     # or if loadShiftForward is true, then the value should be added to the normal set point.
-    heatingOffset: Optional[int] = element(default=None)
+    heatingOffset: int | None = element(default=None)
 
     # The value change requested for the load adjustment percentage. The value should be subtracted from the normal
     # setting, or if loadShiftForward is true, then the value should be added to the normal setting.
-    loadAdjustmentPercentageOffset: Optional[PerCent] = element(default=None)
+    loadAdjustmentPercentageOffset: PerCent | None = element(default=None)
 
 
 class DutyCycle(BaseXmlModelWithNS):
@@ -177,15 +176,15 @@ class DutyCycle(BaseXmlModelWithNS):
 class DrResponse(Response):
     """A response to a Demand Response Load Control (EndDeviceControl) message."""
 
-    ApplianceLoadReduction_: Optional[ApplianceLoadReduction] = element(default=None, tag="ApplianceLoadReduction")
+    ApplianceLoadReduction_: ApplianceLoadReduction | None = element(default=None, tag="ApplianceLoadReduction")
 
-    AppliedTargetReduction_: Optional[AppliedTargetReduction] = element(default=None, tag="AppliedTargetReduction")
-    DutyCycle_: Optional[DutyCycle] = element(default=None, tag="DutyCycle")
-    Offset_: Optional[Offset] = element(default=None, tag="Offset")
+    AppliedTargetReduction_: AppliedTargetReduction | None = element(default=None, tag="AppliedTargetReduction")
+    DutyCycle_: DutyCycle | None = element(default=None, tag="DutyCycle")
+    Offset_: Offset | None = element(default=None, tag="Offset")
     # Indicates the amount of time, in seconds, that the client partially opts-out during the demand response event.
     # When overriding within the allowed override duration, the client SHALL send a partial opt-out (Response status
     # code 8) for partial opt-out upon completion, with the total time the event was overridden (this attribute)
     # populated. The client SHALL send a no participation status response (status type 10) if the user partially
     # opts-out for longer than EndDeviceControl.overrideDuration.
-    overrideDuration: Optional[int] = element(default=None)
-    SetPoint_: Optional[SetPoint] = element(default=None, tag="SetPoint")
+    overrideDuration: int | None = element(default=None)
+    SetPoint_: SetPoint | None = element(default=None, tag="SetPoint")

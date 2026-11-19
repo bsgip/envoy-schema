@@ -1,5 +1,4 @@
 from enum import IntEnum
-from typing import Optional
 
 from pydantic_xml import attr, element
 
@@ -46,11 +45,11 @@ class LogEvent(Resource):
     """A time stamped instance of a significant event detected by the device."""
 
     createdDateTime: types.TimeType = element()
-    details: Optional[primitive_types.String32] = element(
+    details: primitive_types.String32 | None = element(
         default=None
     )  # Human readable text that MAY be used to transmit additional details about the event. Host may remove this.
 
-    extendedData: Optional[int] = element(default=None)  # May be used to transmit additional details about the event.
+    extendedData: int | None = element(default=None)  # May be used to transmit additional details about the event.
     functionSet: FunctionSetIdentifier = element()
     logEventCode: int = element()  # An 8 bit unsigned integer. logEventCodes are scoped to a profile and a function set
     logEventID: int = element()  # An 16 bit unsigned integer.
@@ -59,5 +58,5 @@ class LogEvent(Resource):
 
 
 class LogEventList(SubscribableList):
-    pollRate: Optional[int] = attr(default=types.DEFAULT_POLLRATE_SECONDS)  # recommended client pollrate in seconds
-    LogEvent_: Optional[list[LogEvent]] = element(default=None, tag="LogEvent")
+    pollRate: int | None = attr(default=types.DEFAULT_POLLRATE_SECONDS)  # recommended client pollrate in seconds
+    LogEvent_: list[LogEvent] | None = element(default=None, tag="LogEvent")

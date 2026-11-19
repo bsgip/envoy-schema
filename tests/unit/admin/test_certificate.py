@@ -1,5 +1,4 @@
 import datetime as dt
-from typing import Optional
 
 import pydantic
 import pytest
@@ -15,7 +14,7 @@ from envoy_schema.admin.schema.certificate import CertificateAssignmentRequest  
     ],
 )
 def test_assignment_request_invalid_no_lfdi_or_id(
-    lfdi: Optional[str], certificate_id: Optional[int], expiry: Optional[dt.datetime]
+    lfdi: str | None, certificate_id: int | None, expiry: dt.datetime | None
 ) -> None:
     """Tests the CertificateAssignmentRequest custom validator works as expected, missing id and lfdi"""
     with pytest.raises(pydantic.ValidationError, match="Either lfdi or id needs to be provided"):
@@ -30,7 +29,7 @@ def test_assignment_request_invalid_no_lfdi_or_id(
     ],
 )
 def test_assignment_request_invalid_both_lfdi_and_id(
-    lfdi: Optional[str], certificate_id: Optional[int], expiry: Optional[dt.datetime]
+    lfdi: str | None, certificate_id: int | None, expiry: dt.datetime | None
 ) -> None:
     """Tests the CertificateAssignmentRequest custom validator works as expected, missing id and lfdi"""
     with pytest.raises(pydantic.ValidationError, match="Only one of lfdi or id can be provided, not both"):
@@ -46,9 +45,7 @@ def test_assignment_request_invalid_both_lfdi_and_id(
         (None, 45664564, None),
     ],
 )
-def test_assignment_request_valid(
-    lfdi: Optional[str], certificate_id: Optional[int], expiry: Optional[dt.datetime]
-) -> None:
+def test_assignment_request_valid(lfdi: str | None, certificate_id: int | None, expiry: dt.datetime | None) -> None:
     """Tests the CertificateAssignmentRequest model works as expected excluding the custom validator"""
     cert_ass_req = CertificateAssignmentRequest(
         lfdi=lfdi,

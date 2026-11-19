@@ -1,5 +1,4 @@
 from enum import IntEnum
-from typing import Optional
 
 from pydantic_xml import element
 
@@ -58,8 +57,8 @@ class EventStatus(BaseXmlModelWithNS):
     currentStatus: int = element()  # encodes EventStatusType enum values
     dateTime: TimeType = element()
     potentiallySuperseded: bool = element()
-    potentiallySupersededTime: Optional[TimeType] = element(default=None)
-    reason: Optional[String192] = element(default=None)
+    potentiallySupersededTime: TimeType | None = element(default=None)
+    reason: String192 | None = element(default=None)
 
 
 class Event(RespondableSubscribableIdentifiedObject):
@@ -74,5 +73,5 @@ class Event(RespondableSubscribableIdentifiedObject):
 class RandomizableEvent(Event):
     """An Event that can indicate time ranges over which the start time and duration SHALL be randomized."""
 
-    randomizeDuration: Optional[OneHourRangeType] = element(default=None)
-    randomizeStart: Optional[OneHourRangeType] = element(default=None)
+    randomizeDuration: OneHourRangeType | None = element(default=None)
+    randomizeStart: OneHourRangeType | None = element(default=None)

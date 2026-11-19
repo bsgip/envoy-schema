@@ -1,6 +1,5 @@
 from datetime import datetime
 from decimal import Decimal
-from typing import Optional
 
 from pydantic import BaseModel
 
@@ -9,7 +8,7 @@ class DynamicOperatingEnvelopeRequest(BaseModel):
     """Dynamic Operating Envelope basic model - This is for legacy support. New integrations should use SiteControl"""
 
     site_group_id: int  # Corresponds to SiteGroup id
-    calculation_log_id: Optional[int]  # The ID of the CalculationLog that created this DOE (or NULL if no link)
+    calculation_log_id: int | None  # The ID of the CalculationLog that created this DOE (or NULL if no link)
     duration_seconds: int
     import_limit_active_watts: Decimal
     export_limit_watts: Decimal
@@ -30,5 +29,5 @@ class DoePageResponse(BaseModel):
     total_count: int  # The total number of does (independent of this page of results)
     limit: int  # The maximum number of does that could've been returned (the limit set by the query)
     start: int  # The number of does that have been skipped as part of this query (the start set by the query)
-    after: Optional[datetime]  # The "after" filter set by the query
+    after: datetime | None  # The "after" filter set by the query
     does: list[DynamicOperatingEnvelopeResponse]  # The doe models in this paged response

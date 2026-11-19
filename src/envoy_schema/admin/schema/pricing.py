@@ -1,6 +1,5 @@
 from datetime import datetime
 from decimal import Decimal
-from typing import Optional
 
 from pydantic import BaseModel
 
@@ -14,7 +13,7 @@ class TariffRequest(BaseModel):
     dnsp_code: str
     currency_code: CurrencyCode
     fsa_id: int = 1  # The function set assignment ID that this Tariff will be grouped under
-    required_site_group_id: Optional[int] = (
+    required_site_group_id: int | None = (
         None  # If set - only sites in this SiteGroup will "see" this Tariff. Globally visible otherwise
     )
 
@@ -37,7 +36,7 @@ class TariffPageResponse(BaseModel):
     total_count: int
     limit: int
     start: int
-    group: Optional[str]  # the "group" filter set by the query
+    group: str | None  # the "group" filter set by the query
     tariffs: list[TariffResponse]
 
 
@@ -47,7 +46,7 @@ class TariffGeneratedRateRequest(BaseModel):
 
     tariff_id: int
     site_group_id: int  # The SiteGroup id whose members will have this price available to them
-    calculation_log_id: Optional[int]  # The ID of the CalculationLog that created this rate (or NULL if no link)
+    calculation_log_id: int | None  # The ID of the CalculationLog that created this rate (or NULL if no link)
     start_time: datetime
     duration_seconds: int
     import_active_price: Decimal  # Price in dollars per kw/h (holds 4 decimal places of precision)
@@ -72,5 +71,5 @@ class TariffGeneratedRatePageResponse(BaseModel):
     tariff_component_id: int  # The TariffComponent that scopes this page (echoed from path)
     period_start: datetime
     period_end: datetime
-    site_id: Optional[int]
+    site_id: int | None
     rates: list[TariffGeneratedRateResponse]

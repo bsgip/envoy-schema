@@ -1,23 +1,21 @@
-from typing import Optional
-
 from pydantic_xml import attr, element
 
 from envoy_schema.server.schema.sep2 import base, primitive_types, types
 
 
 class Resource(base.BaseXmlModelWithNS):
-    type: Optional[str] = attr(ns="xsi", default=None)
-    href: Optional[str] = attr(default=None)
+    type: str | None = attr(ns="xsi", default=None)
+    href: str | None = attr(default=None)
 
 
 class IdentifiedObject(Resource):
     mRID: primitive_types.HexBinary128 = element()
-    description: Optional[str] = element(default=None)
-    version: Optional[types.VersionType] = element(default=None)
+    description: str | None = element(default=None)
+    version: types.VersionType | None = element(default=None)
 
 
 class SubscribableResource(Resource):
-    subscribable: Optional[types.SubscribableType] = attr(default=None)
+    subscribable: types.SubscribableType | None = attr(default=None)
 
 
 class SubscribableList(SubscribableResource):
@@ -29,26 +27,26 @@ class SubscribableList(SubscribableResource):
 
 class SubscribableIdentifiedObject(SubscribableResource):
     mRID: primitive_types.HexBinary128 = element()  # The global identifier of the object
-    description: Optional[str] = element(
+    description: str | None = element(
         default=None
     )  # The description is a human readable text describing or naming the object.
-    version: Optional[types.VersionType] = element(default=None)  # Contains the version number of the object.
+    version: types.VersionType | None = element(default=None)  # Contains the version number of the object.
 
 
 class RespondableResource(Resource):
     """A Resource to which a Response can be requested."""
 
-    replyTo: Optional[str] = attr(default=None)
-    responseRequired: Optional[primitive_types.HexBinary8] = attr(default=00)
+    replyTo: str | None = attr(default=None)
+    responseRequired: primitive_types.HexBinary8 | None = attr(default=00)
 
 
 class RespondableSubscribableIdentifiedObject(RespondableResource):
     """An IdentifiedObject to which a Response can be requested."""
 
     mRID: primitive_types.HexBinary128 = element()
-    description: Optional[str] = element(default=None)
-    version: Optional[types.VersionType] = element(default=None)
-    subscribable: Optional[types.SubscribableType] = attr(default=None)
+    description: str | None = element(default=None)
+    version: types.VersionType | None = element(default=None)
+    subscribable: types.SubscribableType | None = attr(default=None)
 
 
 class List(Resource):
@@ -64,4 +62,4 @@ class Link(base.BaseXmlModelWithNS):
 
 
 class ListLink(Link):
-    all_: Optional[int] = attr(name="all", default=None)
+    all_: int | None = attr(name="all", default=None)

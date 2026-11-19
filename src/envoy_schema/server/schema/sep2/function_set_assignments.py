@@ -1,5 +1,3 @@
-from typing import Optional
-
 from pydantic_xml import attr, element
 
 from envoy_schema.server.schema.sep2.identification import (
@@ -15,16 +13,16 @@ from envoy_schema.server.schema.sep2.types import DEFAULT_POLLRATE_SECONDS
 
 class FunctionSetAssignmentsBase(Resource):
     # Optional (0..1) Links and ListLinks
-    CustomerAccountListLink: Optional[ListLink] = element(default=None)
-    DemandResponseProgramListLink: Optional[ListLink] = element(default=None)
-    DERProgramListLink: Optional[ListLink] = element(default=None)
-    FileListLink: Optional[ListLink] = element(default=None)
-    MessagingProgramListLink: Optional[ListLink] = element(default=None)
-    PrepaymentListLink: Optional[ListLink] = element(default=None)
-    ResponseSetListLink: Optional[ListLink] = element(default=None)
-    TariffProfileListLink: Optional[ListLink] = element(default=None)
-    TimeLink: Optional[Link] = element(default=None)
-    UsagePointListLink: Optional[ListLink] = element(default=None)
+    CustomerAccountListLink: ListLink | None = element(default=None)
+    DemandResponseProgramListLink: ListLink | None = element(default=None)
+    DERProgramListLink: ListLink | None = element(default=None)
+    FileListLink: ListLink | None = element(default=None)
+    MessagingProgramListLink: ListLink | None = element(default=None)
+    PrepaymentListLink: ListLink | None = element(default=None)
+    ResponseSetListLink: ListLink | None = element(default=None)
+    TariffProfileListLink: ListLink | None = element(default=None)
+    TimeLink: Link | None = element(default=None)
+    UsagePointListLink: ListLink | None = element(default=None)
 
 
 # The SEP2 standard doesn't explicitly state that FunctionSetAssignments derives from
@@ -38,5 +36,5 @@ class FunctionSetAssignmentsResponse(
 
 
 class FunctionSetAssignmentsListResponse(SubscribableList, tag="FunctionSetAssignmentsList"):
-    FunctionSetAssignments: Optional[list[FunctionSetAssignmentsResponse]] = element(default=None)
-    pollRate: Optional[int] = attr(default=DEFAULT_POLLRATE_SECONDS)  # recommended client pollrate in seconds
+    FunctionSetAssignments: list[FunctionSetAssignmentsResponse] | None = element(default=None)
+    pollRate: int | None = attr(default=DEFAULT_POLLRATE_SECONDS)  # recommended client pollrate in seconds
