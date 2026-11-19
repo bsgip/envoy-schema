@@ -11,6 +11,12 @@ class AggregatorRequest(pydantic.BaseModel):
     name: str
 
 
+class AggregatorDomainRequest(pydantic.BaseModel):
+    """Used for adding a new whitelisted domain to an existing aggregator (or updating an existing domain)"""
+
+    domain: str = pydantic.Field(min_length=1, max_length=512)  # The fully qualified domain name to whitelist
+
+
 class AggregatorDomain(pydantic.BaseModel):
     """A domain whitelisted by the utility server as being controlled by the parent aggregator"""
 
