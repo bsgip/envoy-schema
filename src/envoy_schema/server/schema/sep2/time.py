@@ -6,7 +6,7 @@ from envoy_schema.server.schema.sep2.types import TimeOffsetType, TimeQualityTyp
 
 class TimeResponse(Resource, tag="Time"):
     # xsd
-    href: str = attr()
+    href: str = attr()  # ty:ignore[incompatible-mutable-override]
 
     currentTime: TimeType = element()
     dstEndTime: TimeType = element()
